@@ -4,13 +4,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Sparkles } from "lucide-react";
 import { useGamification } from "@/hooks/useGamification";
 import GamificationBadge from "@/components/GamificationBadge";
 import AchievementsModal from "@/components/AchievementsModal";
 import CreateFocusRoomModal from "@/components/CreateFocusRoomModal";
 import ShareRoomModal from "@/components/ShareRoomModal";
 import DailyCheckInModal from "@/components/DailyCheckInModal";
+import AIInsightsModal from "@/components/AIInsightsModal";
+import HabitsTracker from "@/components/HabitsTracker";
 
 interface Profile {
   full_name: string;
@@ -39,6 +41,7 @@ const Dashboard = () => {
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [showShareRoom, setShowShareRoom] = useState(false);
   const [showCheckIn, setShowCheckIn] = useState(false);
+  const [showAIInsights, setShowAIInsights] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();

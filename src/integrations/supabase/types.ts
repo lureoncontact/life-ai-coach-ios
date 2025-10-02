@@ -210,6 +210,42 @@ export type Database = {
           },
         ]
       }
+      habits: {
+        Row: {
+          completed_today: boolean
+          created_at: string
+          description: string | null
+          id: string
+          last_completed_at: string | null
+          streak: number
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_today?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_completed_at?: string | null
+          streak?: number
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_today?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_completed_at?: string | null
+          streak?: number
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
