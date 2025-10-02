@@ -93,10 +93,10 @@ const ExportDataModal = ({ open, onOpenChange }: ExportDataModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md animate-scale-in">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Download className="w-5 h-5 text-primary" />
+            <Download className="w-5 h-5 text-primary animate-bounce-subtle" />
             Exportar Datos
           </DialogTitle>
           <DialogDescription>
@@ -104,11 +104,11 @@ const ExportDataModal = ({ open, onOpenChange }: ExportDataModalProps) => {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3 mt-4">
-          <Card>
+        <div className="space-y-3 mt-4 animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <Card className="hover-lift">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center animate-pulse-glow">
                   <FileJson className="w-5 h-5 text-primary" />
                 </div>
                 <div className="flex-1">
@@ -121,7 +121,7 @@ const ExportDataModal = ({ open, onOpenChange }: ExportDataModalProps) => {
             </CardHeader>
             <CardContent className="pt-0">
               <Button
-                className="w-full"
+                className="w-full btn-interactive hover:scale-105"
                 onClick={() => exportData("json")}
                 disabled={exporting}
               >

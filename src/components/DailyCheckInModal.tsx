@@ -89,10 +89,10 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md animate-scale-in">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Check-in Diario</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-2xl animate-fade-in">Check-in Diario</DialogTitle>
+          <DialogDescription className="animate-fade-in" style={{ animationDelay: '100ms' }}>
             ¿Cómo te sientes hoy? Gana 5 puntos por registrar tu estado
           </DialogDescription>
         </DialogHeader>
@@ -108,14 +108,14 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
                     <Label
                       key={moodOption.value}
                       htmlFor={moodOption.value}
-                      className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${
+                      className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-all hover-lift ${
                         mood === moodOption.value
-                          ? "border-primary bg-primary/5"
+                          ? "border-primary bg-primary/5 animate-bounce-subtle"
                           : "border-border hover:bg-muted/50"
                       }`}
                     >
                       <RadioGroupItem value={moodOption.value} id={moodOption.value} />
-                      <Icon className={`w-6 h-6 ${moodOption.color}`} />
+                      <Icon className={`w-6 h-6 ${moodOption.color} ${mood === moodOption.value ? 'animate-pulse' : ''}`} />
                       <span className="font-medium">{moodOption.label}</span>
                     </Label>
                   );
@@ -136,7 +136,7 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
           </div>
 
           <Button
-            className="w-full"
+            className="w-full btn-interactive hover:scale-105"
             onClick={handleSubmit}
             disabled={saving}
           >

@@ -44,8 +44,8 @@ const InstallPWAPrompt = () => {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 max-w-sm animate-nudge-slide-up">
-      <Card className="border-primary shadow-lg">
+    <div className="fixed bottom-4 right-4 z-50 max-w-sm animate-slide-in-right">
+      <Card className="border-primary shadow-lg hover-glow">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
@@ -75,7 +75,7 @@ const InstallPWAPrompt = () => {
             <li>✓ Notificaciones push</li>
             <li>✓ Acceso instantáneo</li>
           </ul>
-          <Button className="w-full" onClick={handleInstall}>
+          <Button className="w-full btn-interactive hover:scale-105" onClick={handleInstall}>
             <Download className="w-4 h-4 mr-2" />
             Instalar App
           </Button>
