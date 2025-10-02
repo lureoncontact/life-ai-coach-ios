@@ -35,12 +35,16 @@ const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
 
   const connect = async () => {
     try {
+      console.log('Starting voice call connection...');
+      
       // Request microphone permission first
       await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log('Microphone permission granted');
 
       // Initialize audio context
       if (!audioContextRef.current) {
         audioContextRef.current = new AudioContext({ sampleRate: 24000 });
+        console.log('Audio context initialized');
       }
 
       // Connect to WebSocket for Master AI
@@ -51,20 +55,24 @@ const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log('WebSocket connected for voice call');
+        console.log('✅ WebSocket connected successfully');
       };
 
       ws.onmessage = async (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log('Received event:', data.type);
+          console.log('📩 Received event:', data.type);
 
           if (data.type === 'session.created') {
-            console.log('Session created');
+            console.log('Session created successfully');
           } else if (data.type === 'session.updated') {
-            console.log('Session configured, starting recorder');
+            console.log('✅ Session configured, starting recorder');
             await startRecorder();
             setIsConnected(true);
+            toast({
+              title: "Conectado",
+              description: "Ya puedes hablar con Nudge",
+            });
           } else if (data.type === 'response.audio.delta') {
             const binaryString = atob(data.delta);
             const bytes = new Uint8Array(binaryString.length);
@@ -78,7 +86,7 @@ const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
           } else if (data.type === 'response.done' || data.type === 'response.audio.done') {
             setIsSpeaking(false);
           } else if (data.type === 'error') {
-            console.error('OpenAI error:', data.error);
+            console.error('❌ OpenAI error:', data.error);
             toast({
               variant: "destructive",
               title: "Error",
@@ -86,31 +94,40 @@ const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
             });
           }
         } catch (error) {
-          console.error('Error processing message:', error);
+          console.error('❌ Error processing message:', error);
         }
       };
 
       ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
+        console.error('❌ WebSocket error:', error);
         toast({
           variant: "destructive",
           title: "Error de conexión",
-          description: "No se pudo conectar la llamada",
+          description: "No se pudo conectar la llamada. Verifica tu conexión a internet.",
         });
-      };
-
-      ws.onclose = () => {
-        console.log('WebSocket closed');
         setIsConnected(false);
       };
 
+      ws.onclose = (event) => {
+        console.log('WebSocket closed:', event.code, event.reason);
+        setIsConnected(false);
+        if (event.code !== 1000) {
+          toast({
+            variant: "destructive",
+            title: "Conexión cerrada",
+            description: "La llamada se desconectó inesperadamente",
+          });
+        }
+      };
+
     } catch (error) {
-      console.error('Error starting call:', error);
+      console.error('❌ Error starting call:', error);
       toast({
         variant: "destructive",
         title: "Error",
         description: error instanceof Error ? error.message : 'No se pudo iniciar la llamada',
       });
+      setIsConnected(false);
     }
   };
 
