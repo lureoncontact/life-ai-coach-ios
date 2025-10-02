@@ -197,7 +197,30 @@ export const onChatSession = async (userId: string) => {
 };
 
 export const onAllHabitsCompleted = async (userId: string) => {
+  // Check if user already received bonus today
+  const today = new Date().toISOString().split('T')[0];
+  
+  const { data: stats } = await supabase
+    .from("user_stats")
+    .select("last_all_habits_bonus_date")
+    .eq("user_id", userId)
+    .single();
+
+  // If user already received bonus today, don't award points again
+  if (stats?.last_all_habits_bonus_date === today) {
+    console.log("User already received all habits bonus today, skipping...");
+    return [];
+  }
+
+  // Award points and update the bonus date
   await awardPoints(userId, POINTS_PER_ALL_HABITS, "Todos los hábitos completados");
+  
+  // Update the last bonus date
+  await supabase
+    .from("user_stats")
+    .update({ last_all_habits_bonus_date: today })
+    .eq("user_id", userId);
+
   const newAchievements = await checkAndUnlockAchievements(userId);
   return newAchievements;
 };

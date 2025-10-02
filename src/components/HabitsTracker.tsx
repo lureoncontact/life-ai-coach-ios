@@ -83,14 +83,18 @@ const HabitsTracker = ({ onStatsUpdate }: HabitsTrackerProps) => {
       
       if (newCompletedStatus) {
         if (allCompleted) {
-          // Award points for completing all habits
-          await onAllHabitsCompleted(user.id);
-          toast({
-            title: "¡Todos los hábitos completados! 🎉",
-            description: "Has ganado puntos extra y tu racha continúa",
-          });
-          // Notify parent to update stats
-          onStatsUpdate?.();
+          // Award points for completing all habits (only once per day)
+          const achievements = await onAllHabitsCompleted(user.id);
+          
+          // Only show success message if points were actually awarded
+          if (achievements !== null) {
+            toast({
+              title: "¡Todos los hábitos completados! 🎉",
+              description: "Has ganado puntos extra y tu racha continúa",
+            });
+            // Notify parent to update stats
+            onStatsUpdate?.();
+          }
         } else {
           toast({
             title: "¡Hábito completado!",
