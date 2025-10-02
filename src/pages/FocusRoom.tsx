@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon } from "lucide-react";
+import VoiceInterface from "@/components/VoiceInterface";
 import {
   Dialog,
   DialogContent,
@@ -306,6 +307,18 @@ const FocusRoom = () => {
     }
   };
 
+  const handleVoiceTranscript = async (transcript: string, isUser: boolean) => {
+    if (isUser) {
+      const newUserMessage: Message = { role: "user", content: transcript };
+      setMessages((prev) => [...prev, newUserMessage]);
+      await saveChatMessage("user", transcript);
+    } else {
+      const newAssistantMessage: Message = { role: "assistant", content: transcript };
+      setMessages((prev) => [...prev, newAssistantMessage]);
+      await saveChatMessage("assistant", transcript);
+    }
+  };
+
   if (!room) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -490,18 +503,23 @@ const FocusRoom = () => {
                     rows={2}
                     disabled={isLoading}
                   />
-                  <Button
-                    size="icon"
-                    onClick={sendMessage}
-                    disabled={!input.trim() || isLoading}
-                    className="h-auto"
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                    ) : (
-                      <Send className="w-5 h-5" />
-                    )}
-                  </Button>
+                  <div className="flex flex-col gap-2">
+                    <VoiceInterface 
+                      roomId={roomId!} 
+                      onTranscriptUpdate={handleVoiceTranscript}
+                    />
+                    <Button
+                      size="icon"
+                      onClick={sendMessage}
+                      disabled={!input.trim() || isLoading}
+                    >
+                      {isLoading ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <Send className="w-5 h-5" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
