@@ -15,6 +15,12 @@ import ActiveUsersIndicator from "@/components/ActiveUsersIndicator";
 import CelebrationEffect from "@/components/CelebrationEffect";
 import { useRealtimePresence } from "@/hooks/useRealtimePresence";
 import { useRealtimeGoals } from "@/hooks/useRealtimeGoals";
+import MeditationTimer from "@/components/focus-room-features/MeditationTimer";
+import SavingsTracker from "@/components/focus-room-features/SavingsTracker";
+import WorkoutLogger from "@/components/focus-room-features/WorkoutLogger";
+import SkillTracker from "@/components/focus-room-features/SkillTracker";
+import RelationshipLogger from "@/components/focus-room-features/RelationshipLogger";
+import BookTracker from "@/components/focus-room-features/BookTracker";
 import {
   Dialog,
   DialogContent,
@@ -423,6 +429,27 @@ const FocusRoom = () => {
     return icons[category] || Activity;
   };
 
+  const renderCategoryFeature = () => {
+    if (!roomId) return null;
+    
+    switch (room.area_category) {
+      case "mental":
+        return <MeditationTimer roomId={roomId} />;
+      case "finance":
+        return <SavingsTracker roomId={roomId} />;
+      case "health":
+        return <WorkoutLogger roomId={roomId} />;
+      case "career":
+        return <SkillTracker roomId={roomId} />;
+      case "relationships":
+        return <RelationshipLogger roomId={roomId} />;
+      case "personal":
+        return <BookTracker roomId={roomId} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* Header */}
@@ -552,6 +579,9 @@ const FocusRoom = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Category-specific features */}
+            {renderCategoryFeature()}
           </div>
 
           {/* Chat Area */}

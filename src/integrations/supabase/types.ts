@@ -47,6 +47,62 @@ export type Database = {
         }
         Relationships: []
       }
+      books_read: {
+        Row: {
+          author: string | null
+          book_title: string
+          completed_date: string | null
+          created_at: string
+          focus_room_id: string
+          id: string
+          notes: string | null
+          pages_read: number
+          rating: number | null
+          status: string
+          total_pages: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          author?: string | null
+          book_title: string
+          completed_date?: string | null
+          created_at?: string
+          focus_room_id: string
+          id?: string
+          notes?: string | null
+          pages_read?: number
+          rating?: number | null
+          status?: string
+          total_pages?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          author?: string | null
+          book_title?: string
+          completed_date?: string | null
+          created_at?: string
+          focus_room_id?: string
+          id?: string
+          notes?: string | null
+          pages_read?: number
+          rating?: number | null
+          status?: string
+          total_pages?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "books_read_focus_room_id_fkey"
+            columns: ["focus_room_id"]
+            isOneToOne: false
+            referencedRelation: "focus_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           content: string
@@ -246,6 +302,44 @@ export type Database = {
         }
         Relationships: []
       }
+      meditation_sessions: {
+        Row: {
+          created_at: string
+          date: string
+          duration_minutes: number
+          focus_room_id: string
+          id: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          duration_minutes: number
+          focus_room_id: string
+          id?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          duration_minutes?: number
+          focus_room_id?: string
+          id?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meditation_sessions_focus_room_id_fkey"
+            columns: ["focus_room_id"]
+            isOneToOne: false
+            referencedRelation: "focus_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           age: number | null
@@ -281,6 +375,132 @@ export type Database = {
           user_story?: string | null
         }
         Relationships: []
+      }
+      relationship_logs: {
+        Row: {
+          created_at: string
+          date: string
+          focus_room_id: string
+          id: string
+          interaction_type: string
+          notes: string | null
+          person_name: string
+          quality_rating: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          focus_room_id: string
+          id?: string
+          interaction_type: string
+          notes?: string | null
+          person_name: string
+          quality_rating?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          focus_room_id?: string
+          id?: string
+          interaction_type?: string
+          notes?: string | null
+          person_name?: string
+          quality_rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relationship_logs_focus_room_id_fkey"
+            columns: ["focus_room_id"]
+            isOneToOne: false
+            referencedRelation: "focus_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      savings_records: {
+        Row: {
+          amount: number
+          created_at: string
+          date: string
+          description: string | null
+          focus_room_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          date?: string
+          description?: string | null
+          focus_room_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          date?: string
+          description?: string | null
+          focus_room_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "savings_records_focus_room_id_fkey"
+            columns: ["focus_room_id"]
+            isOneToOne: false
+            referencedRelation: "focus_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skill_progress: {
+        Row: {
+          created_at: string
+          focus_room_id: string
+          hours_invested: number
+          id: string
+          notes: string | null
+          progress_percentage: number
+          skill_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          focus_room_id: string
+          hours_invested?: number
+          id?: string
+          notes?: string | null
+          progress_percentage?: number
+          skill_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          focus_room_id?: string
+          hours_invested?: number
+          id?: string
+          notes?: string | null
+          progress_percentage?: number
+          skill_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skill_progress_focus_room_id_fkey"
+            columns: ["focus_room_id"]
+            isOneToOne: false
+            referencedRelation: "focus_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_achievements: {
         Row: {
@@ -338,6 +558,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      workout_logs: {
+        Row: {
+          calories: number | null
+          created_at: string
+          date: string
+          duration_minutes: number
+          exercise_type: string
+          focus_room_id: string
+          id: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          calories?: number | null
+          created_at?: string
+          date?: string
+          duration_minutes: number
+          exercise_type: string
+          focus_room_id: string
+          id?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          calories?: number | null
+          created_at?: string
+          date?: string
+          duration_minutes?: number
+          exercise_type?: string
+          focus_room_id?: string
+          id?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_logs_focus_room_id_fkey"
+            columns: ["focus_room_id"]
+            isOneToOne: false
+            referencedRelation: "focus_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
