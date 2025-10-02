@@ -135,10 +135,10 @@ const ExportDataModal = ({ open, onOpenChange }: ExportDataModalProps) => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover-lift animate-fade-in" style={{ animationDelay: '200ms' }}>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center animate-pulse-glow">
                   <FileText className="w-5 h-5 text-success" />
                 </div>
                 <div className="flex-1">
@@ -152,7 +152,7 @@ const ExportDataModal = ({ open, onOpenChange }: ExportDataModalProps) => {
             <CardContent className="pt-0">
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full btn-interactive hover:scale-105"
                 onClick={() => exportData("csv")}
                 disabled={exporting}
               >

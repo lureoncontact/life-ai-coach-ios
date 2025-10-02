@@ -169,13 +169,13 @@ const VoiceInterface = ({ roomId, onTranscriptUpdate }: VoiceInterfaceProps) => 
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 animate-fade-in">
       {!isConnected && !isConnecting && (
         <Button 
           onClick={connect}
           variant="outline"
           size="icon"
-          className="rounded-full"
+          className="rounded-full btn-interactive hover:scale-110"
         >
           <Mic className="w-5 h-5" />
         </Button>
@@ -188,7 +188,7 @@ const VoiceInterface = ({ roomId, onTranscriptUpdate }: VoiceInterfaceProps) => 
           className="rounded-full"
           disabled
         >
-          <Loader2 className="w-5 h-5 animate-spin" />
+          <Loader2 className="w-5 h-5 animate-spin animate-pulse-glow" />
         </Button>
       )}
       
@@ -197,7 +197,7 @@ const VoiceInterface = ({ roomId, onTranscriptUpdate }: VoiceInterfaceProps) => 
           onClick={disconnect}
           variant={isSpeaking ? "default" : "destructive"}
           size="icon"
-          className={`rounded-full ${isSpeaking ? 'animate-pulse' : ''}`}
+          className={`rounded-full btn-interactive ${isSpeaking ? 'animate-pulse hover-glow' : 'hover:scale-110'}`}
         >
           <MicOff className="w-5 h-5" />
         </Button>

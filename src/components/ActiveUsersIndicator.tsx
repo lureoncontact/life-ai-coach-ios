@@ -34,14 +34,14 @@ const ActiveUsersIndicator = ({ activeUsers, activeCount }: ActiveUsersIndicator
   ];
 
   return (
-    <div className="flex items-center gap-2">
-      <Users className="w-4 h-4 text-muted-foreground" />
+    <div className="flex items-center gap-2 animate-fade-in">
+      <Users className="w-4 h-4 text-muted-foreground animate-pulse" />
       <div className="flex -space-x-2">
         <TooltipProvider>
           {activeUsers.slice(0, 3).map((user, index) => (
             <Tooltip key={user.userId}>
               <TooltipTrigger>
-                <Avatar className={`w-8 h-8 border-2 border-background ${colors[index % colors.length]}`}>
+                <Avatar className={`w-8 h-8 border-2 border-background ${colors[index % colors.length]} hover-lift animate-fade-in transition-transform hover:scale-110`} style={{ animationDelay: `${index * 100}ms` }}>
                   <AvatarFallback className="text-xs text-white">
                     {getInitials(user.userName)}
                   </AvatarFallback>
@@ -56,7 +56,7 @@ const ActiveUsersIndicator = ({ activeUsers, activeCount }: ActiveUsersIndicator
             </Tooltip>
           ))}
           {activeCount > 3 && (
-            <Avatar className="w-8 h-8 border-2 border-background bg-muted">
+            <Avatar className="w-8 h-8 border-2 border-background bg-muted hover-lift animate-fade-in">
               <AvatarFallback className="text-xs">
                 +{activeCount - 3}
               </AvatarFallback>

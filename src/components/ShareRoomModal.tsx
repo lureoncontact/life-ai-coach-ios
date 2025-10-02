@@ -46,10 +46,10 @@ const ShareRoomModal = ({ open, onOpenChange, roomId, roomName }: ShareRoomModal
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md animate-scale-in">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Share2 className="w-5 h-5 text-primary" />
+            <Share2 className="w-5 h-5 text-primary animate-pulse" />
             Compartir Focus Room
           </DialogTitle>
           <DialogDescription>
@@ -57,7 +57,7 @@ const ShareRoomModal = ({ open, onOpenChange, roomId, roomName }: ShareRoomModal
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 mt-4">
+        <div className="space-y-4 mt-4 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <div className="space-y-2">
             <Label>Enlace de la sala</Label>
             <div className="flex gap-2">
@@ -66,10 +66,10 @@ const ShareRoomModal = ({ open, onOpenChange, roomId, roomName }: ShareRoomModal
                 variant="outline"
                 size="icon"
                 onClick={copyToClipboard}
-                className="flex-shrink-0"
+                className="flex-shrink-0 btn-interactive hover:scale-110"
               >
                 {copied ? (
-                  <Check className="w-4 h-4 text-success" />
+                  <Check className="w-4 h-4 text-success animate-scale-in" />
                 ) : (
                   <Copy className="w-4 h-4" />
                 )}
@@ -85,7 +85,7 @@ const ShareRoomModal = ({ open, onOpenChange, roomId, roomName }: ShareRoomModal
             <div className="grid grid-cols-2 gap-2">
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full btn-interactive hover:scale-105"
                 onClick={shareViaEmail}
               >
                 <Mail className="w-4 h-4 mr-2" />
@@ -93,7 +93,7 @@ const ShareRoomModal = ({ open, onOpenChange, roomId, roomName }: ShareRoomModal
               </Button>
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full btn-interactive hover:scale-105"
                 onClick={shareViaWhatsApp}
               >
                 <MessageSquare className="w-4 h-4 mr-2" />

@@ -83,10 +83,10 @@ const PremiumPlansModal = ({ open, onOpenChange }: PremiumPlansModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto animate-scale-in">
         <DialogHeader>
           <DialogTitle className="text-2xl flex items-center gap-2">
-            <Crown className="w-6 h-6 text-primary" />
+            <Crown className="w-6 h-6 text-primary animate-pulse" />
             Planes Premium
           </DialogTitle>
           <DialogDescription>
@@ -95,21 +95,22 @@ const PremiumPlansModal = ({ open, onOpenChange }: PremiumPlansModalProps) => {
         </DialogHeader>
 
         <div className="grid md:grid-cols-3 gap-6 mt-4">
-          {plans.map((plan) => {
+          {plans.map((plan, index) => {
             const Icon = plan.icon;
             return (
               <Card
                 key={plan.name}
-                className={`relative ${plan.popular ? "border-primary shadow-lg" : ""}`}
+                className={`relative hover-lift animate-fade-in ${plan.popular ? "border-primary shadow-lg hover-glow" : ""}`}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 {plan.popular && (
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 animate-bounce-subtle">
                     Más Popular
                   </Badge>
                 )}
                 <CardHeader>
-                  <div className={`w-12 h-12 rounded-full ${plan.bgColor} flex items-center justify-center mb-2`}>
-                    <Icon className={`w-6 h-6 ${plan.color}`} />
+                  <div className={`w-12 h-12 rounded-full ${plan.bgColor} flex items-center justify-center mb-2 transition-transform hover:scale-110`}>
+                    <Icon className={`w-6 h-6 ${plan.color} ${plan.popular ? 'animate-pulse' : ''}`} />
                   </div>
                   <CardTitle>{plan.name}</CardTitle>
                   <CardDescription>
@@ -129,7 +130,7 @@ const PremiumPlansModal = ({ open, onOpenChange }: PremiumPlansModalProps) => {
                     ))}
                   </ul>
                   <Button
-                    className="w-full"
+                    className="w-full btn-interactive hover:scale-105"
                     variant={plan.popular ? "default" : "outline"}
                     disabled={plan.disabled}
                     onClick={() => handleSubscribe(plan.name)}

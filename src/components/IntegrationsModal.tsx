@@ -113,10 +113,10 @@ const IntegrationsModal = ({ open, onOpenChange }: IntegrationsModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto animate-scale-in">
         <DialogHeader>
           <DialogTitle className="text-2xl flex items-center gap-2">
-            <Cloud className="w-6 h-6 text-primary" />
+            <Cloud className="w-6 h-6 text-primary animate-pulse" />
             Integraciones
           </DialogTitle>
           <DialogDescription>
@@ -125,24 +125,24 @@ const IntegrationsModal = ({ open, onOpenChange }: IntegrationsModalProps) => {
         </DialogHeader>
 
         <div className="space-y-6 mt-4">
-          {categories.map((category) => (
-            <div key={category}>
+          {categories.map((category, catIndex) => (
+            <div key={category} className="animate-fade-in" style={{ animationDelay: `${catIndex * 100}ms` }}>
               <h3 className="text-sm font-semibold text-muted-foreground mb-3 uppercase">
                 {category}
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 {integrations
                   .filter((i) => i.category === category)
-                  .map((integration) => {
+                  .map((integration, index) => {
                     const Icon = integration.icon;
                     const isEnabled = enabledIntegrations.has(integration.name);
                     return (
-                      <Card key={integration.name}>
+                      <Card key={integration.name} className="hover-lift stagger-item animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
                         <CardHeader className="pb-3">
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
                               <div
-                                className={`w-10 h-10 rounded-lg ${integration.bgColor} flex items-center justify-center`}
+                                className={`w-10 h-10 rounded-lg ${integration.bgColor} flex items-center justify-center transition-transform hover:scale-110`}
                               >
                                 <Icon className={`w-5 h-5 ${integration.color}`} />
                               </div>
