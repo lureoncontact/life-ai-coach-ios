@@ -80,18 +80,18 @@ const SavingsTracker = ({ roomId }: SavingsTrackerProps) => {
   };
 
   return (
-    <div className="space-y-4">
-      <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+    <div className="space-y-4 w-full max-w-full">
+      <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/20 w-full">
+        <CardHeader className="p-4">
+          <CardTitle className="flex items-center justify-between text-base">
             <span className="flex items-center gap-2">
               💰 Total Ahorrado
             </span>
             <TrendingUp className="w-5 h-5 text-green-500" />
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="text-4xl font-bold text-green-600">
+        <CardContent className="p-4 pt-0">
+          <div className="text-3xl font-bold text-green-600">
             ${totalSavings.toFixed(2)}
           </div>
           <p className="text-sm text-muted-foreground mt-1">
@@ -100,17 +100,17 @@ const SavingsTracker = ({ roomId }: SavingsTrackerProps) => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+      <Card className="w-full">
+        <CardHeader className="p-4">
+          <CardTitle className="flex items-center gap-2 text-base">
             <Plus className="w-5 h-5" />
             Registrar Ahorro
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm">
             Agrega un nuevo ahorro a tu registro
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 p-4 pt-0">
           <div className="space-y-2">
             <Label htmlFor="amount">Cantidad</Label>
             <Input

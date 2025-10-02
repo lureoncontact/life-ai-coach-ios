@@ -452,10 +452,10 @@ const FocusRoom = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 w-full overflow-x-hidden">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10 w-full">
+        <div className="w-full px-4 py-3 flex items-center justify-between max-w-full">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")}>
               <ArrowLeft className="w-5 h-5" />
@@ -482,33 +482,33 @@ const FocusRoom = () => {
         
         {/* Active Users Indicator */}
         {activeCount > 0 && (
-          <div className="container mx-auto px-4 pb-3">
+          <div className="w-full px-4 pb-2 max-w-full">
             <ActiveUsersIndicator activeUsers={activeUsers} activeCount={activeCount} />
           </div>
         )}
       </header>
 
-      <div className="container mx-auto px-4 py-6">
-        <div className="grid lg:grid-cols-2 gap-6">
+      <div className="w-full px-3 py-4 max-w-full overflow-x-hidden">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 w-full max-w-full">
           {/* Goals and Features Section */}
-          <div className="space-y-4">
+          <div className="space-y-4 w-full max-w-full">
             {/* Chat Button */}
-            <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 hover-glow">
-              <CardContent className="p-4">
+            <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 hover-glow w-full">
+              <CardContent className="p-3">
                 <Button
                   onClick={() => setShowChatModal(true)}
-                  className="w-full h-16 text-lg btn-interactive hover:scale-105 transition-transform"
+                  className="w-full h-14 text-base btn-interactive hover:scale-105 transition-transform"
                 >
-                  <MessageCircle className="w-6 h-6 mr-2" />
+                  <MessageCircle className="w-5 h-5 mr-2" />
                   Chat con el Bot de {room.name}
                 </Button>
               </CardContent>
             </Card>
 
             {/* Goals Card */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
+            <Card className="w-full max-w-full">
+              <CardHeader className="p-4">
+                <div className="flex items-center justify-between gap-2">
                   <CardTitle className="text-lg">Metas</CardTitle>
                   <Dialog open={showNewGoal} onOpenChange={setShowNewGoal}>
                     <DialogTrigger asChild>
@@ -551,7 +551,7 @@ const FocusRoom = () => {
                   </Dialog>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-2 p-4">
                 {goals.length === 0 ? (
                   <p className="text-sm text-muted-foreground text-center py-4">
                     No hay metas aún
@@ -597,7 +597,7 @@ const FocusRoom = () => {
           </div>
 
           {/* Category-specific features */}
-          <div>
+          <div className="w-full max-w-full overflow-x-hidden">
             {renderCategoryFeature()}
           </div>
         </div>
@@ -605,8 +605,8 @@ const FocusRoom = () => {
 
       {/* Chat Modal */}
       <Dialog open={showChatModal} onOpenChange={setShowChatModal}>
-        <DialogContent className="max-w-4xl h-[80vh] flex flex-col p-0">
-          <DialogHeader className="p-6 pb-0">
+        <DialogContent className="w-[95vw] max-w-4xl h-[85vh] flex flex-col p-0 m-2">
+          <DialogHeader className="p-4 pb-0">
             <DialogTitle className="flex items-center gap-2">
               {(() => {
                 const IconComponent = getAreaIcon(room.area_category);
@@ -624,9 +624,9 @@ const FocusRoom = () => {
           </DialogHeader>
 
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto px-6">
+          <div className="flex-1 overflow-y-auto px-4 pb-4">
             {messages.length === 0 && (
-              <div className="text-center py-8 animate-scale-in">
+              <div className="text-center py-6 animate-scale-in">
                 {(() => {
                   const IconComponent = getAreaIcon(room.area_category);
                   return (
@@ -669,14 +669,14 @@ const FocusRoom = () => {
           </div>
 
           {/* Chat Input */}
-          <div className="border-t p-4">
+          <div className="border-t p-3">
             <div className="flex gap-2">
               <Textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Escribe tu mensaje..."
-                className="resize-none"
+                className="resize-none text-sm"
                 rows={2}
                 disabled={isLoading}
               />
@@ -689,12 +689,12 @@ const FocusRoom = () => {
                   size="icon"
                   onClick={sendMessage}
                   disabled={!input.trim() || isLoading}
-                  className="btn-interactive hover:scale-110 transition-transform"
+                  className="btn-interactive hover:scale-110 transition-transform h-9 w-9"
                 >
                   {isLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <Send className="w-5 h-5" />
+                    <Send className="w-4 h-4" />
                   )}
                 </Button>
               </div>

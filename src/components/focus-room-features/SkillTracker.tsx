@@ -121,15 +121,15 @@ const SkillTracker = ({ roomId }: SkillTrackerProps) => {
   };
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
+    <div className="space-y-4 w-full max-w-full">
+      <Card className="w-full">
+        <CardHeader className="p-4">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <CardTitle className="flex items-center gap-2 text-base">
                 🎯 Habilidades en Desarrollo
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm">
                 Rastrea tu progreso en diferentes skills
               </CardDescription>
             </div>

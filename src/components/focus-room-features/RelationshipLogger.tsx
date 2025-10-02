@@ -106,10 +106,10 @@ const RelationshipLogger = ({ roomId }: RelationshipLoggerProps) => {
   };
 
   return (
-    <div className="space-y-4">
-      <Card className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 border-pink-500/20">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+    <div className="space-y-4 w-full max-w-full">
+      <Card className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 border-pink-500/20 w-full">
+        <CardHeader className="p-4">
+          <CardTitle className="flex items-center justify-between text-base">
             <span className="flex items-center gap-2">
               ❤️ Esta Semana
             </span>

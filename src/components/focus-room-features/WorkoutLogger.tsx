@@ -109,18 +109,18 @@ const WorkoutLogger = ({ roomId }: WorkoutLoggerProps) => {
   };
 
   return (
-    <div className="space-y-4">
-      <Card className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border-orange-500/20">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
+    <div className="space-y-4 w-full max-w-full">
+      <Card className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border-orange-500/20 w-full">
+        <CardHeader className="p-4">
+          <CardTitle className="flex items-center justify-between text-base">
             <span className="flex items-center gap-2">
               💪 Esta Semana
             </span>
             <Activity className="w-5 h-5 text-orange-500" />
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="text-4xl font-bold text-orange-600">
+        <CardContent className="p-4 pt-0">
+          <div className="text-3xl font-bold text-orange-600">
             {weeklyMinutes} min
           </div>
           <p className="text-sm text-muted-foreground mt-1">

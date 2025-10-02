@@ -103,17 +103,17 @@ const MeditationTimer = ({ roomId }: MeditationTimerProps) => {
   };
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+    <div className="space-y-4 w-full max-w-full">
+      <Card className="w-full">
+        <CardHeader className="p-4">
+          <CardTitle className="flex items-center gap-2 text-base">
             🧘 Temporizador de Meditación
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm">
             Registra tus sesiones de meditación
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 p-4">
           <div className="space-y-2">
             <Label htmlFor="duration">Duración (minutos)</Label>
             <Input
@@ -127,11 +127,11 @@ const MeditationTimer = ({ roomId }: MeditationTimerProps) => {
             />
           </div>
 
-          <div className="text-center p-8 bg-primary/5 rounded-lg">
-            <div className="text-6xl font-mono font-bold text-primary mb-4">
+          <div className="text-center p-6 bg-primary/5 rounded-lg">
+            <div className="text-5xl font-mono font-bold text-primary mb-4">
               {formatTime(timeLeft || duration * 60)}
             </div>
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-2 flex-wrap">
               {!isRunning && timeLeft === 0 ? (
                 <Button onClick={startTimer} className="btn-interactive">
                   <Play className="w-4 h-4 mr-2" />
@@ -178,18 +178,18 @@ const MeditationTimer = ({ roomId }: MeditationTimerProps) => {
       </Card>
 
       {sessions.length > 0 && (
-        <Card>
-          <CardHeader>
+        <Card className="w-full">
+          <CardHeader className="p-4">
             <CardTitle className="text-sm">Sesiones Recientes</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 pt-0">
             <div className="space-y-2">
               {sessions.map((session) => (
                 <div
                   key={session.id}
-                  className="flex justify-between items-center p-2 bg-muted/50 rounded"
+                  className="flex justify-between items-center p-2 bg-muted/50 rounded text-sm"
                 >
-                  <div className="text-sm">
+                  <div>
                     <div className="font-medium">{session.duration_minutes} min</div>
                     <div className="text-xs text-muted-foreground">
                       {new Date(session.date).toLocaleDateString()}
