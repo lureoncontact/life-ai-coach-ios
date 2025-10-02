@@ -52,11 +52,16 @@ serve(async (req) => {
     
     // Connect to OpenAI Realtime API
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
-    const openAIUrl = `wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01`;
+    if (!OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY not configured');
+    }
     
+    // For Deno WebSocket, we need to use the Authorization in the subprotocol
+    const openAIUrl = `wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01`;
     const openAISocket = new WebSocket(openAIUrl, [
+      `realtime`,
       `openai-insecure-api-key.${OPENAI_API_KEY}`,
-      'realtime=v1'
+      `openai-beta.realtime-v1`
     ]);
 
     let sessionConfigured = false;
@@ -87,7 +92,7 @@ serve(async (req) => {
     };
 
     openAISocket.onopen = () => {
-      console.log('Connected to OpenAI Realtime API');
+      console.log('✅ Connected to OpenAI Realtime API');
     };
 
     openAISocket.onmessage = (event) => {
