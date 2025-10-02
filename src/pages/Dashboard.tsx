@@ -144,10 +144,12 @@ const Dashboard = () => {
     }
   };
 
-  const handleCheckInComplete = () => {
+  const handleCheckInComplete = async () => {
     setHasCheckedInToday(true);
     setIsFirstLogin(false);
-    checkDailyCheckIn();
+    setShowCheckIn(false);
+    // Recheck to ensure state is updated
+    await checkDailyCheckIn();
   };
 
   const handleSignOut = async () => {
