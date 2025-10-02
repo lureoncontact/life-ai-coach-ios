@@ -29,9 +29,27 @@ serve(async (req) => {
       userId 
     });
 
-    // Get user's latest check-in for context
-    let checkInContext = "";
+    // Get user's complete context
+    let userContext = "";
     if (userId) {
+      // Get user profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name, age, gender, interests, user_story, habits')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (profile) {
+        userContext += `\n\nINFORMACIÓN DEL USUARIO:`;
+        userContext += `\nNombre: ${profile.full_name || 'Usuario'}`;
+        if (profile.age) userContext += `\nEdad: ${profile.age} años`;
+        if (profile.gender) userContext += `\nGénero: ${profile.gender}`;
+        if (profile.interests) userContext += `\nIntereses: ${profile.interests}`;
+        if (profile.habits) userContext += `\nHábitos personales: ${profile.habits}`;
+        if (profile.user_story) userContext += `\nHistoria del usuario: ${profile.user_story}`;
+      }
+
+      // Get latest check-in
       const { data: latestCheckIn } = await supabase
         .from("daily_check_ins")
         .select("mood, notes, check_in_date")
@@ -49,17 +67,66 @@ serve(async (req) => {
         };
         
         const moodText = moodLabels[latestCheckIn.mood] || latestCheckIn.mood;
-        const dateObj = new Date(latestCheckIn.check_in_date);
         const today = new Date().toISOString().split('T')[0];
         const isToday = latestCheckIn.check_in_date === today;
         
-        checkInContext = `\n\nCONTEXTO DEL USUARIO:\nÚltimo check-in (${isToday ? 'hoy' : dateObj.toLocaleDateString()}): Se siente ${moodText}.`;
+        userContext += `\n\nESTADO EMOCIONAL ACTUAL:`;
+        userContext += `\nÚltimo check-in (${isToday ? 'hoy' : latestCheckIn.check_in_date}): Se siente ${moodText}`;
         
         if (latestCheckIn.notes) {
-          checkInContext += `\nNotas del usuario: "${latestCheckIn.notes}"`;
+          userContext += `\nNotas: "${latestCheckIn.notes}"`;
         }
-        
-        checkInContext += `\n\nIMPORTANTE: Usa esta información para personalizar tus respuestas y mostrar empatía. Si el usuario se siente mal o ha compartido algo importante, reconócelo en tu respuesta de manera natural y empática.`;
+      }
+
+      // Get active focus rooms
+      const { data: focusRooms } = await supabase
+        .from('focus_rooms')
+        .select('name, area_category, description')
+        .eq('user_id', userId)
+        .limit(5);
+
+      if (focusRooms && focusRooms.length > 0) {
+        userContext += `\n\nÁREAS DE ENFOQUE:`;
+        focusRooms.forEach(room => {
+          userContext += `\n- ${room.name} (${room.area_category})`;
+          if (room.description) userContext += `: ${room.description}`;
+        });
+      }
+
+      // Get active goals
+      const { data: goals } = await supabase
+        .from('goals')
+        .select('title, description')
+        .eq('user_id', userId)
+        .eq('is_completed', false)
+        .limit(5);
+
+      if (goals && goals.length > 0) {
+        userContext += `\n\nMETAS ACTIVAS:`;
+        goals.forEach(goal => {
+          userContext += `\n- ${goal.title}`;
+          if (goal.description) userContext += `: ${goal.description}`;
+        });
+      }
+
+      // Get habits with streaks
+      const { data: habits } = await supabase
+        .from('habits')
+        .select('title, description, streak, completed_today')
+        .eq('user_id', userId)
+        .order('streak', { ascending: false })
+        .limit(5);
+
+      if (habits && habits.length > 0) {
+        userContext += `\n\nHÁBITOS RASTREADOS:`;
+        habits.forEach(habit => {
+          const status = habit.completed_today ? '✅' : '⏳';
+          userContext += `\n${status} ${habit.title} (racha: ${habit.streak} días)`;
+        });
+      }
+
+      if (userContext) {
+        userContext += `\n\nIMPORTANTE: Usa toda esta información para dar respuestas personalizadas, empáticas y relevantes. Cuando el usuario pregunte sobre sí mismo, menciona información específica de su perfil, hábitos, metas y áreas de enfoque.`;
       }
     }
 
@@ -94,7 +161,7 @@ Tu estilo:
 - Empático pero directo
 - Celebra logros brevemente, sin exagerar
 
-${checkInContext}`;
+${userContext}`;
     } else {
       // Focus Room bot - specialized with tools
       systemPrompt = `Eres un coach especializado en esta área específica. Tu enfoque es ayudar al usuario a alcanzar objetivos concretos aquí.
@@ -117,7 +184,7 @@ Tu estilo:
 
 IMPORTANTE: Cuando el usuario diga que quiere crear un hábito nuevo, usa la herramienta create_habit automáticamente.
 
-${checkInContext}`;
+${userContext}`;
 
       // Tools for Focus Room bot
       tools.push({

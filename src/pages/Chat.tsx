@@ -134,6 +134,7 @@ const Chat = () => {
       const decoder = new TextDecoder();
       let assistantMessage = "";
       let textBuffer = "";
+      let lastContent = ""; // Para detectar duplicación
 
       // Add assistant message placeholder
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
@@ -160,7 +161,9 @@ const Chat = () => {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content;
             
-            if (content) {
+            if (content && content !== lastContent) {
+              // Prevenir duplicación inmediata del mismo token
+              lastContent = content;
               assistantMessage += content;
               setMessages((prev) => {
                 const updated = [...prev];
