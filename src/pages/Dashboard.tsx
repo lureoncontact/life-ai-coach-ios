@@ -6,7 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { MessageCircle, Plus, Settings, BarChart3, Share2, Heart, Activity, Briefcase, DollarSign, Sprout, Brain } from "lucide-react";
 import nudgeIcon from "@/assets/nudge_icon.png";
+import { useGamification } from "@/hooks/useGamification";
 import MobileMenu from "@/components/MobileMenu";
+import UserLevelCard from "@/components/UserLevelCard";
+import { getPointsForNextLevel } from "@/utils/gamification";
 import CreateFocusRoomModal from "@/components/CreateFocusRoomModal";
 import ShareRoomModal from "@/components/ShareRoomModal";
 import AIInsightsModal from "@/components/AIInsightsModal";
@@ -42,6 +45,7 @@ const Dashboard = () => {
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { stats, loading: statsLoading, refreshStats } = useGamification();
 
   useEffect(() => {
     loadDashboardData();
@@ -155,6 +159,18 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8">
+        {/* User Level & Streak Card */}
+        {stats && (
+          <div className="animate-nudge-slide-up">
+            <UserLevelCard
+              level={stats.level}
+              totalPoints={stats.total_points}
+              currentStreak={stats.current_streak}
+              pointsToNextLevel={getPointsForNextLevel(stats.level)}
+            />
+          </div>
+        )}
+
         {/* Main Chat Button */}
         <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 animate-nudge-slide-up hover-glow">
           <CardContent className="p-6">
@@ -174,7 +190,7 @@ const Dashboard = () => {
 
         {/* Habits Tracker */}
         <div className="animate-nudge-slide-up">
-          <HabitsTracker />
+          <HabitsTracker onStatsUpdate={refreshStats} />
         </div>
 
         {/* Today's Goals */}

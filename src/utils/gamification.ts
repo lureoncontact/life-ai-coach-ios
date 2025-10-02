@@ -5,6 +5,7 @@ const POINTS_PER_GOAL = 10;
 const POINTS_PER_DAILY_GOAL = 15;
 const POINTS_PER_FOCUS_ROOM = 20;
 const POINTS_PER_CHAT_SESSION = 5;
+const POINTS_PER_ALL_HABITS = 50;
 
 export const calculateLevel = (totalPoints: number): number => {
   return Math.floor(Math.sqrt(totalPoints / 100)) + 1;
@@ -191,6 +192,12 @@ export const onFocusRoomCreated = async (userId: string) => {
 
 export const onChatSession = async (userId: string) => {
   await awardPoints(userId, POINTS_PER_CHAT_SESSION, "Sesión de chat");
+  const newAchievements = await checkAndUnlockAchievements(userId);
+  return newAchievements;
+};
+
+export const onAllHabitsCompleted = async (userId: string) => {
+  await awardPoints(userId, POINTS_PER_ALL_HABITS, "Todos los hábitos completados");
   const newAchievements = await checkAndUnlockAchievements(userId);
   return newAchievements;
 };

@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, Circle, Flame } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { onAllHabitsCompleted } from "@/utils/gamification";
 
 interface Habit {
   id: string;
@@ -14,7 +15,11 @@ interface Habit {
   completed_today: boolean;
 }
 
-const HabitsTracker = () => {
+interface HabitsTrackerProps {
+  onStatsUpdate?: () => void;
+}
+
+const HabitsTracker = ({ onStatsUpdate }: HabitsTrackerProps) => {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -45,6 +50,9 @@ const HabitsTracker = () => {
 
   const toggleHabit = async (habitId: string) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const habit = habits.find((h) => h.id === habitId);
       if (!habit) return;
 
@@ -62,17 +70,33 @@ const HabitsTracker = () => {
 
       if (error) throw error;
 
-      setHabits(habits.map((h) =>
+      const updatedHabits = habits.map((h) =>
         h.id === habitId
           ? { ...h, completed_today: newCompletedStatus, streak: newStreak }
           : h
-      ));
+      );
 
+      setHabits(updatedHabits);
+
+      // Check if all habits are completed
+      const allCompleted = updatedHabits.every(h => h.completed_today);
+      
       if (newCompletedStatus) {
-        toast({
-          title: "¡Hábito completado!",
-          description: `Racha de ${newStreak} día${newStreak !== 1 ? 's' : ''}`,
-        });
+        if (allCompleted) {
+          // Award points for completing all habits
+          await onAllHabitsCompleted(user.id);
+          toast({
+            title: "¡Todos los hábitos completados! 🎉",
+            description: "Has ganado puntos extra y tu racha continúa",
+          });
+          // Notify parent to update stats
+          onStatsUpdate?.();
+        } else {
+          toast({
+            title: "¡Hábito completado!",
+            description: `Racha de ${newStreak} día${newStreak !== 1 ? 's' : ''}`,
+          });
+        }
       }
     } catch (error: any) {
       toast({
