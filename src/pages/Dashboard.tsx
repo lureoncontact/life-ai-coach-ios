@@ -8,6 +8,7 @@ import { MessageCircle, Plus, Settings, BarChart3, Trophy } from "lucide-react";
 import { useGamification } from "@/hooks/useGamification";
 import GamificationBadge from "@/components/GamificationBadge";
 import AchievementsModal from "@/components/AchievementsModal";
+import CreateFocusRoomModal from "@/components/CreateFocusRoomModal";
 
 interface Profile {
   full_name: string;
@@ -33,6 +34,7 @@ const Dashboard = () => {
   const [todaysGoals, setTodaysGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAchievements, setShowAchievements] = useState(false);
+  const [showCreateRoom, setShowCreateRoom] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { stats, achievements, refreshStats } = useGamification();
@@ -201,7 +203,7 @@ const Dashboard = () => {
         <div className="space-y-4 animate-nudge-slide-up">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Focus Rooms</h2>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="outline" onClick={() => setShowCreateRoom(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Nueva Sala
             </Button>
@@ -249,6 +251,16 @@ const Dashboard = () => {
         open={showAchievements}
         onOpenChange={setShowAchievements}
         userAchievements={achievements}
+      />
+
+      {/* Create Focus Room Modal */}
+      <CreateFocusRoomModal
+        open={showCreateRoom}
+        onOpenChange={setShowCreateRoom}
+        onRoomCreated={() => {
+          loadDashboardData();
+          refreshStats();
+        }}
       />
     </div>
   );
