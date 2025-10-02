@@ -218,8 +218,21 @@ const FocusRoom = () => {
         }),
       });
 
-      if (!response.ok || !response.body) {
-        throw new Error("Error al conectar con el asistente");
+      // Handle error responses
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Error desconocido" }));
+        
+        if (response.status === 402) {
+          throw new Error("Se han agotado los créditos de Lovable AI. Ve a Settings → Workspace → Usage para agregar más créditos.");
+        } else if (response.status === 429) {
+          throw new Error("Demasiadas solicitudes. Por favor espera un momento antes de intentar de nuevo.");
+        }
+        
+        throw new Error(errorData.error || "Error al conectar con el asistente");
+      }
+
+      if (!response.body) {
+        throw new Error("No se recibió respuesta del servidor");
       }
 
       const reader = response.body.getReader();
