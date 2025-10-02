@@ -26,20 +26,26 @@ serve(async (req) => {
   }
 
   try {
-    // Get room data to customize the bot
+    // Get room data to customize the bot (or use default for master_ai)
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const { data: room } = await supabase
-      .from('focus_rooms')
-      .select('*')
-      .eq('id', roomId)
-      .single();
-
-    if (!room) {
-      return new Response("Room not found", { status: 404 });
+    let room = null;
+    
+    // If it's not master_ai, fetch the room from database
+    if (roomId !== 'master_ai') {
+      const { data } = await supabase
+        .from('focus_rooms')
+        .select('*')
+        .eq('id', roomId)
+        .single();
+      
+      if (!data) {
+        return new Response("Room not found", { status: 404 });
+      }
+      room = data;
     }
 
     const { socket, response } = Deno.upgradeWebSocket(req);
@@ -60,6 +66,12 @@ serve(async (req) => {
 
     // Build system instructions based on room data
     const buildSystemInstructions = () => {
+      // Default instructions for master_ai
+      if (!room) {
+        return `Eres Nudge, el coach personal de vida del usuario. Tu propósito es ayudar a las personas a alcanzar sus metas, desarrollar buenos hábitos y vivir una vida más plena y satisfactoria. Eres empático, motivador y ofreces consejos prácticos y actionables. Mantén las respuestas concisas y conversacionales, como si estuvieras hablando en persona con el usuario.`;
+      }
+      
+      // Custom instructions for specific focus rooms
       let instructions = `Eres el bot de coaching especializado en "${room.name}". `;
       
       if (room.description) {
@@ -96,7 +108,7 @@ serve(async (req) => {
             session: {
               modalities: ['text', 'audio'],
               instructions: buildSystemInstructions(),
-              voice: room.bot_voice || 'alloy',
+              voice: room?.bot_voice || 'alloy',
               input_audio_format: 'pcm16',
               output_audio_format: 'pcm16',
               input_audio_transcription: {
