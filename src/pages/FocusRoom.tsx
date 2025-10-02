@@ -598,7 +598,7 @@ const FocusRoom = () => {
 
       {/* Chat Modal */}
       <Dialog open={showChatModal} onOpenChange={setShowChatModal}>
-        <DialogContent className="w-[95vw] max-w-4xl h-[85vh] flex flex-col p-0 m-2">
+        <DialogContent className="sm:max-w-[600px] md:max-w-[700px] lg:max-w-4xl h-[85vh] flex flex-col p-0 rounded-2xl">
           <DialogHeader className="p-4 pb-0">
             <DialogTitle className="flex items-center gap-2">
               {(() => {

@@ -30,8 +30,7 @@ const UserLevelCard = ({ level, totalPoints, currentStreak, pointsToNextLevel }:
 
           {/* Progreso a siguiente nivel */}
           <div className="flex-1 max-w-xs">
-            <div className="flex items-center justify-between mb-1">
-              <p className="text-xs text-muted-foreground">Progreso</p>
+            <div className="flex items-center justify-end mb-1">
               <p className="text-xs font-medium">{currentLevelPoints}/{pointsToNextLevel}</p>
             </div>
             <Progress value={progress} className="h-2" />
