@@ -18,12 +18,19 @@ export const requestNotificationPermission = async (): Promise<boolean> => {
 
 export const sendNotification = (title: string, options?: NotificationOptions) => {
   if (Notification.permission === 'granted') {
-    new Notification(title, {
-      icon: '/favicon.ico',
-      badge: '/favicon.ico',
+    const notification = new Notification(title, {
+      icon: '/icon-192.png',
+      badge: '/icon-192.png',
+      requireInteraction: false,
       ...options,
     });
+
+    // Auto-close after 5 seconds if not interacted with
+    setTimeout(() => notification.close(), 5000);
+
+    return notification;
   }
+  return null;
 };
 
 export const scheduleReminder = (
@@ -53,4 +60,33 @@ export const scheduleReminder = (
     // Reschedule for next day
     scheduleReminder(time, callback);
   }, timeUntilReminder);
+};
+
+// Notification templates for common actions
+export const notifyGoalCompleted = (goalTitle: string) => {
+  sendNotification('¡Meta completada! 🎉', {
+    body: `Has completado: "${goalTitle}"`,
+    tag: 'goal-completed',
+  });
+};
+
+export const notifyStreakMilestone = (streakDays: number) => {
+  sendNotification(`¡Racha de ${streakDays} días! 🔥`, {
+    body: '¡Sigue así! Tu consistencia es impresionante.',
+    tag: 'streak-milestone',
+  });
+};
+
+export const notifyLevelUp = (newLevel: number) => {
+  sendNotification(`¡Nivel ${newLevel} alcanzado! ⭐`, {
+    body: 'Has subido de nivel. ¡Sigue creciendo!',
+    tag: 'level-up',
+  });
+};
+
+export const notifyAchievementUnlocked = (achievementName: string) => {
+  sendNotification('¡Nuevo logro desbloqueado! 🏆', {
+    body: achievementName,
+    tag: 'achievement-unlocked',
+  });
 };

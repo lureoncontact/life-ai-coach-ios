@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { notifyLevelUp, notifyAchievementUnlocked, notifyStreakMilestone } from "./notifications";
 
 const POINTS_PER_GOAL = 10;
 const POINTS_PER_DAILY_GOAL = 15;
@@ -37,6 +38,7 @@ export const awardPoints = async (
   } else {
     const newTotal = stats.total_points + points;
     const newLevel = calculateLevel(newTotal);
+    const oldLevel = stats.level;
     const today = new Date().toISOString().split('T')[0];
     
     let newStreak = stats.current_streak;
@@ -51,6 +53,11 @@ export const awardPoints = async (
       if (diffDays === 1) {
         newStreak += 1;
         newLongestStreak = Math.max(newLongestStreak, newStreak);
+        
+        // Notify on streak milestones
+        if (newStreak % 7 === 0) {
+          notifyStreakMilestone(newStreak);
+        }
       } else if (diffDays > 1) {
         newStreak = 1;
       }
@@ -66,6 +73,11 @@ export const awardPoints = async (
         last_activity_date: today,
       })
       .eq("user_id", userId);
+
+    // Notify if level up
+    if (newLevel > oldLevel) {
+      notifyLevelUp(newLevel);
+    }
   }
 
   console.log(`Awarded ${points} points for ${reason}`);
@@ -153,6 +165,9 @@ export const checkAndUnlockAchievements = async (userId: string): Promise<any[]>
 
       // Award points for achievement
       await awardPoints(userId, achievement.points_reward, `Logro: ${achievement.name}`);
+
+      // Notify achievement unlocked
+      notifyAchievementUnlocked(achievement.name);
 
       newlyUnlocked.push(achievement);
     }

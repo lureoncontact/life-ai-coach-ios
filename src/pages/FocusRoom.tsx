@@ -11,6 +11,7 @@ import { onGoalCompleted } from "@/utils/gamification";
 import AchievementsModal from "@/components/AchievementsModal";
 import ShareRoomModal from "@/components/ShareRoomModal";
 import ActiveUsersIndicator from "@/components/ActiveUsersIndicator";
+import CelebrationEffect from "@/components/CelebrationEffect";
 import { useRealtimePresence } from "@/hooks/useRealtimePresence";
 import { useRealtimeGoals } from "@/hooks/useRealtimeGoals";
 import {
@@ -65,6 +66,7 @@ const FocusRoom = () => {
   const [newGoalIsDaily, setNewGoalIsDaily] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
   const [showShareRoom, setShowShareRoom] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
   const [profile, setProfile] = useState<{ full_name: string } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -346,15 +348,20 @@ const FocusRoom = () => {
       
       if (achievements.length > 0) {
         setNewAchievements(achievements);
-        setShowAchievements(true);
+        setShowCelebration(true);
+        
+        // Show achievements modal after celebration
+        setTimeout(() => {
+          setShowAchievements(true);
+        }, 3000);
         
         toast({
-          title: "¡Logro desbloqueado!",
+          title: "¡Logro desbloqueado! 🏆",
           description: `Has desbloqueado ${achievements.length} nuevo${achievements.length > 1 ? 's' : ''} logro${achievements.length > 1 ? 's' : ''}`,
         });
       } else {
         toast({
-          title: "¡Excelente!",
+          title: "¡Meta completada! 🎉",
           description: `+${goal.is_daily ? 15 : 10} puntos`,
         });
       }
@@ -487,27 +494,28 @@ const FocusRoom = () => {
                     No hay metas aún
                   </p>
                 ) : (
-                  goals.map((goal) => (
+                  goals.map((goal, index) => (
                     <Card
                       key={goal.id}
-                      className={`p-3 cursor-pointer transition-all hover:shadow-md ${
-                        goal.is_completed ? "bg-success/10" : ""
+                      className={`p-3 cursor-pointer transition-all hover-lift stagger-item ${
+                        goal.is_completed ? "bg-success/10 border-success/30" : ""
                       }`}
+                      style={{ animationDelay: `${index * 0.05}s` }}
                       onClick={() => toggleGoalCompletion(goal.id, goal.is_completed)}
                     >
                       <div className="flex items-start gap-3">
                         <div
-                          className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center ${
+                          className={`mt-1 w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
                             goal.is_completed
-                              ? "bg-success border-success"
-                              : "border-muted-foreground"
+                              ? "bg-success border-success scale-110"
+                              : "border-muted-foreground hover:border-primary"
                           }`}
                         >
-                          {goal.is_completed && <Check className="w-3 h-3 text-white" />}
+                          {goal.is_completed && <Check className="w-3 h-3 text-white animate-scale-in" />}
                         </div>
                         <div className="flex-1">
                           <p
-                            className={`text-sm font-medium ${
+                            className={`text-sm font-medium transition-all ${
                               goal.is_completed ? "line-through text-muted-foreground" : ""
                             }`}
                           >
@@ -530,8 +538,8 @@ const FocusRoom = () => {
             <Card className="flex-1 flex flex-col">
               <CardContent className="flex-1 overflow-y-auto p-6">
                 {messages.length === 0 && (
-                  <div className="text-center py-8">
-                    <div className="text-5xl mb-4">{getAreaIcon(room.area_category)}</div>
+                  <div className="text-center py-8 animate-scale-in">
+                    <div className="text-5xl mb-4 animate-bounce-subtle">{getAreaIcon(room.area_category)}</div>
                     <h2 className="text-xl font-bold mb-2">Bot de {room.name}</h2>
                     <p className="text-muted-foreground">
                       Soy tu coach especializado en {room.name}. ¿Cómo puedo ayudarte hoy?
@@ -545,14 +553,15 @@ const FocusRoom = () => {
                       key={index}
                       className={`flex ${
                         message.role === "user" ? "justify-end" : "justify-start"
-                      }`}
+                      } animate-fade-in stagger-item`}
+                      style={{ animationDelay: `${index * 0.03}s` }}
                     >
                       <Card
-                        className={`max-w-[80%] p-4 ${
+                        className={`max-w-[80%] p-4 hover-lift ${
                           message.role === "user"
                             ? "bg-primary text-primary-foreground"
-                            : "bg-card"
-                        } animate-nudge-slide-up`}
+                            : "bg-card hover-glow"
+                        }`}
                       >
                         <p className="whitespace-pre-wrap text-sm">{message.content}</p>
                       </Card>
@@ -582,6 +591,7 @@ const FocusRoom = () => {
                       size="icon"
                       onClick={sendMessage}
                       disabled={!input.trim() || isLoading}
+                      className="btn-interactive hover:scale-110 transition-transform"
                     >
                       {isLoading ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -612,6 +622,13 @@ const FocusRoom = () => {
         open={showAchievements}
         onOpenChange={setShowAchievements}
         userAchievements={newAchievements}
+      />
+
+      {/* Celebration Effect */}
+      <CelebrationEffect
+        show={showCelebration}
+        type="achievement"
+        onComplete={() => setShowCelebration(false)}
       />
     </div>
   );

@@ -15,6 +15,7 @@ self.addEventListener('install', (event) => {
       return cache.addAll(urlsToCache);
     })
   );
+  self.skipWaiting();
 });
 
 self.addEventListener('fetch', (event) => {
@@ -48,6 +49,61 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
+    })
+  );
+  return self.clients.claim();
+});
+
+// Push notification support
+self.addEventListener('push', (event) => {
+  const data = event.data ? event.data.json() : {};
+  const title = data.title || 'Nudge';
+  const options = {
+    body: data.body || 'Tienes una nueva notificación',
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
+    vibrate: [200, 100, 200],
+    tag: data.tag || 'nudge-notification',
+    data: data.url || '/',
+    actions: [
+      {
+        action: 'open',
+        title: 'Ver ahora',
+      },
+      {
+        action: 'close',
+        title: 'Cerrar',
+      },
+    ],
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+// Notification click handler
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  if (event.action === 'close') {
+    return;
+  }
+
+  const urlToOpen = event.notification.data || '/dashboard';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      // Check if there's already a window open
+      for (const client of clientList) {
+        if (client.url.includes(urlToOpen) && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      // Open new window if none found
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
     })
   );
 });
