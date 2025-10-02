@@ -4,11 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3, Trophy } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2 } from "lucide-react";
 import { useGamification } from "@/hooks/useGamification";
 import GamificationBadge from "@/components/GamificationBadge";
 import AchievementsModal from "@/components/AchievementsModal";
 import CreateFocusRoomModal from "@/components/CreateFocusRoomModal";
+import ShareRoomModal from "@/components/ShareRoomModal";
 
 interface Profile {
   full_name: string;
@@ -35,6 +36,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showAchievements, setShowAchievements] = useState(false);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
+  const [showShareRoom, setShowShareRoom] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { stats, achievements, refreshStats } = useGamification();
@@ -92,6 +95,12 @@ const Dashboard = () => {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/auth");
+  };
+
+  const handleShareRoom = (e: React.MouseEvent, roomId: string, roomName: string) => {
+    e.stopPropagation();
+    setSelectedRoom({ id: roomId, name: roomName });
+    setShowShareRoom(true);
   };
 
   const getAreaIcon = (category: string) => {
@@ -225,12 +234,22 @@ const Dashboard = () => {
               {focusRooms.map((room) => (
                 <Card
                   key={room.id}
-                  className="hover:shadow-lg transition-all hover:scale-105 cursor-pointer"
+                  className="hover:shadow-lg transition-all hover:scale-105 cursor-pointer group"
                   onClick={() => navigate(`/focus-room/${room.id}`)}
                 >
                   <CardHeader>
-                    <div className="text-4xl mb-2">
-                      {getAreaIcon(room.area_category)}
+                    <div className="flex items-start justify-between">
+                      <div className="text-4xl mb-2">
+                        {getAreaIcon(room.area_category)}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => handleShareRoom(e, room.id, room.name)}
+                      >
+                        <Share2 className="w-4 h-4" />
+                      </Button>
                     </div>
                     <CardTitle className="text-lg">{room.name}</CardTitle>
                     {room.description && (
@@ -262,6 +281,16 @@ const Dashboard = () => {
           refreshStats();
         }}
       />
+
+      {/* Share Room Modal */}
+      {selectedRoom && (
+        <ShareRoomModal
+          open={showShareRoom}
+          onOpenChange={setShowShareRoom}
+          roomId={selectedRoom.id}
+          roomName={selectedRoom.name}
+        />
+      )}
     </div>
   );
 };

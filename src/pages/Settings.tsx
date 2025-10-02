@@ -7,10 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, LogOut, Bell } from "lucide-react";
+import { ArrowLeft, Save, LogOut, Bell, Crown, Share2, Download, Palette } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { requestNotificationPermission, scheduleReminder, sendNotification } from "@/utils/notifications";
 import { Separator } from "@/components/ui/separator";
+import PremiumPlansModal from "@/components/PremiumPlansModal";
+import IntegrationsModal from "@/components/IntegrationsModal";
+import ExportDataModal from "@/components/ExportDataModal";
+import ThemeSelector from "@/components/ThemeSelector";
 
 interface Profile {
   full_name: string;
@@ -34,6 +38,9 @@ const Settings = () => {
   const [saving, setSaving] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [reminderTime, setReminderTime] = useState("09:00");
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showIntegrationsModal, setShowIntegrationsModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -327,6 +334,9 @@ const Settings = () => {
           </CardContent>
         </Card>
 
+        {/* Theme Section */}
+        <ThemeSelector />
+
         {/* Notifications Section */}
         <Card className="animate-nudge-slide-up">
           <CardHeader>
@@ -369,6 +379,42 @@ const Settings = () => {
           </CardContent>
         </Card>
 
+        {/* Premium & Features Section */}
+        <Card className="animate-nudge-slide-up">
+          <CardHeader>
+            <CardTitle>Funciones Avanzadas</CardTitle>
+            <CardDescription>
+              Desbloquea todo el potencial de Nudge
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => setShowPremiumModal(true)}
+            >
+              <Crown className="w-4 h-4 mr-2 text-primary" />
+              Ver Planes Premium
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => setShowIntegrationsModal(true)}
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              Integraciones
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => setShowExportModal(true)}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exportar Datos
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Actions */}
         <div className="flex flex-col gap-3">
           <Button
@@ -404,6 +450,11 @@ const Settings = () => {
           </CardContent>
         </Card>
       </main>
+
+      {/* Modals */}
+      <PremiumPlansModal open={showPremiumModal} onOpenChange={setShowPremiumModal} />
+      <IntegrationsModal open={showIntegrationsModal} onOpenChange={setShowIntegrationsModal} />
+      <ExportDataModal open={showExportModal} onOpenChange={setShowExportModal} />
     </div>
   );
 };
