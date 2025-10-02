@@ -480,12 +480,6 @@ const FocusRoom = () => {
           </Button>
         </div>
         
-        {/* Active Users Indicator */}
-        {activeCount > 0 && (
-          <div className="w-full px-4 pb-2 max-w-full">
-            <ActiveUsersIndicator activeUsers={activeUsers} activeCount={activeCount} />
-          </div>
-        )}
       </header>
 
       <div className="w-full px-3 py-4 max-w-full overflow-x-hidden">
@@ -500,7 +494,7 @@ const FocusRoom = () => {
                   className="w-full h-14 text-base btn-interactive hover:scale-105 transition-transform"
                 >
                   <MessageCircle className="w-5 h-5 mr-2" />
-                  Chat con el Bot de {room.name}
+                  Chat
                 </Button>
               </CardContent>
             </Card>
@@ -616,7 +610,7 @@ const FocusRoom = () => {
                   </div>
                 );
               })()}
-              <span>Chat con Bot de {room.name}</span>
+              <span>Chat</span>
             </DialogTitle>
             <DialogDescription>
               Tu coach especializado está aquí para ayudarte
