@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Sparkles, Award, Activity, Briefcase, DollarSign, Sprout, Brain } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Award, Activity, Briefcase, DollarSign, Sprout, Brain } from "lucide-react";
 import nudgeIcon from "@/assets/nudge_icon.png";
 import { useGamification } from "@/hooks/useGamification";
 import MobileMenu from "@/components/MobileMenu";
@@ -147,13 +147,8 @@ const Dashboard = () => {
             {/* Desktop icons */}
             <div className="hidden md:flex gap-2">
               <Button variant="ghost" size="icon" onClick={() => setShowAchievements(true)}>
-                <Award className="w-5 h-5" />
+                <Trophy className="w-5 h-5" />
               </Button>
-              {stats && (
-                <Button variant="ghost" size="icon" onClick={() => setShowAchievements(true)}>
-                  <Trophy className="w-5 h-5" />
-                </Button>
-              )}
               <Button variant="ghost" size="icon" onClick={() => navigate("/stats")}>
                 <BarChart3 className="w-5 h-5" />
               </Button>
@@ -297,6 +292,7 @@ const Dashboard = () => {
         open={showAchievements}
         onOpenChange={setShowAchievements}
         userAchievements={achievements}
+        userStats={stats || undefined}
       />
 
       {/* Create Focus Room Modal */}

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Award, Sparkles, Heart, Trophy, BarChart3, Settings } from "lucide-react";
+import { Menu, Trophy, Heart, BarChart3, Settings } from "lucide-react";
 
 interface MobileMenuProps {
   onAchievementsClick: () => void;
@@ -41,7 +41,7 @@ const MobileMenu = ({ onAchievementsClick, onCheckInClick, showStats }: MobileMe
             className="w-full justify-start"
             onClick={() => handleAction(onAchievementsClick)}
           >
-            <Award className="w-5 h-5 mr-2" />
+            <Trophy className="w-5 h-5 mr-2" />
             Logros
           </Button>
           <Button
@@ -52,16 +52,6 @@ const MobileMenu = ({ onAchievementsClick, onCheckInClick, showStats }: MobileMe
             <Heart className="w-5 h-5 mr-2" />
             Check-in
           </Button>
-          {showStats && (
-            <Button
-              variant="ghost"
-              className="w-full justify-start"
-              onClick={() => handleAction(onAchievementsClick)}
-            >
-              <Trophy className="w-5 h-5 mr-2" />
-              Trofeos
-            </Button>
-          )}
           <Button
             variant="ghost"
             className="w-full justify-start"

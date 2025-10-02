@@ -5,9 +5,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Trophy, Lock } from "lucide-react";
+import { Trophy, Lock, TrendingUp, Flame, Award } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -25,13 +25,21 @@ interface UserAchievement extends Achievement {
   unlocked_at?: string;
 }
 
+interface UserStats {
+  total_points: number;
+  level: number;
+  current_streak: number;
+  longest_streak: number;
+}
+
 interface AchievementsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   userAchievements: UserAchievement[];
+  userStats?: UserStats;
 }
 
-const AchievementsModal = ({ open, onOpenChange, userAchievements }: AchievementsModalProps) => {
+const AchievementsModal = ({ open, onOpenChange, userAchievements, userStats }: AchievementsModalProps) => {
   const [allAchievements, setAllAchievements] = useState<Achievement[]>([]);
 
   useEffect(() => {
@@ -62,19 +70,79 @@ const AchievementsModal = ({ open, onOpenChange, userAchievements }: Achievement
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto animate-scale-in">
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto animate-scale-in">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-primary animate-pulse" />
-            Logros
+            Logros y Estadísticas
           </DialogTitle>
           <DialogDescription>
-            Desbloquea logros completando metas y usando la app
+            Tu progreso, logros y estadísticas
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid md:grid-cols-2 gap-4 mt-4">
-          {allAchievements.map((achievement, index) => {
+        {/* User Statistics Cards */}
+        {userStats && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+            <Card className="hover-lift">
+              <CardHeader className="p-3 pb-2">
+                <CardTitle className="text-xs text-muted-foreground flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3" />
+                  Nivel
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-3 pt-0">
+                <p className="text-2xl font-bold text-primary">{userStats.level}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift">
+              <CardHeader className="p-3 pb-2">
+                <CardTitle className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Award className="w-3 h-3" />
+                  Puntos
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-3 pt-0">
+                <p className="text-2xl font-bold text-primary">{userStats.total_points}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift">
+              <CardHeader className="p-3 pb-2">
+                <CardTitle className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Flame className="w-3 h-3" />
+                  Racha Actual
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-3 pt-0">
+                <p className="text-2xl font-bold text-primary">{userStats.current_streak}</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover-lift">
+              <CardHeader className="p-3 pb-2">
+                <CardTitle className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Trophy className="w-3 h-3" />
+                  Mayor Racha
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-3 pt-0">
+                <p className="text-2xl font-bold text-primary">{userStats.longest_streak}</p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Achievements Section */}
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+            <Trophy className="w-4 h-4" />
+            Logros Desbloqueados
+          </h3>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            {allAchievements.map((achievement, index) => {
             const unlocked = isUnlocked(achievement.id);
             const unlockDate = getUnlockDate(achievement.id);
 
@@ -119,6 +187,7 @@ const AchievementsModal = ({ open, onOpenChange, userAchievements }: Achievement
               </Card>
             );
           })}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
