@@ -14,7 +14,178 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          focus_room_id: string | null
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          focus_room_id?: string | null
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          focus_room_id?: string | null
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_focus_room_id_fkey"
+            columns: ["focus_room_id"]
+            isOneToOne: false
+            referencedRelation: "focus_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      focus_rooms: {
+        Row: {
+          area_category: string
+          bot_knowledge: string | null
+          bot_tone: string | null
+          bot_voice: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          area_category: string
+          bot_knowledge?: string | null
+          bot_tone?: string | null
+          bot_voice?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          area_category?: string
+          bot_knowledge?: string | null
+          bot_tone?: string | null
+          bot_voice?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      goals: {
+        Row: {
+          achievable: string | null
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          focus_room_id: string
+          id: string
+          is_completed: boolean | null
+          is_daily: boolean | null
+          measurable: string | null
+          relevant: string | null
+          specific: string | null
+          time_bound: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          achievable?: string | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          focus_room_id: string
+          id?: string
+          is_completed?: boolean | null
+          is_daily?: boolean | null
+          measurable?: string | null
+          relevant?: string | null
+          specific?: string | null
+          time_bound?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          achievable?: string | null
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          focus_room_id?: string
+          id?: string
+          is_completed?: boolean | null
+          is_daily?: boolean | null
+          measurable?: string | null
+          relevant?: string | null
+          specific?: string | null
+          time_bound?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goals_focus_room_id_fkey"
+            columns: ["focus_room_id"]
+            isOneToOne: false
+            referencedRelation: "focus_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          age: number | null
+          created_at: string
+          full_name: string
+          gender: string | null
+          habits: string | null
+          id: string
+          interests: string | null
+          updated_at: string
+          user_story: string | null
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string
+          full_name: string
+          gender?: string | null
+          habits?: string | null
+          id: string
+          interests?: string | null
+          updated_at?: string
+          user_story?: string | null
+        }
+        Update: {
+          age?: number | null
+          created_at?: string
+          full_name?: string
+          gender?: string | null
+          habits?: string | null
+          id?: string
+          interests?: string | null
+          updated_at?: string
+          user_story?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
