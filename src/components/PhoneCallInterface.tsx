@@ -79,13 +79,20 @@ const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
               description: "Ya puedes hablar con Nudge",
             });
           } else if (data.type === 'response.audio.delta') {
+            console.log('📢 Recibiendo audio delta, tamaño:', data.delta?.length);
             const binaryString = atob(data.delta);
             const bytes = new Uint8Array(binaryString.length);
             for (let i = 0; i < binaryString.length; i++) {
               bytes[i] = binaryString.charCodeAt(i);
             }
+            console.log('📢 Audio decodificado, bytes:', bytes.length);
             if (audioContextRef.current) {
+              if (audioContextRef.current.state === 'suspended') {
+                await audioContextRef.current.resume();
+                console.log('📢 AudioContext resumed');
+              }
               await playAudioData(audioContextRef.current, bytes);
+              console.log('📢 Audio enviado a reproducir');
             }
             setIsSpeaking(true);
           } else if (data.type === 'response.done' || data.type === 'response.audio.done') {

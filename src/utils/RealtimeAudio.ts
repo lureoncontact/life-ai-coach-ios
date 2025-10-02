@@ -145,17 +145,30 @@ class AudioQueue {
     const audioData = this.queue.shift()!;
 
     try {
+      console.log('🎵 Reproduciendo chunk de audio, tamaño:', audioData.length);
+      
+      // Resume AudioContext if suspended
+      if (this.audioContext.state === 'suspended') {
+        await this.audioContext.resume();
+      }
+      
       const wavData = createWavFromPCM(audioData);
+      console.log('🎵 WAV creado, tamaño:', wavData.length);
+      
       const audioBuffer = await this.audioContext.decodeAudioData(wavData.buffer);
+      console.log('🎵 Audio buffer decodificado, duración:', audioBuffer.duration, 's');
       
       const source = this.audioContext.createBufferSource();
       source.buffer = audioBuffer;
       source.connect(this.audioContext.destination);
       
-      source.onended = () => this.playNext();
+      source.onended = () => {
+        console.log('🎵 Chunk terminado, siguiente...');
+        this.playNext();
+      };
       source.start(0);
     } catch (error) {
-      console.error('Error playing audio:', error);
+      console.error('❌ Error playing audio:', error);
       this.playNext();
     }
   }
@@ -168,7 +181,9 @@ class AudioQueue {
 let audioQueueInstance: AudioQueue | null = null;
 
 export const playAudioData = async (audioContext: AudioContext, audioData: Uint8Array) => {
+  console.log('🔊 playAudioData llamado con', audioData.length, 'bytes');
   if (!audioQueueInstance) {
+    console.log('🔊 Creando nueva instancia de AudioQueue');
     audioQueueInstance = new AudioQueue(audioContext);
   }
   await audioQueueInstance.addToQueue(audioData);
