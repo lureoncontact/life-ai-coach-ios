@@ -1,23 +1,159 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PhoneOff } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import nudgeIcon from "@/assets/nudge_icon.png";
+import { AudioRecorder, encodeAudioForAPI, playAudioData, clearAudioQueue } from '@/utils/RealtimeAudio';
 
 interface PhoneCallInterfaceProps {
   onHangup: () => void;
 }
 
 const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
+  const { toast } = useToast();
   const [duration, setDuration] = useState(0);
+  const [isConnected, setIsConnected] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const wsRef = useRef<WebSocket | null>(null);
+  const recorderRef = useRef<AudioRecorder | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
+    // Start voice connection when component mounts
+    connect();
+    
     const interval = setInterval(() => {
       setDuration((prev) => prev + 1);
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      disconnect();
+    };
   }, []);
+
+  const connect = async () => {
+    try {
+      // Request microphone permission first
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Initialize audio context
+      if (!audioContextRef.current) {
+        audioContextRef.current = new AudioContext({ sampleRate: 24000 });
+      }
+
+      // Connect to WebSocket for Master AI
+      const wsUrl = `wss://mecywtbdycgfhsigztaf.supabase.co/functions/v1/realtime-voice?roomId=master_ai`;
+      console.log('Connecting to:', wsUrl);
+      
+      const ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
+
+      ws.onopen = () => {
+        console.log('WebSocket connected for voice call');
+      };
+
+      ws.onmessage = async (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          console.log('Received event:', data.type);
+
+          if (data.type === 'session.created') {
+            console.log('Session created');
+          } else if (data.type === 'session.updated') {
+            console.log('Session configured, starting recorder');
+            await startRecorder();
+            setIsConnected(true);
+          } else if (data.type === 'response.audio.delta') {
+            const binaryString = atob(data.delta);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+            }
+            if (audioContextRef.current) {
+              await playAudioData(audioContextRef.current, bytes);
+            }
+            setIsSpeaking(true);
+          } else if (data.type === 'response.done' || data.type === 'response.audio.done') {
+            setIsSpeaking(false);
+          } else if (data.type === 'error') {
+            console.error('OpenAI error:', data.error);
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: data.error?.message || "Error en la llamada",
+            });
+          }
+        } catch (error) {
+          console.error('Error processing message:', error);
+        }
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        toast({
+          variant: "destructive",
+          title: "Error de conexión",
+          description: "No se pudo conectar la llamada",
+        });
+      };
+
+      ws.onclose = () => {
+        console.log('WebSocket closed');
+        setIsConnected(false);
+      };
+
+    } catch (error) {
+      console.error('Error starting call:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : 'No se pudo iniciar la llamada',
+      });
+    }
+  };
+
+  const startRecorder = async () => {
+    try {
+      recorderRef.current = new AudioRecorder((audioData) => {
+        if (wsRef.current?.readyState === WebSocket.OPEN) {
+          const base64Audio = encodeAudioForAPI(audioData);
+          wsRef.current.send(JSON.stringify({
+            type: 'input_audio_buffer.append',
+            audio: base64Audio
+          }));
+        }
+      });
+      await recorderRef.current.start();
+      console.log('Recorder started for call');
+    } catch (error) {
+      console.error('Error starting recorder:', error);
+      throw error;
+    }
+  };
+
+  const disconnect = () => {
+    recorderRef.current?.stop();
+    recorderRef.current = null;
+    
+    wsRef.current?.close();
+    wsRef.current = null;
+    
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+    
+    clearAudioQueue();
+    setIsConnected(false);
+    setIsSpeaking(false);
+  };
+
+  const handleHangup = () => {
+    disconnect();
+    onHangup();
+  };
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -29,12 +165,14 @@ const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
     <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-primary/10 flex items-center justify-center p-4">
       <Card className="w-full max-w-md p-8 text-center space-y-8 animate-scale-in">
         <div className="space-y-4">
-          <div className="w-24 h-24 mx-auto bg-primary/10 rounded-full flex items-center justify-center animate-pulse">
+          <div className={`w-24 h-24 mx-auto bg-primary/10 rounded-full flex items-center justify-center ${isSpeaking ? 'animate-pulse ring-4 ring-primary/50' : 'animate-pulse'}`}>
             <img src={nudgeIcon} alt="Nudge" className="w-16 h-16" />
           </div>
           <div>
             <h2 className="text-2xl font-bold">Nudge</h2>
-            <p className="text-muted-foreground">En llamada...</p>
+            <p className="text-muted-foreground">
+              {!isConnected ? 'Conectando...' : isSpeaking ? 'Nudge está hablando...' : 'En llamada - Habla con Nudge'}
+            </p>
           </div>
         </div>
 
@@ -49,15 +187,15 @@ const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
           <Button
             size="lg"
             variant="destructive"
-            className="w-16 h-16 rounded-full"
-            onClick={onHangup}
+            className="w-16 h-16 rounded-full hover:scale-110 transition-transform"
+            onClick={handleHangup}
           >
             <PhoneOff className="w-6 h-6" />
           </Button>
         </div>
 
         <p className="text-xs text-muted-foreground">
-          Conectado con tu coach personal
+          {isConnected ? '🎤 Micrófono activo - Habla libremente' : 'Estableciendo conexión...'}
         </p>
       </Card>
     </div>
