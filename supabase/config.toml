@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.realtime-voice]
 verify_jwt = false
+
+[functions.habits-analysis]
+verify_jwt = false
+
+[functions.ai-insights]
+verify_jwt = false

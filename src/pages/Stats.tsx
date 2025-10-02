@@ -4,8 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Trophy, TrendingUp, Calendar, Flame } from "lucide-react";
+import { ArrowLeft, Trophy, TrendingUp, Calendar, Flame, Sparkles } from "lucide-react";
 import nudgeIcon from "@/assets/nudge_icon.png";
+import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -51,6 +52,8 @@ const Stats = () => {
   const [goalsByCategory, setGoalsByCategory] = useState<GoalsByCategory[]>([]);
   const [weeklyProgress, setWeeklyProgress] = useState<WeeklyProgress[]>([]);
   const [loading, setLoading] = useState(true);
+  const [aiAnalysis, setAiAnalysis] = useState<string>("");
+  const [analyzingHabits, setAnalyzingHabits] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -161,6 +164,43 @@ const Stats = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const analyzeHabits = async () => {
+    setAnalyzingHabits(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Get habits
+      const { data: habits } = await supabase
+        .from("habits")
+        .select("*")
+        .eq("user_id", user.id);
+
+      // Get user stats
+      const { data: userStats } = await supabase
+        .from("user_stats")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      const { data: analysisData, error } = await supabase.functions.invoke('habits-analysis', {
+        body: { habits, stats: userStats || stats }
+      });
+
+      if (error) throw error;
+
+      setAiAnalysis(analysisData.analysis);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
+    } finally {
+      setAnalyzingHabits(false);
     }
   };
 
@@ -385,24 +425,40 @@ const Stats = () => {
           </CardContent>
         </Card>
 
-        {/* Motivational Message */}
-        <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 hover-glow stagger-item" style={{ animationDelay: "0.4s" }}>
-          <CardContent className="p-6 text-center">
-            <div className="text-4xl mb-3 animate-bounce-subtle">🚀</div>
-            <h3 className="text-lg md:text-xl font-bold mb-2">
-              {stats.completionRate >= 80
-                ? "¡Excelente trabajo!"
-                : stats.completionRate >= 50
-                ? "¡Vas por buen camino!"
-                : "¡Sigue adelante!"}
-            </h3>
-            <p className="text-sm md:text-base text-muted-foreground">
-              {stats.completionRate >= 80
-                ? "Estás alcanzando tus metas consistentemente. ¡Increíble progreso!"
-                : stats.completionRate >= 50
-                ? "Has completado más de la mitad de tus metas. ¡Continúa así!"
-                : "Cada pequeño paso cuenta. ¡No te rindas!"}
-            </p>
+        {/* AI Analysis of Habits */}
+        <Card className="hover-lift stagger-item" style={{ animationDelay: "0.4s" }}>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base md:text-lg flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" />
+                Análisis de Hábitos con IA
+              </CardTitle>
+              <Button
+                size="sm"
+                onClick={analyzeHabits}
+                disabled={analyzingHabits}
+                className="btn-interactive"
+              >
+                {analyzingHabits ? "Analizando..." : "Analizar"}
+              </Button>
+            </div>
+            <CardDescription>
+              Obtén insights sobre tus áreas de oportunidad
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {aiAnalysis ? (
+              <Textarea
+                value={aiAnalysis}
+                readOnly
+                className="min-h-[150px] bg-muted/50"
+              />
+            ) : (
+              <div className="text-center p-8 text-muted-foreground">
+                <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>Haz clic en "Analizar" para obtener un análisis personalizado de tus hábitos</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </main>

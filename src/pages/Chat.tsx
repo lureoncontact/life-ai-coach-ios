@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Phone } from "lucide-react";
 import nudgeIcon from "@/assets/nudge_icon.png";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import PhoneCallInterface from "@/components/PhoneCallInterface";
 
 interface Message {
   role: "user" | "assistant";
@@ -19,6 +20,7 @@ const Chat = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
+  const [isInCall, setIsInCall] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -197,6 +199,10 @@ const Chat = () => {
     }
   };
 
+  if (isInCall) {
+    return <PhoneCallInterface onHangup={() => setIsInCall(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex flex-col">
       {/* Header */}
@@ -212,6 +218,14 @@ const Chat = () => {
               <p className="text-xs text-muted-foreground">Tu coach personal de IA</p>
             </div>
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsInCall(true)}
+            className="btn-interactive"
+          >
+            <Phone className="w-5 h-5" />
+          </Button>
         </div>
       </header>
 

@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { Activity, Briefcase, Heart, DollarSign, Sprout, Brain } from "lucide-react";
 
@@ -89,9 +90,6 @@ const Onboarding = () => {
           user_id: user.id,
           name: commonArea ? commonArea.name : area,
           area_category: area,
-          description: `Focus room para mejorar en ${
-            commonArea ? commonArea.name : area
-          }`,
         };
       });
 
@@ -160,13 +158,16 @@ const Onboarding = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="gender">Género</Label>
-                <Input
-                  id="gender"
-                  type="text"
-                  placeholder="Hombre / Mujer / Otro"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                />
+                <Select value={gender} onValueChange={setGender}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona tu género" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hombre">Hombre</SelectItem>
+                    <SelectItem value="mujer">Mujer</SelectItem>
+                    <SelectItem value="prefiero_no_decirlo">Prefiero no decirlo</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           )}

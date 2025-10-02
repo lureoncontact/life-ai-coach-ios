@@ -7,11 +7,11 @@ import { useToast } from "@/hooks/use-toast";
 import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Sparkles, Award, Activity, Briefcase, DollarSign, Sprout, Brain } from "lucide-react";
 import nudgeIcon from "@/assets/nudge_icon.png";
 import { useGamification } from "@/hooks/useGamification";
+import MobileMenu from "@/components/MobileMenu";
 import GamificationBadge from "@/components/GamificationBadge";
 import AchievementsModal from "@/components/AchievementsModal";
 import CreateFocusRoomModal from "@/components/CreateFocusRoomModal";
 import ShareRoomModal from "@/components/ShareRoomModal";
-import DailyCheckInModal from "@/components/DailyCheckInModal";
 import AIInsightsModal from "@/components/AIInsightsModal";
 import HabitsTracker from "@/components/HabitsTracker";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -42,7 +42,6 @@ const Dashboard = () => {
   const [showAchievements, setShowAchievements] = useState(false);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [showShareRoom, setShowShareRoom] = useState(false);
-  const [showCheckIn, setShowCheckIn] = useState(false);
   const [showAIInsights, setShowAIInsights] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
   const navigate = useNavigate();
@@ -51,20 +50,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadDashboardData();
-    checkDailyCheckIn();
   }, []);
-
-  const checkDailyCheckIn = () => {
-    const lastCheckIn = localStorage.getItem("last-check-in");
-    const today = new Date().toISOString().split('T')[0];
-    
-    if (lastCheckIn !== today) {
-      // Show check-in modal after 2 seconds
-      setTimeout(() => {
-        setShowCheckIn(true);
-      }, 2000);
-    }
-  };
 
   const loadDashboardData = async () => {
     try {
@@ -158,26 +144,33 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="ghost" size="icon" onClick={() => setShowAchievements(true)}>
-              <Award className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => setShowAIInsights(true)}>
-              <Sparkles className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => setShowCheckIn(true)}>
-              <Heart className="w-5 h-5" />
-            </Button>
-            {stats && (
+            {/* Desktop icons */}
+            <div className="hidden md:flex gap-2">
               <Button variant="ghost" size="icon" onClick={() => setShowAchievements(true)}>
-                <Trophy className="w-5 h-5" />
+                <Award className="w-5 h-5" />
               </Button>
-            )}
-            <Button variant="ghost" size="icon" onClick={() => navigate("/stats")}>
-              <BarChart3 className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => navigate("/settings")}>
-              <Settings className="w-5 h-5" />
-            </Button>
+              <Button variant="ghost" size="icon" onClick={() => setShowAIInsights(true)}>
+                <Sparkles className="w-5 h-5" />
+              </Button>
+              {stats && (
+                <Button variant="ghost" size="icon" onClick={() => setShowAchievements(true)}>
+                  <Trophy className="w-5 h-5" />
+                </Button>
+              )}
+              <Button variant="ghost" size="icon" onClick={() => navigate("/stats")}>
+                <BarChart3 className="w-5 h-5" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => navigate("/settings")}>
+                <Settings className="w-5 h-5" />
+              </Button>
+            </div>
+            {/* Mobile menu */}
+            <MobileMenu
+              onAchievementsClick={() => setShowAchievements(true)}
+              onAIInsightsClick={() => setShowAIInsights(true)}
+              onCheckInClick={() => {}}
+              showStats={!!stats}
+            />
           </div>
         </div>
       </header>
@@ -316,12 +309,7 @@ const Dashboard = () => {
                         <Share2 className="w-4 h-4" />
                       </Button>
                     </div>
-                    <CardTitle className="text-lg">{room.name}</CardTitle>
-                    {room.description && (
-                      <CardDescription className="text-sm">
-                        {room.description}
-                      </CardDescription>
-                    )}
+                     <CardTitle className="text-lg">{room.name}</CardTitle>
                   </CardHeader>
                 </Card>
               ))}
@@ -356,16 +344,6 @@ const Dashboard = () => {
           roomName={selectedRoom.name}
         />
       )}
-
-      {/* Daily Check-in Modal */}
-      <DailyCheckInModal
-        open={showCheckIn}
-        onOpenChange={setShowCheckIn}
-        onCheckInComplete={() => {
-          refreshStats();
-          loadDashboardData();
-        }}
-      />
 
       {/* AI Insights Modal */}
       <AIInsightsModal

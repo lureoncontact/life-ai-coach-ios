@@ -63,7 +63,6 @@ const voices = [
 
 const CreateFocusRoomModal = ({ open, onOpenChange, onRoomCreated }: CreateFocusRoomModalProps) => {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [tone, setTone] = useState("motivational");
   const [voice, setVoice] = useState("alloy");
@@ -90,7 +89,6 @@ const CreateFocusRoomModal = ({ open, onOpenChange, onRoomCreated }: CreateFocus
       const { error } = await supabase.from("focus_rooms").insert({
         user_id: user.id,
         name,
-        description: description || null,
         area_category: category,
         bot_tone: tone,
         bot_voice: voice,
@@ -111,7 +109,6 @@ const CreateFocusRoomModal = ({ open, onOpenChange, onRoomCreated }: CreateFocus
 
       // Reset form
       setName("");
-      setDescription("");
       setCategory("");
       setTone("motivational");
       setVoice("alloy");
@@ -171,17 +168,6 @@ const CreateFocusRoomModal = ({ open, onOpenChange, onRoomCreated }: CreateFocus
                 })}
               </SelectContent>
             </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Descripción</Label>
-            <Textarea
-              id="description"
-              placeholder="Describe brevemente tu objetivo en este espacio..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-            />
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
