@@ -13,6 +13,7 @@ import ShareRoomModal from "@/components/ShareRoomModal";
 import DailyCheckInModal from "@/components/DailyCheckInModal";
 import AIInsightsModal from "@/components/AIInsightsModal";
 import HabitsTracker from "@/components/HabitsTracker";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface Profile {
   full_name: string;
@@ -135,8 +136,8 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-primary text-xl">Cargando...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5">
+        <LoadingSpinner size="lg" text="Cargando tu dashboard..." />
       </div>
     );
   }
@@ -195,11 +196,11 @@ const Dashboard = () => {
         )}
 
         {/* Main Chat Button */}
-        <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 animate-nudge-slide-up">
+        <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 animate-nudge-slide-up hover-glow">
           <CardContent className="p-6">
             <Button
               size="lg"
-              className="w-full h-20 text-lg"
+              className="w-full h-20 text-lg btn-interactive hover:scale-105 transition-transform"
               onClick={() => navigate("/chat")}
             >
               <MessageCircle className="w-6 h-6 mr-2" />
@@ -240,11 +241,15 @@ const Dashboard = () => {
 
         {/* Today's Goals */}
         {todaysGoals.length > 0 && (
-          <div className="space-y-4 animate-nudge-slide-up">
+          <div className="space-y-4 animate-fade-in">
             <h2 className="text-2xl font-bold">Metas de Hoy</h2>
             <div className="grid gap-3">
-              {todaysGoals.map((goal) => (
-                <Card key={goal.id} className="hover:shadow-md transition-shadow">
+              {todaysGoals.map((goal, index) => (
+                <Card 
+                  key={goal.id} 
+                  className="hover-lift stagger-item"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
                   <CardContent className="p-4 flex items-center justify-between">
                     <span className={goal.is_completed ? "line-through text-muted-foreground" : ""}>
                       {goal.title}
@@ -252,6 +257,7 @@ const Dashboard = () => {
                     <Button
                       size="sm"
                       variant={goal.is_completed ? "secondary" : "default"}
+                      className="btn-interactive"
                     >
                       {goal.is_completed ? "✓" : "Marcar"}
                     </Button>
@@ -285,21 +291,22 @@ const Dashboard = () => {
             </Card>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {focusRooms.map((room) => (
+              {focusRooms.map((room, index) => (
                 <Card
                   key={room.id}
-                  className="hover:shadow-lg transition-all hover:scale-105 cursor-pointer group"
+                  className="hover-lift cursor-pointer group stagger-item"
+                  style={{ animationDelay: `${index * 0.05}s` }}
                   onClick={() => navigate(`/focus-room/${room.id}`)}
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="text-4xl mb-2">
+                      <div className="text-4xl mb-2 transition-transform group-hover:scale-110">
                         {getAreaIcon(room.area_category)}
                       </div>
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="opacity-0 group-hover:opacity-100 transition-all btn-interactive"
                         onClick={(e) => handleShareRoom(e, room.id, room.name)}
                       >
                         <Share2 className="w-4 h-4" />

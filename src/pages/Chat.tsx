@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface Message {
   role: "user" | "assistant";
@@ -206,8 +207,8 @@ const Chat = () => {
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto px-4 py-6 max-w-4xl">
           {messages.length === 0 && (
-            <Card className="p-8 text-center border-dashed">
-              <div className="text-5xl mb-4">👋</div>
+            <Card className="p-8 text-center border-dashed animate-scale-in">
+              <div className="text-5xl mb-4 animate-bounce-subtle">👋</div>
               <h2 className="text-xl font-bold mb-2">
                 ¡Hola {profile?.full_name || ""}!
               </h2>
@@ -223,14 +224,15 @@ const Chat = () => {
                 key={index}
                 className={`flex ${
                   message.role === "user" ? "justify-end" : "justify-start"
-                }`}
+                } animate-fade-in stagger-item`}
+                style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <Card
                   className={`max-w-[80%] p-4 ${
                     message.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card"
-                  } animate-nudge-slide-up`}
+                      ? "bg-primary text-primary-foreground hover-lift"
+                      : "bg-card hover-glow"
+                  }`}
                 >
                   <p className="whitespace-pre-wrap">{message.content}</p>
                 </Card>
@@ -258,7 +260,7 @@ const Chat = () => {
               size="icon"
               onClick={sendMessage}
               disabled={!input.trim() || isLoading}
-              className="h-auto"
+              className="h-auto btn-interactive hover:scale-110 transition-transform"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

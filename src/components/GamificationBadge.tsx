@@ -24,9 +24,9 @@ const GamificationBadge = ({
 
   if (compact) {
     return (
-      <div className="flex items-center gap-2 bg-card px-3 py-2 rounded-lg border">
+      <div className="flex items-center gap-2 bg-card px-3 py-2 rounded-lg border hover-lift animate-fade-in">
         <div className="flex items-center gap-1">
-          <Star className="w-4 h-4 text-yellow-500" />
+          <Star className="w-4 h-4 text-yellow-500 animate-pulse" />
           <span className="text-sm font-bold">Nv.{level}</span>
         </div>
         <div className="h-4 w-px bg-border" />
@@ -38,7 +38,7 @@ const GamificationBadge = ({
           <>
             <div className="h-4 w-px bg-border" />
             <div className="flex items-center gap-1">
-              <Flame className="w-4 h-4 text-orange-500" />
+              <Flame className="w-4 h-4 text-orange-500 animate-bounce-subtle" />
               <span className="text-sm font-medium">{currentStreak}</span>
             </div>
           </>
@@ -48,12 +48,12 @@ const GamificationBadge = ({
   }
 
   return (
-    <Card className="p-4">
+    <Card className="p-4 hover-glow animate-scale-in bg-gradient-to-br from-card to-primary/5">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
-              <Star className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center animate-pulse-glow">
+              <Star className="w-6 h-6 text-white animate-pulse" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Nivel</p>
@@ -62,7 +62,7 @@ const GamificationBadge = ({
           </div>
 
           <div className="flex gap-6">
-            <div className="text-center">
+            <div className="text-center hover-lift">
               <div className="flex items-center gap-1 justify-center mb-1">
                 <Trophy className="w-4 h-4 text-primary" />
               </div>
@@ -71,9 +71,9 @@ const GamificationBadge = ({
             </div>
 
             {currentStreak > 0 && (
-              <div className="text-center">
+              <div className="text-center hover-lift">
                 <div className="flex items-center gap-1 justify-center mb-1">
-                  <Flame className="w-4 h-4 text-orange-500" />
+                  <Flame className="w-4 h-4 text-orange-500 animate-bounce-subtle" />
                 </div>
                 <p className="text-lg font-bold">{currentStreak}</p>
                 <p className="text-xs text-muted-foreground">Racha</p>
@@ -87,7 +87,7 @@ const GamificationBadge = ({
             <span className="text-muted-foreground">Progreso al Nivel {level + 1}</span>
             <span className="font-medium">{pointsInCurrentLevel} / {pointsNeededForLevel}</span>
           </div>
-          <Progress value={progressPercent} className="h-2" />
+          <Progress value={progressPercent} className="h-2 transition-all duration-500" />
         </div>
       </div>
     </Card>
