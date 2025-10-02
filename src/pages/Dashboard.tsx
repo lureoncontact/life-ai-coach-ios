@@ -158,6 +158,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex gap-2">
+            <Button variant="ghost" size="icon" onClick={() => setShowAIInsights(true)}>
+              <Sparkles className="w-5 h-5" />
+            </Button>
             <Button variant="ghost" size="icon" onClick={() => setShowCheckIn(true)}>
               <Heart className="w-5 h-5" />
             </Button>
@@ -204,6 +207,33 @@ const Dashboard = () => {
             </p>
           </CardContent>
         </Card>
+
+        {/* Habits Tracker & AI Insights */}
+        <div className="grid md:grid-cols-2 gap-6 animate-nudge-slide-up">
+          <HabitsTracker />
+          
+          <Card className="bg-gradient-to-br from-accent/10 to-primary/5 border-primary/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary" />
+                Análisis con IA
+              </CardTitle>
+              <CardDescription>
+                Obtén insights personalizados sobre tu progreso
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => setShowAIInsights(true)}
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Generar Análisis
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Today's Goals */}
         {todaysGoals.length > 0 && (
@@ -321,6 +351,12 @@ const Dashboard = () => {
           refreshStats();
           loadDashboardData();
         }}
+      />
+
+      {/* AI Insights Modal */}
+      <AIInsightsModal
+        open={showAIInsights}
+        onOpenChange={setShowAIInsights}
       />
     </div>
   );
