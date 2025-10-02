@@ -212,6 +212,8 @@ const FocusRoom = () => {
     try {
       const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
       
+      const { data: { user } } = await supabase.auth.getUser();
+      
       const response = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
@@ -221,6 +223,7 @@ const FocusRoom = () => {
         body: JSON.stringify({
           messages: [...messages, newUserMessage],
           focusRoomId: roomId,
+          userId: user?.id,
         }),
       });
 
@@ -290,6 +293,9 @@ const FocusRoom = () => {
       if (assistantMessage) {
         await saveChatMessage("assistant", assistantMessage);
       }
+
+      // Reload goals and habits after message to capture any AI-created items
+      await loadRoomData();
     } catch (error: any) {
       console.error("Error sending message:", error);
       toast({

@@ -98,6 +98,8 @@ const Chat = () => {
     try {
       const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
       
+      const { data: { user } } = await supabase.auth.getUser();
+      
       const response = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
@@ -107,6 +109,7 @@ const Chat = () => {
         body: JSON.stringify({
           messages: [...messages, newUserMessage],
           focusRoomId: null, // Master AI
+          userId: user?.id,
         }),
       });
 
