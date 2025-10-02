@@ -6,12 +6,11 @@ import { Menu, Award, Sparkles, Heart, Trophy, BarChart3, Settings } from "lucid
 
 interface MobileMenuProps {
   onAchievementsClick: () => void;
-  onAIInsightsClick: () => void;
   onCheckInClick: () => void;
   showStats: boolean;
 }
 
-const MobileMenu = ({ onAchievementsClick, onAIInsightsClick, onCheckInClick, showStats }: MobileMenuProps) => {
+const MobileMenu = ({ onAchievementsClick, onCheckInClick, showStats }: MobileMenuProps) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -44,14 +43,6 @@ const MobileMenu = ({ onAchievementsClick, onAIInsightsClick, onCheckInClick, sh
           >
             <Award className="w-5 h-5 mr-2" />
             Logros
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start"
-            onClick={() => handleAction(onAIInsightsClick)}
-          >
-            <Sparkles className="w-5 h-5 mr-2" />
-            Análisis IA
           </Button>
           <Button
             variant="ghost"
