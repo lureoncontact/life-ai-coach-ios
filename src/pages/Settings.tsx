@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Save, LogOut, Bell, Crown, Share2, Download, Palette } from "lucide-react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { Switch } from "@/components/ui/switch";
 import { requestNotificationPermission, scheduleReminder, sendNotification } from "@/utils/notifications";
 import { Separator } from "@/components/ui/separator";
@@ -208,11 +209,7 @@ const Settings = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-primary text-xl">Cargando...</div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
@@ -232,7 +229,7 @@ const Settings = () => {
 
       <main className="container mx-auto px-4 py-8 max-w-2xl space-y-6">
         {/* Profile Section */}
-        <Card className="animate-nudge-slide-up">
+        <Card className="hover-lift stagger-item animate-fade-in" style={{ animationDelay: '0ms' }}>
           <CardHeader>
             <CardTitle>Información Personal</CardTitle>
             <CardDescription>
@@ -285,7 +282,7 @@ const Settings = () => {
         </Card>
 
         {/* Context Section */}
-        <Card className="animate-nudge-slide-up">
+        <Card className="hover-lift stagger-item animate-fade-in" style={{ animationDelay: '100ms' }}>
           <CardHeader>
             <CardTitle>Contexto Personal</CardTitle>
             <CardDescription>
@@ -338,7 +335,7 @@ const Settings = () => {
         <ThemeSelector />
 
         {/* Notifications Section */}
-        <Card className="animate-nudge-slide-up">
+        <Card className="hover-lift stagger-item animate-fade-in" style={{ animationDelay: '200ms' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="w-5 h-5" />
@@ -380,7 +377,7 @@ const Settings = () => {
         </Card>
 
         {/* Premium & Features Section */}
-        <Card className="animate-nudge-slide-up">
+        <Card className="hover-lift stagger-item animate-fade-in" style={{ animationDelay: '300ms' }}>
           <CardHeader>
             <CardTitle>Funciones Avanzadas</CardTitle>
             <CardDescription>
@@ -390,15 +387,15 @@ const Settings = () => {
           <CardContent className="space-y-3">
             <Button
               variant="outline"
-              className="w-full justify-start"
+              className="w-full justify-start btn-interactive hover:scale-105"
               onClick={() => setShowPremiumModal(true)}
             >
-              <Crown className="w-4 h-4 mr-2 text-primary" />
+              <Crown className="w-4 h-4 mr-2 text-primary animate-pulse" />
               Ver Planes Premium
             </Button>
             <Button
               variant="outline"
-              className="w-full justify-start"
+              className="w-full justify-start btn-interactive hover:scale-105"
               onClick={() => setShowIntegrationsModal(true)}
             >
               <Share2 className="w-4 h-4 mr-2" />
@@ -406,7 +403,7 @@ const Settings = () => {
             </Button>
             <Button
               variant="outline"
-              className="w-full justify-start"
+              className="w-full justify-start btn-interactive hover:scale-105"
               onClick={() => setShowExportModal(true)}
             >
               <Download className="w-4 h-4 mr-2" />
@@ -420,7 +417,7 @@ const Settings = () => {
           <Button
             onClick={saveProfile}
             disabled={saving || !profile.full_name.trim()}
-            className="w-full"
+            className="w-full btn-interactive hover:scale-105"
           >
             <Save className="w-4 h-4 mr-2" />
             {saving ? "Guardando..." : "Guardar Cambios"}
@@ -431,7 +428,7 @@ const Settings = () => {
           <Button
             variant="destructive"
             onClick={handleSignOut}
-            className="w-full"
+            className="w-full btn-interactive hover:scale-105"
           >
             <LogOut className="w-4 h-4 mr-2" />
             Cerrar Sesión

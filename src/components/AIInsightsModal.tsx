@@ -68,10 +68,10 @@ const AIInsightsModal = ({ open, onOpenChange }: AIInsightsModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto animate-scale-in">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
-            <Sparkles className="w-6 h-6 text-primary" />
+            <Sparkles className="w-6 h-6 text-primary animate-pulse" />
             Análisis de Progreso con IA
           </DialogTitle>
           <DialogDescription>
@@ -80,12 +80,12 @@ const AIInsightsModal = ({ open, onOpenChange }: AIInsightsModalProps) => {
         </DialogHeader>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
-            <p className="text-muted-foreground">Analizando tu progreso...</p>
+          <div className="flex flex-col items-center justify-center py-12 animate-fade-in">
+            <Loader2 className="w-12 h-12 text-primary animate-spin animate-pulse-glow mb-4" />
+            <p className="text-muted-foreground animate-pulse">Analizando tu progreso...</p>
           </div>
         ) : insights ? (
-          <Card>
+          <Card className="animate-fade-in hover-lift">
             <CardContent className="pt-6">
               <div className="prose prose-sm max-w-none dark:prose-invert">
                 <ReactMarkdown>{insights}</ReactMarkdown>
@@ -106,9 +106,9 @@ const AIInsightsModal = ({ open, onOpenChange }: AIInsightsModalProps) => {
         )}
 
         {insights && !loading && (
-          <div className="flex justify-end">
-            <Button variant="outline" onClick={generateInsights}>
-              <Sparkles className="w-4 h-4 mr-2" />
+          <div className="flex justify-end animate-fade-in">
+            <Button variant="outline" onClick={generateInsights} className="btn-interactive hover:scale-105">
+              <Sparkles className="w-4 h-4 mr-2 animate-pulse" />
               Generar Nuevo Análisis
             </Button>
           </div>

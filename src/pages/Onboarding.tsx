@@ -127,7 +127,7 @@ const Onboarding = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
-      <Card className="w-full max-w-2xl animate-nudge-slide-up">
+      <Card className="w-full max-w-2xl animate-scale-in hover-lift">
         <CardHeader>
           <div className="space-y-4">
             <Progress value={progress} className="h-2" />
@@ -139,7 +139,7 @@ const Onboarding = () => {
         </CardHeader>
         <CardContent>
           {step === 1 && (
-            <div className="space-y-6 animate-nudge-slide-up">
+            <div className="space-y-6 animate-fade-in">
               <div className="text-center mb-6">
                 <CardTitle className="text-2xl mb-2">Datos Personales</CardTitle>
                 <CardDescription>
@@ -170,7 +170,7 @@ const Onboarding = () => {
           )}
 
           {step === 2 && (
-            <div className="space-y-6 animate-nudge-slide-up">
+            <div className="space-y-6 animate-fade-in">
               <div className="text-center mb-6">
                 <CardTitle className="text-2xl mb-2">Contexto Profundo</CardTitle>
                 <CardDescription>
@@ -211,7 +211,7 @@ const Onboarding = () => {
           )}
 
           {step === 3 && (
-            <div className="space-y-6 animate-nudge-slide-up">
+            <div className="space-y-6 animate-fade-in">
               <div className="text-center mb-6">
                 <CardTitle className="text-2xl mb-2">Áreas de Mejora</CardTitle>
                 <CardDescription>
@@ -224,13 +224,13 @@ const Onboarding = () => {
                     key={area.id}
                     type="button"
                     onClick={() => toggleArea(area.id)}
-                    className={`p-4 rounded-lg border-2 transition-all hover:scale-105 ${
+                    className={`p-4 rounded-lg border-2 transition-all hover:scale-110 hover-lift ${
                       selectedAreas.includes(area.id)
-                        ? "border-primary bg-primary/10"
+                        ? "border-primary bg-primary/10 animate-bounce-subtle"
                         : "border-border hover:border-primary/50"
                     }`}
                   >
-                    <div className="text-3xl mb-2">{area.icon}</div>
+                    <div className="text-3xl mb-2 transition-transform group-hover:scale-125">{area.icon}</div>
                     <div className="text-sm font-medium">{area.name}</div>
                   </button>
                 ))}
@@ -263,7 +263,7 @@ const Onboarding = () => {
               type="button"
               onClick={handleNext}
               disabled={!canProceed() || loading}
-              className="flex-1"
+              className="flex-1 btn-interactive hover:scale-105"
             >
               {loading
                 ? "Guardando..."

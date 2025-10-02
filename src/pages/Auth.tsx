@@ -75,10 +75,10 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
-      <Card className="w-full max-w-md animate-nudge-slide-up">
+      <Card className="w-full max-w-md animate-scale-in hover-lift">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center">
+            <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center animate-bounce-subtle hover-glow">
               <span className="text-3xl">🎯</span>
             </div>
           </div>
@@ -88,7 +88,7 @@ const Auth = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleAuth} className="space-y-4">
+          <form onSubmit={handleAuth} className="space-y-4 animate-fade-in">
             {!isLogin && (
               <div className="space-y-2">
                 <Label htmlFor="fullName">Nombre completo</Label>
@@ -127,7 +127,7 @@ const Auth = () => {
             </div>
             <Button
               type="submit"
-              className="w-full"
+              className="w-full btn-interactive hover:scale-105"
               disabled={loading}
             >
               {loading
