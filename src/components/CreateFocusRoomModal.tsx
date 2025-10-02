@@ -158,14 +158,17 @@ const CreateFocusRoomModal = ({ open, onOpenChange, onRoomCreated }: CreateFocus
                 <SelectValue placeholder="Selecciona una categoría" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    <div className="flex items-center gap-2">
-                      <cat.icon className="w-4 h-4" />
-                      <span>{cat.label}</span>
-                    </div>
-                  </SelectItem>
-                ))}
+                {categories.map((cat) => {
+                  const Icon = cat.icon;
+                  return (
+                    <SelectItem key={cat.value} value={cat.value}>
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        <span>{cat.label}</span>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
