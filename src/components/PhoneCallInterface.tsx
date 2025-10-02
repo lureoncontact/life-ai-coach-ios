@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PhoneOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import nudgeIcon from "@/assets/nudge_icon.png";
 import { AudioRecorder, encodeAudioForAPI, playAudioData, clearAudioQueue } from '@/utils/RealtimeAudio';
 
@@ -47,8 +48,12 @@ const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
         console.log('Audio context initialized');
       }
 
-      // Connect to WebSocket for Master AI
-      const wsUrl = `wss://mecywtbdycgfhsigztaf.supabase.co/functions/v1/realtime-voice?roomId=master_ai`;
+      // Get user ID from supabase
+      const { data: { user } } = await supabase.auth.getUser();
+      const userId = user?.id || '';
+
+      // Connect to WebSocket for Master AI with userId
+      const wsUrl = `wss://mecywtbdycgfhsigztaf.supabase.co/functions/v1/realtime-voice?roomId=master_ai&userId=${userId}`;
       console.log('Connecting to:', wsUrl);
       
       const ws = new WebSocket(wsUrl);
@@ -111,13 +116,7 @@ const PhoneCallInterface = ({ onHangup }: PhoneCallInterfaceProps) => {
       ws.onclose = (event) => {
         console.log('WebSocket closed:', event.code, event.reason);
         setIsConnected(false);
-        if (event.code !== 1000) {
-          toast({
-            variant: "destructive",
-            title: "Conexión cerrada",
-            description: "La llamada se desconectó inesperadamente",
-          });
-        }
+        // No mostrar toast al colgar normalmente
       };
 
     } catch (error) {

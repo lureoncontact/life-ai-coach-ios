@@ -20,13 +20,14 @@ serve(async (req) => {
 
   const url = new URL(req.url);
   const roomId = url.searchParams.get("roomId");
+  const userId = url.searchParams.get("userId");
   
   if (!roomId) {
     return new Response("roomId parameter is required", { status: 400 });
   }
 
   try {
-    // Get room data to customize the bot (or use default for master_ai)
+    // Get room data and user context
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -46,6 +47,106 @@ serve(async (req) => {
         return new Response("Room not found", { status: 404 });
       }
       room = data;
+    }
+
+    // Get user context
+    let userContext = "";
+    if (userId) {
+      // Get user profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name, age, gender, interests, user_story')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (profile) {
+        userContext += `\n\nINFORMACIÓN DEL USUARIO:`;
+        userContext += `\nNombre: ${profile.full_name || 'Usuario'}`;
+        if (profile.age) userContext += `\nEdad: ${profile.age} años`;
+        if (profile.gender) userContext += `\nGénero: ${profile.gender}`;
+        if (profile.interests) userContext += `\nIntereses: ${profile.interests}`;
+        if (profile.user_story) userContext += `\nHistoria: ${profile.user_story}`;
+      }
+
+      // Get latest check-in
+      const { data: latestCheckIn } = await supabase
+        .from("daily_check_ins")
+        .select("mood, notes, check_in_date")
+        .eq("user_id", userId)
+        .order("check_in_date", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (latestCheckIn) {
+        const moodLabels: Record<string, string> = {
+          great: "excelente",
+          good: "bien",
+          okay: "normal",
+          bad: "mal"
+        };
+        
+        const moodText = moodLabels[latestCheckIn.mood] || latestCheckIn.mood;
+        const today = new Date().toISOString().split('T')[0];
+        const isToday = latestCheckIn.check_in_date === today;
+        
+        userContext += `\n\nESTADO EMOCIONAL:`;
+        userContext += `\nÚltimo check-in (${isToday ? 'hoy' : latestCheckIn.check_in_date}): Se siente ${moodText}`;
+        
+        if (latestCheckIn.notes) {
+          userContext += `\nNotas: "${latestCheckIn.notes}"`;
+        }
+      }
+
+      // Get active focus rooms
+      const { data: focusRooms } = await supabase
+        .from('focus_rooms')
+        .select('name, area_category, description')
+        .eq('user_id', userId)
+        .limit(5);
+
+      if (focusRooms && focusRooms.length > 0) {
+        userContext += `\n\nÁREAS DE ENFOQUE DEL USUARIO:`;
+        focusRooms.forEach(room => {
+          userContext += `\n- ${room.name} (${room.area_category})`;
+          if (room.description) userContext += `: ${room.description}`;
+        });
+      }
+
+      // Get active goals
+      const { data: goals } = await supabase
+        .from('goals')
+        .select('title, description')
+        .eq('user_id', userId)
+        .eq('is_completed', false)
+        .limit(5);
+
+      if (goals && goals.length > 0) {
+        userContext += `\n\nMETAS ACTIVAS:`;
+        goals.forEach(goal => {
+          userContext += `\n- ${goal.title}`;
+          if (goal.description) userContext += `: ${goal.description}`;
+        });
+      }
+
+      // Get active habits
+      const { data: habits } = await supabase
+        .from('habits')
+        .select('title, description, streak')
+        .eq('user_id', userId)
+        .order('streak', { ascending: false })
+        .limit(5);
+
+      if (habits && habits.length > 0) {
+        userContext += `\n\nHÁBITOS:`;
+        habits.forEach(habit => {
+          userContext += `\n- ${habit.title} (racha: ${habit.streak} días)`;
+          if (habit.description) userContext += `: ${habit.description}`;
+        });
+      }
+
+      if (userContext) {
+        userContext += `\n\nUSA ESTA INFORMACIÓN para personalizar la conversación y ser más empático y relevante.`;
+      }
     }
 
     const { socket, response } = Deno.upgradeWebSocket(req);
@@ -70,7 +171,25 @@ serve(async (req) => {
     const buildSystemInstructions = () => {
       // Default instructions for master_ai
       if (!room) {
-        return `Eres Nudge, el coach personal de vida del usuario. Tu propósito es ayudar a las personas a alcanzar sus metas, desarrollar buenos hábitos y vivir una vida más plena y satisfactoria. Eres empático, motivador y ofreces consejos prácticos y actionables. Mantén las respuestas concisas y conversacionales, como si estuvieras hablando en persona con el usuario.`;
+        return `Eres Nudge, el coach personal de vida del usuario. Tu propósito es ayudar a las personas a alcanzar sus metas, desarrollar buenos hábitos y vivir una vida más plena y satisfactoria.
+
+Reglas de comunicación:
+- Sé conciso: respuestas de máximo 2-3 oraciones cortas en cada intervención
+- NUNCA uses asteriscos (*) para énfasis, usa palabras simples
+- Habla como un amigo cercano, no como un libro de autoayuda
+- Evita repetir las mismas frases o ideas
+- Ve directo al punto sin preámbulos largos
+- No repitas lo que el usuario ya dijo
+- Si el usuario pregunta algo simple, responde simple
+
+Tu estilo:
+- Conversacional y auténtico, como en una llamada con un amigo
+- Práctico: da pasos concretos, no teoría
+- Empático pero directo
+- Celebra logros brevemente, sin exagerar
+- Mantén un tono cálido pero profesional
+
+${userContext}`;
       }
       
       // Custom instructions for specific focus rooms
@@ -80,13 +199,27 @@ serve(async (req) => {
         instructions += `Descripción del área: ${room.description}. `;
       }
       
-      instructions += `Tu tono debe ser ${room.bot_tone || 'motivacional'}. `;
+      instructions += `\n\nReglas de comunicación:
+- Sé conciso: respuestas de máximo 2-3 oraciones cortas en cada intervención
+- NUNCA uses asteriscos (*) para énfasis, usa palabras simples
+- Habla como un amigo cercano que es experto en el tema
+- Evita repetir las mismas frases o ideas
+- Ve directo al punto sin preámbulos largos
+
+Tu estilo:
+- Conversacional y auténtico
+- Práctico: da pasos concretos y específicos
+- Enfocado solo en este objetivo
+- Tono ${room.bot_tone || 'motivacional'}
+
+`;
       
       if (room.bot_knowledge) {
-        instructions += `Conocimiento específico: ${room.bot_knowledge}. `;
+        instructions += `Conocimiento específico: ${room.bot_knowledge}\n\n`;
       }
       
-      instructions += `Ayuda al usuario a alcanzar sus metas en esta área con consejos prácticos y motivación. Mantén las respuestas concisas y actionables.`;
+      instructions += `Ayuda al usuario a alcanzar sus metas en esta área con consejos prácticos y motivación.`;
+      instructions += userContext;
       
       return instructions;
     };
