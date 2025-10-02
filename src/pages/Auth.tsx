@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+import { Target } from "lucide-react";
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -78,8 +80,8 @@ const Auth = () => {
       <Card className="w-full max-w-md animate-scale-in hover-lift">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center animate-bounce-subtle hover-glow">
-              <span className="text-3xl">🎯</span>
+            <div className="w-14 h-14 bg-primary/10 border-2 border-primary rounded-xl flex items-center justify-center">
+              <Target className="w-7 h-7 text-primary" />
             </div>
           </div>
           <CardTitle className="text-3xl font-bold">Nudge</CardTitle>

@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Sparkles, Award } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Sparkles, Award, Activity, Briefcase, DollarSign, Sprout, Brain, Target } from "lucide-react";
 import { useGamification } from "@/hooks/useGamification";
 import GamificationBadge from "@/components/GamificationBadge";
 import AchievementsModal from "@/components/AchievementsModal";
@@ -123,15 +123,15 @@ const Dashboard = () => {
   };
 
   const getAreaIcon = (category: string) => {
-    const icons: Record<string, string> = {
-      health: "💪",
-      career: "💼",
-      relationships: "❤️",
-      finance: "💰",
-      personal: "🌱",
-      mental: "🧠",
+    const icons: Record<string, React.ComponentType<{ className?: string }>> = {
+      health: Activity,
+      career: Briefcase,
+      relationships: Heart,
+      finance: DollarSign,
+      personal: Sprout,
+      mental: Brain,
     };
-    return icons[category] || "🎯";
+    return icons[category] || Target;
   };
 
   if (loading) {
@@ -148,8 +148,8 @@ const Dashboard = () => {
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-              <span className="text-xl">🎯</span>
+            <div className="w-9 h-9 bg-primary/10 border border-primary rounded-lg flex items-center justify-center">
+              <Target className="w-5 h-5 text-primary" />
             </div>
             <div>
               <h1 className="text-xl font-bold">Nudge</h1>
@@ -300,9 +300,14 @@ const Dashboard = () => {
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="text-4xl mb-2 transition-transform group-hover:scale-110">
-                        {getAreaIcon(room.area_category)}
-                      </div>
+                      {(() => {
+                        const IconComponent = getAreaIcon(room.area_category);
+                        return (
+                          <div className="w-10 h-10 bg-primary/10 border border-primary rounded-lg flex items-center justify-center mb-2 transition-transform group-hover:scale-110">
+                            <IconComponent className="w-6 h-6 text-primary" />
+                          </div>
+                        );
+                      })()}
                       <Button
                         variant="ghost"
                         size="icon"

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 
+import { Target } from "lucide-react";
+
 const Index = () => {
   const navigate = useNavigate();
 
@@ -32,8 +34,8 @@ const Index = () => {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-background to-primary/5">
       <div className="text-center space-y-8 p-8 animate-scale-in">
         <div className="flex justify-center mb-8">
-          <div className="w-24 h-24 bg-primary rounded-3xl flex items-center justify-center shadow-lg hover-glow animate-bounce-subtle">
-            <span className="text-5xl">🎯</span>
+          <div className="w-20 h-20 bg-primary/10 border-2 border-primary rounded-2xl flex items-center justify-center shadow-lg">
+            <Target className="w-10 h-10 text-primary" />
           </div>
         </div>
         <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>

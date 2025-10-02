@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, LogOut, Bell, Crown, Share2, Download, Palette } from "lucide-react";
+import { ArrowLeft, Save, LogOut, Bell, Crown, Share2, Download, Palette, Target } from "lucide-react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Switch } from "@/components/ui/switch";
 import { requestNotificationPermission, scheduleReminder, sendNotification } from "@/utils/notifications";
@@ -124,7 +124,7 @@ const Settings = () => {
         .eq("is_completed", false);
 
       if (goals && goals.length > 0) {
-        sendNotification("¡Hora de trabajar en tus metas! 💪", {
+        sendNotification("¡Hora de trabajar en tus metas!", {
           body: `Tienes ${goals.length} meta${goals.length > 1 ? 's' : ''} diaria${goals.length > 1 ? 's' : ''} pendiente${goals.length > 1 ? 's' : ''}.`,
           tag: "daily-reminder",
         });
@@ -439,8 +439,10 @@ const Settings = () => {
         <Card className="bg-muted/50">
           <CardContent className="p-4 text-center text-sm text-muted-foreground">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <span className="text-2xl">🎯</span>
-              <span className="font-bold text-foreground">Nudge</span>
+              <div className="w-8 h-8 bg-primary/10 border border-primary rounded-lg flex items-center justify-center">
+                <Target className="w-4 h-4 text-primary" />
+              </div>
+              <span className="font-semibold text-foreground text-base">Nudge</span>
             </div>
             <p>Tu coach de vida personal impulsado por IA</p>
             <p className="mt-2 text-xs">Versión 1.0.0</p>

@@ -9,13 +9,15 @@ import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
+import { Activity, Briefcase, Heart, DollarSign, Sprout, Brain } from "lucide-react";
+
 const COMMON_AREAS = [
-  { id: "health", name: "Salud y Fitness", icon: "💪" },
-  { id: "career", name: "Carrera Profesional", icon: "💼" },
-  { id: "relationships", name: "Relaciones", icon: "❤️" },
-  { id: "finance", name: "Finanzas", icon: "💰" },
-  { id: "personal", name: "Desarrollo Personal", icon: "🌱" },
-  { id: "mental", name: "Salud Mental", icon: "🧠" },
+  { id: "health", name: "Salud y Fitness", icon: Activity },
+  { id: "career", name: "Carrera Profesional", icon: Briefcase },
+  { id: "relationships", name: "Relaciones", icon: Heart },
+  { id: "finance", name: "Finanzas", icon: DollarSign },
+  { id: "personal", name: "Desarrollo Personal", icon: Sprout },
+  { id: "mental", name: "Salud Mental", icon: Brain },
 ];
 
 const Onboarding = () => {
@@ -219,21 +221,26 @@ const Onboarding = () => {
                 </CardDescription>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                {COMMON_AREAS.map((area) => (
-                  <button
-                    key={area.id}
-                    type="button"
-                    onClick={() => toggleArea(area.id)}
-                    className={`p-4 rounded-lg border-2 transition-all hover:scale-110 hover-lift ${
-                      selectedAreas.includes(area.id)
-                        ? "border-primary bg-primary/10 animate-bounce-subtle"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <div className="text-3xl mb-2 transition-transform group-hover:scale-125">{area.icon}</div>
-                    <div className="text-sm font-medium">{area.name}</div>
-                  </button>
-                ))}
+                {COMMON_AREAS.map((area) => {
+                  const IconComponent = area.icon;
+                  return (
+                    <button
+                      key={area.id}
+                      type="button"
+                      onClick={() => toggleArea(area.id)}
+                      className={`p-4 rounded-lg border-2 transition-all hover:scale-110 hover-lift ${
+                        selectedAreas.includes(area.id)
+                          ? "border-primary bg-primary/10 animate-bounce-subtle"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="mb-2 flex justify-center">
+                        <IconComponent className="w-8 h-8 text-primary" />
+                      </div>
+                      <div className="text-sm font-medium">{area.name}</div>
+                    </button>
+                  );
+                })}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="customArea">Área Personalizada</Label>

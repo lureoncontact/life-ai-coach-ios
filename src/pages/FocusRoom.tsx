@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon, Share2 } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon, Share2, Activity, Briefcase, Heart, DollarSign, Sprout, Brain, Target } from "lucide-react";
 import VoiceInterface from "@/components/VoiceInterface";
 import { onGoalCompleted } from "@/utils/gamification";
 import AchievementsModal from "@/components/AchievementsModal";
@@ -356,7 +356,7 @@ const FocusRoom = () => {
         }, 3000);
         
         toast({
-          title: "¡Logro desbloqueado! 🏆",
+          title: "¡Logro desbloqueado!",
           description: `Has desbloqueado ${achievements.length} nuevo${achievements.length > 1 ? 's' : ''} logro${achievements.length > 1 ? 's' : ''}`,
         });
       } else {
@@ -398,15 +398,15 @@ const FocusRoom = () => {
   }
 
   const getAreaIcon = (category: string) => {
-    const icons: Record<string, string> = {
-      health: "💪",
-      career: "💼",
-      relationships: "❤️",
-      finance: "💰",
-      personal: "🌱",
-      mental: "🧠",
+    const icons: Record<string, React.ComponentType<{ className?: string }>> = {
+      health: Activity,
+      career: Briefcase,
+      relationships: Heart,
+      finance: DollarSign,
+      personal: Sprout,
+      mental: Brain,
     };
-    return icons[category] || "🎯";
+    return icons[category] || Target;
   };
 
   return (
@@ -419,7 +419,14 @@ const FocusRoom = () => {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="flex items-center gap-3">
-              <div className="text-3xl">{getAreaIcon(room.area_category)}</div>
+              {(() => {
+                const IconComponent = getAreaIcon(room.area_category);
+                return (
+                  <div className="w-8 h-8 bg-primary/10 border border-primary rounded-lg flex items-center justify-center">
+                    <IconComponent className="w-4 h-4 text-primary" />
+                  </div>
+                );
+              })()}
               <div>
                 <h1 className="text-lg font-bold">{room.name}</h1>
                 <p className="text-xs text-muted-foreground">{room.description}</p>
@@ -539,7 +546,16 @@ const FocusRoom = () => {
               <CardContent className="flex-1 overflow-y-auto p-6">
                 {messages.length === 0 && (
                   <div className="text-center py-8 animate-scale-in">
-                    <div className="text-5xl mb-4 animate-bounce-subtle">{getAreaIcon(room.area_category)}</div>
+                    {(() => {
+                      const IconComponent = getAreaIcon(room.area_category);
+                      return (
+                        <div className="flex justify-center mb-4">
+                          <div className="w-14 h-14 bg-primary/10 border-2 border-primary rounded-xl flex items-center justify-center animate-bounce-subtle">
+                            <IconComponent className="w-8 h-8 text-primary" />
+                          </div>
+                        </div>
+                      );
+                    })()}
                     <h2 className="text-xl font-bold mb-2">Bot de {room.name}</h2>
                     <p className="text-muted-foreground">
                       Soy tu coach especializado en {room.name}. ¿Cómo puedo ayudarte hoy?

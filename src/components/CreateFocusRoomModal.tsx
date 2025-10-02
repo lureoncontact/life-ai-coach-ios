@@ -27,13 +27,21 @@ interface CreateFocusRoomModalProps {
   onRoomCreated: () => void;
 }
 
-const categories = [
-  { value: "health", label: "Salud y Fitness", icon: "💪" },
-  { value: "career", label: "Carrera Profesional", icon: "💼" },
-  { value: "relationships", label: "Relaciones", icon: "❤️" },
-  { value: "finance", label: "Finanzas", icon: "💰" },
-  { value: "personal", label: "Desarrollo Personal", icon: "🌱" },
-  { value: "mental", label: "Salud Mental", icon: "🧠" },
+import { Activity, Briefcase, Heart, DollarSign, Sprout, Brain } from "lucide-react";
+
+interface Category {
+  value: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const categories: Category[] = [
+  { value: "health", label: "Salud y Fitness", icon: Activity },
+  { value: "career", label: "Carrera Profesional", icon: Briefcase },
+  { value: "relationships", label: "Relaciones", icon: Heart },
+  { value: "finance", label: "Finanzas", icon: DollarSign },
+  { value: "personal", label: "Desarrollo Personal", icon: Sprout },
+  { value: "mental", label: "Salud Mental", icon: Brain },
 ];
 
 const tones = [
@@ -152,10 +160,10 @@ const CreateFocusRoomModal = ({ open, onOpenChange, onRoomCreated }: CreateFocus
               <SelectContent>
                 {categories.map((cat) => (
                   <SelectItem key={cat.value} value={cat.value}>
-                    <span className="flex items-center gap-2">
-                      <span>{cat.icon}</span>
+                    <div className="flex items-center gap-2">
+                      <cat.icon className="w-4 h-4" />
                       <span>{cat.label}</span>
-                    </span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>

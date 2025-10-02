@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, X } from "lucide-react";
+import { Download, X, Target } from "lucide-react";
 import { showInstallPrompt, isPWAInstalled } from "@/utils/pwa";
 import { useToast } from "@/hooks/use-toast";
 
@@ -49,8 +49,8 @@ const InstallPWAPrompt = () => {
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-xl">🎯</span>
+              <div className="w-8 h-8 bg-primary/10 border border-primary rounded-md flex items-center justify-center">
+                <Target className="w-4 h-4 text-primary" />
               </div>
               <div>
                 <CardTitle className="text-base">Instalar Nudge</CardTitle>
