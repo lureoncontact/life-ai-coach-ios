@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon, Share2 } from "lucide-react";
 import VoiceInterface from "@/components/VoiceInterface";
 import { onGoalCompleted } from "@/utils/gamification";
 import AchievementsModal from "@/components/AchievementsModal";
+import ShareRoomModal from "@/components/ShareRoomModal";
 import ActiveUsersIndicator from "@/components/ActiveUsersIndicator";
 import { useRealtimePresence } from "@/hooks/useRealtimePresence";
 import { useRealtimeGoals } from "@/hooks/useRealtimeGoals";
@@ -63,6 +64,7 @@ const FocusRoom = () => {
   const [newGoalTitle, setNewGoalTitle] = useState("");
   const [newGoalIsDaily, setNewGoalIsDaily] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
+  const [showShareRoom, setShowShareRoom] = useState(false);
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
   const [profile, setProfile] = useState<{ full_name: string } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -417,8 +419,8 @@ const FocusRoom = () => {
               </div>
             </div>
           </div>
-          <Button variant="ghost" size="icon">
-            <SettingsIcon className="w-5 h-5" />
+          <Button variant="ghost" size="icon" onClick={() => setShowShareRoom(true)}>
+            <Share2 className="w-5 h-5" />
           </Button>
         </div>
         
@@ -594,6 +596,16 @@ const FocusRoom = () => {
           </div>
         </div>
       </div>
+
+      {/* Share Room Modal */}
+      {room && (
+        <ShareRoomModal
+          open={showShareRoom}
+          onOpenChange={setShowShareRoom}
+          roomId={room.id}
+          roomName={room.name}
+        />
+      )}
 
       {/* Achievements Modal */}
       <AchievementsModal

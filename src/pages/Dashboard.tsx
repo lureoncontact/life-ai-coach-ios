@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Sparkles } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Sparkles, Award } from "lucide-react";
 import { useGamification } from "@/hooks/useGamification";
 import GamificationBadge from "@/components/GamificationBadge";
 import AchievementsModal from "@/components/AchievementsModal";
@@ -158,6 +158,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex gap-2">
+            <Button variant="ghost" size="icon" onClick={() => setShowAchievements(true)}>
+              <Award className="w-5 h-5" />
+            </Button>
             <Button variant="ghost" size="icon" onClick={() => setShowAIInsights(true)}>
               <Sparkles className="w-5 h-5" />
             </Button>
