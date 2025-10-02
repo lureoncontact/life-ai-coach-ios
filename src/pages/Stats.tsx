@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Trophy, Target, TrendingUp, Calendar, Flame } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface Stats {
   totalGoals: number;
@@ -164,8 +165,8 @@ const Stats = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-primary text-xl">Cargando estadísticas...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5">
+        <LoadingSpinner size="lg" text="Cargando estadísticas..." />
       </div>
     );
   }
@@ -187,8 +188,8 @@ const Stats = () => {
 
       <main className="container mx-auto px-4 py-8 space-y-6">
         {/* Summary Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <Card className="animate-nudge-slide-up">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
+          <Card className="hover-lift stagger-item">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -198,14 +199,14 @@ const Stats = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{stats.totalGoals}</div>
+              <div className="text-2xl md:text-3xl font-bold">{stats.totalGoals}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 {stats.activeGoals} activas
               </p>
             </CardContent>
           </Card>
 
-          <Card className="animate-nudge-slide-up" style={{ animationDelay: "0.1s" }}>
+          <Card className="hover-lift stagger-item" style={{ animationDelay: "0.05s" }}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -215,31 +216,31 @@ const Stats = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-success">{stats.completedGoals}</div>
+              <div className="text-2xl md:text-3xl font-bold text-success">{stats.completedGoals}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 {stats.completionRate}% de tasa
               </p>
             </CardContent>
           </Card>
 
-          <Card className="animate-nudge-slide-up" style={{ animationDelay: "0.2s" }}>
+          <Card className="hover-lift stagger-item" style={{ animationDelay: "0.1s" }}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Racha Actual
                 </CardTitle>
-                <Flame className="w-4 h-4 text-orange-500" />
+                <Flame className="w-4 h-4 text-orange-500 animate-bounce-subtle" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-orange-500">{stats.currentStreak}</div>
+              <div className="text-2xl md:text-3xl font-bold text-orange-500">{stats.currentStreak}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 días consecutivos
               </p>
             </CardContent>
           </Card>
 
-          <Card className="animate-nudge-slide-up" style={{ animationDelay: "0.3s" }}>
+          <Card className="hover-lift stagger-item" style={{ animationDelay: "0.15s" }}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -249,24 +250,24 @@ const Stats = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{stats.totalFocusRooms}</div>
+              <div className="text-2xl md:text-3xl font-bold">{stats.totalFocusRooms}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 áreas de enfoque
               </p>
             </CardContent>
           </Card>
 
-          <Card className="animate-nudge-slide-up" style={{ animationDelay: "0.4s" }}>
+          <Card className="hover-lift stagger-item" style={{ animationDelay: "0.2s" }}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Nivel
                 </CardTitle>
-                <Trophy className="w-4 h-4 text-primary" />
+                <Trophy className="w-4 h-4 text-primary animate-pulse" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-primary">{stats.level}</div>
+              <div className="text-2xl md:text-3xl font-bold text-primary">{stats.level}</div>
               <p className="text-xs text-muted-foreground mt-1">
                 {stats.totalPoints} pts
               </p>
@@ -275,11 +276,11 @@ const Stats = () => {
         </div>
 
         {/* Charts Row */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-6">
           {/* Weekly Progress Chart */}
-          <Card className="animate-nudge-slide-up">
+          <Card className="hover-glow stagger-item" style={{ animationDelay: "0.25s" }}>
             <CardHeader>
-              <CardTitle>Progreso Semanal</CardTitle>
+              <CardTitle className="text-base md:text-lg">Progreso Semanal</CardTitle>
               <CardDescription>
                 Metas completadas en los últimos 7 días
               </CardDescription>
@@ -304,9 +305,9 @@ const Stats = () => {
           </Card>
 
           {/* Goals by Category Chart */}
-          <Card className="animate-nudge-slide-up">
+          <Card className="hover-glow stagger-item" style={{ animationDelay: "0.3s" }}>
             <CardHeader>
-              <CardTitle>Metas por Categoría</CardTitle>
+              <CardTitle className="text-base md:text-lg">Metas por Categoría</CardTitle>
               <CardDescription>
                 Distribución de tus metas por área
               </CardDescription>
@@ -321,7 +322,7 @@ const Stats = () => {
                     cx="50%"
                     cy="50%"
                     outerRadius={80}
-                    label
+                    label={(entry) => entry.category}
                   >
                     {goalsByCategory.map((entry, index) => (
                       <Cell 
@@ -344,7 +345,6 @@ const Stats = () => {
                       borderRadius: '8px'
                     }}
                   />
-                  <Legend />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
@@ -352,9 +352,9 @@ const Stats = () => {
         </div>
 
         {/* Completion Rate Card */}
-        <Card className="animate-nudge-slide-up">
+        <Card className="hover-lift stagger-item" style={{ animationDelay: "0.35s" }}>
           <CardHeader>
-            <CardTitle>Tasa de Completado General</CardTitle>
+            <CardTitle className="text-base md:text-lg">Tasa de Completado General</CardTitle>
             <CardDescription>
               Porcentaje de metas completadas del total
             </CardDescription>
@@ -365,19 +365,19 @@ const Stats = () => {
                 <span className="text-sm font-medium">Progreso</span>
                 <span className="text-sm font-bold text-primary">{stats.completionRate}%</span>
               </div>
-              <Progress value={stats.completionRate} className="h-3" />
+              <Progress value={stats.completionRate} className="h-3 transition-all duration-500" />
             </div>
             <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-success">{stats.completedGoals}</div>
+              <div className="hover-lift">
+                <div className="text-xl md:text-2xl font-bold text-success">{stats.completedGoals}</div>
                 <div className="text-xs text-muted-foreground">Completadas</div>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-primary">{stats.activeGoals}</div>
+              <div className="hover-lift">
+                <div className="text-xl md:text-2xl font-bold text-primary">{stats.activeGoals}</div>
                 <div className="text-xs text-muted-foreground">En Progreso</div>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-orange-500">{stats.longestStreak}</div>
+              <div className="hover-lift">
+                <div className="text-xl md:text-2xl font-bold text-orange-500">{stats.longestStreak}</div>
                 <div className="text-xs text-muted-foreground">Mejor Racha</div>
               </div>
             </div>
@@ -385,17 +385,17 @@ const Stats = () => {
         </Card>
 
         {/* Motivational Message */}
-        <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 animate-nudge-slide-up">
+        <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 hover-glow stagger-item" style={{ animationDelay: "0.4s" }}>
           <CardContent className="p-6 text-center">
-            <div className="text-4xl mb-3">🚀</div>
-            <h3 className="text-xl font-bold mb-2">
+            <div className="text-4xl mb-3 animate-bounce-subtle">🚀</div>
+            <h3 className="text-lg md:text-xl font-bold mb-2">
               {stats.completionRate >= 80
                 ? "¡Excelente trabajo!"
                 : stats.completionRate >= 50
                 ? "¡Vas por buen camino!"
                 : "¡Sigue adelante!"}
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-sm md:text-base text-muted-foreground">
               {stats.completionRate >= 80
                 ? "Estás alcanzando tus metas consistentemente. ¡Increíble progreso!"
                 : stats.completionRate >= 50
