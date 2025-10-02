@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, LogOut } from "lucide-react";
+import { ArrowLeft, Save, LogOut, Bell } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { requestNotificationPermission, scheduleReminder, sendNotification } from "@/utils/notifications";
 import { Separator } from "@/components/ui/separator";
 
 interface Profile {
@@ -30,12 +32,21 @@ const Settings = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [reminderTime, setReminderTime] = useState("09:00");
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
     loadProfile();
+    loadNotificationSettings();
   }, []);
+
+  useEffect(() => {
+    if (notificationsEnabled) {
+      setupDailyReminder();
+    }
+  }, [notificationsEnabled, reminderTime]);
 
   const loadProfile = async () => {
     try {
@@ -64,6 +75,88 @@ const Settings = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadNotificationSettings = () => {
+    const savedEnabled = localStorage.getItem("notificationsEnabled");
+    const savedTime = localStorage.getItem("reminderTime");
+    
+    if (savedEnabled) {
+      setNotificationsEnabled(savedEnabled === "true");
+    }
+    if (savedTime) {
+      setReminderTime(savedTime);
+    }
+  };
+
+  const setupDailyReminder = async () => {
+    const hasPermission = await requestNotificationPermission();
+    
+    if (!hasPermission) {
+      toast({
+        variant: "destructive",
+        title: "Permisos denegados",
+        description: "No se pueden mostrar notificaciones. Habilita los permisos en tu navegador.",
+      });
+      setNotificationsEnabled(false);
+      localStorage.setItem("notificationsEnabled", "false");
+      return;
+    }
+
+    scheduleReminder(reminderTime, async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: goals } = await supabase
+        .from("goals")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("is_daily", true)
+        .eq("is_completed", false);
+
+      if (goals && goals.length > 0) {
+        sendNotification("¡Hora de trabajar en tus metas! 💪", {
+          body: `Tienes ${goals.length} meta${goals.length > 1 ? 's' : ''} diaria${goals.length > 1 ? 's' : ''} pendiente${goals.length > 1 ? 's' : ''}.`,
+          tag: "daily-reminder",
+        });
+      }
+    });
+  };
+
+  const toggleNotifications = async (enabled: boolean) => {
+    if (enabled) {
+      const hasPermission = await requestNotificationPermission();
+      if (!hasPermission) {
+        toast({
+          variant: "destructive",
+          title: "Permisos denegados",
+          description: "Por favor habilita las notificaciones en la configuración de tu navegador.",
+        });
+        return;
+      }
+    }
+
+    setNotificationsEnabled(enabled);
+    localStorage.setItem("notificationsEnabled", enabled.toString());
+    
+    if (enabled) {
+      toast({
+        title: "Recordatorios activados",
+        description: `Recibirás un recordatorio diario a las ${reminderTime}`,
+      });
+    }
+  };
+
+  const updateReminderTime = (time: string) => {
+    setReminderTime(time);
+    localStorage.setItem("reminderTime", time);
+    
+    if (notificationsEnabled) {
+      toast({
+        title: "Hora actualizada",
+        description: `Nuevo recordatorio a las ${time}`,
+      });
     }
   };
 
@@ -231,6 +324,48 @@ const Settings = () => {
                 rows={4}
               />
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Notifications Section */}
+        <Card className="animate-nudge-slide-up">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bell className="w-5 h-5" />
+              Recordatorios
+            </CardTitle>
+            <CardDescription>
+              Configura recordatorios diarios para tus metas
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Activar recordatorios diarios</Label>
+                <p className="text-sm text-muted-foreground">
+                  Recibe notificaciones para completar tus metas diarias
+                </p>
+              </div>
+              <Switch
+                checked={notificationsEnabled}
+                onCheckedChange={toggleNotifications}
+              />
+            </div>
+
+            {notificationsEnabled && (
+              <div className="space-y-2">
+                <Label htmlFor="reminderTime">Hora del recordatorio</Label>
+                <Input
+                  id="reminderTime"
+                  type="time"
+                  value={reminderTime}
+                  onChange={(e) => updateReminderTime(e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Recibirás una notificación todos los días a esta hora
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
