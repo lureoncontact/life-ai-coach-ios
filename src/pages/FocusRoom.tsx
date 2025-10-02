@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon, Share2, Activity, Briefcase, Heart, DollarSign, Sprout, Brain } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon, Share2, Activity, Briefcase, Heart, DollarSign, Sprout, Brain, MessageCircle } from "lucide-react";
 import nudgeIcon from "@/assets/nudge_icon.png";
 import VoiceInterface from "@/components/VoiceInterface";
 import { onGoalCompleted } from "@/utils/gamification";
@@ -74,6 +74,7 @@ const FocusRoom = () => {
   const [showAchievements, setShowAchievements] = useState(false);
   const [showShareRoom, setShowShareRoom] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
   const [profile, setProfile] = useState<{ full_name: string } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -488,9 +489,23 @@ const FocusRoom = () => {
       </header>
 
       <div className="container mx-auto px-4 py-6">
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Goals Sidebar */}
-          <div className="lg:col-span-1 space-y-4">
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* Goals and Features Section */}
+          <div className="space-y-4">
+            {/* Chat Button */}
+            <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 hover-glow">
+              <CardContent className="p-4">
+                <Button
+                  onClick={() => setShowChatModal(true)}
+                  className="w-full h-16 text-lg btn-interactive hover:scale-105 transition-transform"
+                >
+                  <MessageCircle className="w-6 h-6 mr-2" />
+                  Chat con el Bot de {room.name}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Goals Card */}
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -579,93 +594,114 @@ const FocusRoom = () => {
                 )}
               </CardContent>
             </Card>
-
-            {/* Category-specific features */}
-            {renderCategoryFeature()}
           </div>
 
-          {/* Chat Area */}
-          <div className="lg:col-span-2 flex flex-col h-[calc(100vh-200px)]">
-            <Card className="flex-1 flex flex-col">
-              <CardContent className="flex-1 overflow-y-auto p-6">
-                {messages.length === 0 && (
-                  <div className="text-center py-8 animate-scale-in">
-                    {(() => {
-                      const IconComponent = getAreaIcon(room.area_category);
-                      return (
-                        <div className="flex justify-center mb-4">
-                          <div className="w-14 h-14 bg-primary/10 border-2 border-primary rounded-xl flex items-center justify-center animate-bounce-subtle">
-                            <IconComponent className="w-8 h-8 text-primary" />
-                          </div>
-                        </div>
-                      );
-                    })()}
-                    <h2 className="text-xl font-bold mb-2">Bot de {room.name}</h2>
-                    <p className="text-muted-foreground">
-                      Soy tu coach especializado en {room.name}. ¿Cómo puedo ayudarte hoy?
-                    </p>
-                  </div>
-                )}
-
-                <div className="space-y-4">
-                  {messages.map((message, index) => (
-                    <div
-                      key={index}
-                      className={`flex ${
-                        message.role === "user" ? "justify-end" : "justify-start"
-                      } animate-fade-in stagger-item`}
-                      style={{ animationDelay: `${index * 0.03}s` }}
-                    >
-                      <Card
-                        className={`max-w-[80%] p-4 hover-lift ${
-                          message.role === "user"
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-card hover-glow"
-                        }`}
-                      >
-                        <p className="whitespace-pre-wrap text-sm">{message.content}</p>
-                      </Card>
-                    </div>
-                  ))}
-                </div>
-                <div ref={messagesEndRef} />
-              </CardContent>
-
-              <CardContent className="border-t p-4">
-                <div className="flex gap-2">
-                  <Textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Escribe tu mensaje..."
-                    className="resize-none"
-                    rows={2}
-                    disabled={isLoading}
-                  />
-                  <div className="flex flex-col gap-2">
-                    <VoiceInterface 
-                      roomId={roomId!} 
-                      onTranscriptUpdate={handleVoiceTranscript}
-                    />
-                    <Button
-                      size="icon"
-                      onClick={sendMessage}
-                      disabled={!input.trim() || isLoading}
-                      className="btn-interactive hover:scale-110 transition-transform"
-                    >
-                      {isLoading ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                      ) : (
-                        <Send className="w-5 h-5" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Category-specific features */}
+          <div>
+            {renderCategoryFeature()}
           </div>
         </div>
       </div>
+
+      {/* Chat Modal */}
+      <Dialog open={showChatModal} onOpenChange={setShowChatModal}>
+        <DialogContent className="max-w-4xl h-[80vh] flex flex-col p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle className="flex items-center gap-2">
+              {(() => {
+                const IconComponent = getAreaIcon(room.area_category);
+                return (
+                  <div className="w-8 h-8 bg-primary/10 border border-primary rounded-lg flex items-center justify-center">
+                    <IconComponent className="w-4 h-4 text-primary" />
+                  </div>
+                );
+              })()}
+              <span>Chat con Bot de {room.name}</span>
+            </DialogTitle>
+            <DialogDescription>
+              Tu coach especializado está aquí para ayudarte
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto px-6">
+            {messages.length === 0 && (
+              <div className="text-center py-8 animate-scale-in">
+                {(() => {
+                  const IconComponent = getAreaIcon(room.area_category);
+                  return (
+                    <div className="flex justify-center mb-4">
+                      <div className="w-14 h-14 bg-primary/10 border-2 border-primary rounded-xl flex items-center justify-center animate-bounce-subtle">
+                        <IconComponent className="w-8 h-8 text-primary" />
+                      </div>
+                    </div>
+                  );
+                })()}
+                <h2 className="text-xl font-bold mb-2">Bot de {room.name}</h2>
+                <p className="text-muted-foreground">
+                  Soy tu coach especializado en {room.name}. ¿Cómo puedo ayudarte hoy?
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-4">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${
+                    message.role === "user" ? "justify-end" : "justify-start"
+                  } animate-fade-in stagger-item`}
+                  style={{ animationDelay: `${index * 0.03}s` }}
+                >
+                  <Card
+                    className={`max-w-[80%] p-4 hover-lift ${
+                      message.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-card hover-glow"
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+                  </Card>
+                </div>
+              ))}
+            </div>
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Chat Input */}
+          <div className="border-t p-4">
+            <div className="flex gap-2">
+              <Textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Escribe tu mensaje..."
+                className="resize-none"
+                rows={2}
+                disabled={isLoading}
+              />
+              <div className="flex flex-col gap-2">
+                <VoiceInterface 
+                  roomId={roomId!} 
+                  onTranscriptUpdate={handleVoiceTranscript}
+                />
+                <Button
+                  size="icon"
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isLoading}
+                  className="btn-interactive hover:scale-110 transition-transform"
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Share Room Modal */}
       {room && (
