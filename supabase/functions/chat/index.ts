@@ -12,10 +12,10 @@ serve(async (req) => {
 
   try {
     const { messages, focusRoomId } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    if (!OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY is not configured");
     }
 
     console.log("Starting chat request", { 
@@ -56,14 +56,14 @@ Características clave:
 Tu misión es ayudar al usuario a tener éxito en este objetivo específico.`;
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,
@@ -86,9 +86,19 @@ Tu misión es ayudar al usuario a tener éxito en este objetivo específico.`;
       if (response.status === 402) {
         console.error("Payment required");
         return new Response(
-          JSON.stringify({ error: "Se requiere créditos adicionales en tu cuenta de Lovable." }),
+          JSON.stringify({ error: "Tu API key de OpenAI no tiene créditos suficientes." }),
           {
             status: 402,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+      if (response.status === 401) {
+        console.error("Invalid API key");
+        return new Response(
+          JSON.stringify({ error: "API key de OpenAI inválida. Por favor verifica tu configuración." }),
+          {
+            status: 401,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           }
         );
