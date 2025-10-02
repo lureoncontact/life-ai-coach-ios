@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon } from "lucide-react";
 import VoiceInterface from "@/components/VoiceInterface";
+import { onGoalCompleted } from "@/utils/gamification";
+import AchievementsModal from "@/components/AchievementsModal";
 import {
   Dialog,
   DialogContent,
@@ -57,6 +59,8 @@ const FocusRoom = () => {
   const [showNewGoal, setShowNewGoal] = useState(false);
   const [newGoalTitle, setNewGoalTitle] = useState("");
   const [newGoalIsDaily, setNewGoalIsDaily] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [newAchievements, setNewAchievements] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -280,6 +284,13 @@ const FocusRoom = () => {
   };
 
   const toggleGoalCompletion = async (goalId: string, currentStatus: boolean) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Find the goal to know if it's daily
+    const goal = goals.find(g => g.id === goalId);
+    if (!goal) return;
+
     const { error } = await supabase
       .from("goals")
       .update({
@@ -295,6 +306,26 @@ const FocusRoom = () => {
         description: "No se pudo actualizar la meta",
       });
       return;
+    }
+
+    // Award points and check achievements when completing (not uncompleting)
+    if (!currentStatus) {
+      const achievements = await onGoalCompleted(user.id, goal.is_daily);
+      
+      if (achievements.length > 0) {
+        setNewAchievements(achievements);
+        setShowAchievements(true);
+        
+        toast({
+          title: "¡Logro desbloqueado!",
+          description: `Has desbloqueado ${achievements.length} nuevo${achievements.length > 1 ? 's' : ''} logro${achievements.length > 1 ? 's' : ''}`,
+        });
+      } else {
+        toast({
+          title: "¡Excelente!",
+          description: `+${goal.is_daily ? 15 : 10} puntos`,
+        });
+      }
     }
 
     loadGoals();
@@ -526,6 +557,13 @@ const FocusRoom = () => {
           </div>
         </div>
       </div>
+
+      {/* Achievements Modal */}
+      <AchievementsModal
+        open={showAchievements}
+        onOpenChange={setShowAchievements}
+        userAchievements={newAchievements}
+      />
     </div>
   );
 };

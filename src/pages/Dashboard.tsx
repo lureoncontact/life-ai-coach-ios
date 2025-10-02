@@ -4,7 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3 } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Trophy } from "lucide-react";
+import { useGamification } from "@/hooks/useGamification";
+import GamificationBadge from "@/components/GamificationBadge";
+import AchievementsModal from "@/components/AchievementsModal";
 
 interface Profile {
   full_name: string;
@@ -29,8 +32,10 @@ const Dashboard = () => {
   const [focusRooms, setFocusRooms] = useState<FocusRoom[]>([]);
   const [todaysGoals, setTodaysGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAchievements, setShowAchievements] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { stats, achievements, refreshStats } = useGamification();
 
   useEffect(() => {
     loadDashboardData();
@@ -124,6 +129,11 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex gap-2">
+            {stats && (
+              <Button variant="ghost" size="icon" onClick={() => setShowAchievements(true)}>
+                <Trophy className="w-5 h-5" />
+              </Button>
+            )}
             <Button variant="ghost" size="icon" onClick={() => navigate("/stats")}>
               <BarChart3 className="w-5 h-5" />
             </Button>
@@ -135,6 +145,17 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8">
+        {/* Gamification Badge */}
+        {stats && (
+          <div className="animate-nudge-slide-up">
+            <GamificationBadge
+              totalPoints={stats.total_points}
+              level={stats.level}
+              currentStreak={stats.current_streak}
+            />
+          </div>
+        )}
+
         {/* Main Chat Button */}
         <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 animate-nudge-slide-up">
           <CardContent className="p-6">
@@ -222,6 +243,13 @@ const Dashboard = () => {
           )}
         </div>
       </main>
+
+      {/* Achievements Modal */}
+      <AchievementsModal
+        open={showAchievements}
+        onOpenChange={setShowAchievements}
+        userAchievements={achievements}
+      />
     </div>
   );
 };
