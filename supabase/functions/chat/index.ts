@@ -456,11 +456,13 @@ ${userContext}`;
 
               // Forward the chunk to the client (excluding tool calls)
               if (!delta?.tool_calls) {
-                await writer.write(value);
+                // Rewrite the line properly to avoid duplication
+                const encoder = new TextEncoder();
+                await writer.write(encoder.encode(line + '\n'));
               }
             } catch (parseError) {
               console.error("Error parsing SSE line:", parseError);
-              await writer.write(value);
+              // Don't forward malformed lines
             }
           }
         }
