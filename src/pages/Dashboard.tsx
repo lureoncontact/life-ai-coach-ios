@@ -15,6 +15,7 @@ import ShareRoomModal from "@/components/ShareRoomModal";
 import AIInsightsModal from "@/components/AIInsightsModal";
 import HabitsTracker from "@/components/HabitsTracker";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import DailyCheckInModal from "@/components/DailyCheckInModal";
 
 interface Profile {
   full_name: string;
@@ -42,6 +43,9 @@ const Dashboard = () => {
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [showShareRoom, setShowShareRoom] = useState(false);
   const [showAIInsights, setShowAIInsights] = useState(false);
+  const [showCheckIn, setShowCheckIn] = useState(false);
+  const [hasCheckedInToday, setHasCheckedInToday] = useState(true);
+  const [isFirstLogin, setIsFirstLogin] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -49,6 +53,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadDashboardData();
+    checkDailyCheckIn();
   }, []);
 
   const loadDashboardData = async () => {
@@ -95,6 +100,54 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const checkDailyCheckIn = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const today = new Date().toISOString().split('T')[0];
+
+      // Check if user has done check-in today
+      const { data: checkInData, error } = await supabase
+        .from("daily_check_ins")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("check_in_date", today)
+        .maybeSingle();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error("Error checking daily check-in:", error);
+        return;
+      }
+
+      const hasCheckedIn = !!checkInData;
+      setHasCheckedInToday(hasCheckedIn);
+
+      // Check if this is first time user
+      const { count } = await supabase
+        .from("daily_check_ins")
+        .select("*", { count: 'exact', head: true })
+        .eq("user_id", user.id);
+
+      const isFirst = count === 0;
+      setIsFirstLogin(isFirst);
+
+      // Show modal if first login or hasn't checked in today
+      if (isFirst || !hasCheckedIn) {
+        // Small delay for better UX
+        setTimeout(() => setShowCheckIn(true), 1000);
+      }
+    } catch (error) {
+      console.error("Error in checkDailyCheckIn:", error);
+    }
+  };
+
+  const handleCheckInComplete = () => {
+    setHasCheckedInToday(true);
+    setIsFirstLogin(false);
+    checkDailyCheckIn();
   };
 
   const handleSignOut = async () => {
@@ -277,8 +330,38 @@ const Dashboard = () => {
               ))}
             </div>
           )}
-        </div>
+         </div>
+
+        {/* Daily Check-in Card (if not done today) */}
+        {!hasCheckedInToday && (
+          <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10 animate-fade-in">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Heart className="w-5 h-5 text-primary" />
+                Check-in Diario
+              </CardTitle>
+              <CardDescription>
+                Comparte cómo te sientes hoy para que Nudge pueda apoyarte mejor
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button 
+                onClick={() => setShowCheckIn(true)}
+                className="w-full btn-interactive"
+              >
+                Hacer Check-in
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </main>
+
+      {/* Daily Check-in Modal */}
+      <DailyCheckInModal
+        open={showCheckIn}
+        onOpenChange={setShowCheckIn}
+        onCheckInComplete={handleCheckInComplete}
+      />
 
       {/* Create Focus Room Modal */}
       <CreateFocusRoomModal

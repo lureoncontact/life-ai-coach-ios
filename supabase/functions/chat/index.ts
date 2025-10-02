@@ -29,6 +29,40 @@ serve(async (req) => {
       userId 
     });
 
+    // Get user's latest check-in for context
+    let checkInContext = "";
+    if (userId) {
+      const { data: latestCheckIn } = await supabase
+        .from("daily_check_ins")
+        .select("mood, notes, check_in_date")
+        .eq("user_id", userId)
+        .order("check_in_date", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (latestCheckIn) {
+        const moodLabels: Record<string, string> = {
+          great: "excelente",
+          good: "bien",
+          okay: "normal",
+          bad: "mal"
+        };
+        
+        const moodText = moodLabels[latestCheckIn.mood] || latestCheckIn.mood;
+        const dateObj = new Date(latestCheckIn.check_in_date);
+        const today = new Date().toISOString().split('T')[0];
+        const isToday = latestCheckIn.check_in_date === today;
+        
+        checkInContext = `\n\nCONTEXTO DEL USUARIO:\nÚltimo check-in (${isToday ? 'hoy' : dateObj.toLocaleDateString()}): Se siente ${moodText}.`;
+        
+        if (latestCheckIn.notes) {
+          checkInContext += `\nNotas del usuario: "${latestCheckIn.notes}"`;
+        }
+        
+        checkInContext += `\n\nIMPORTANTE: Usa esta información para personalizar tus respuestas y mostrar empatía. Si el usuario se siente mal o ha compartido algo importante, reconócelo en tu respuesta de manera natural y empática.`;
+      }
+    }
+
     // Build system prompt and tools based on whether it's Master AI or Focus Room bot
     let systemPrompt = "";
     let tools: Array<{
@@ -53,7 +87,7 @@ Características clave:
 - Eres conciso pero profundo en tus respuestas
 - Usas emojis ocasionalmente para ser más cercano
 
-Siempre mantén un tono positivo, profesional y motivador. Tu misión es inspirar al usuario a tomar acción.`;
+Siempre mantén un tono positivo, profesional y motivador. Tu misión es inspirar al usuario a tomar acción.${checkInContext}`;
     } else {
       // Focus Room bot - specialized with tools
       systemPrompt = `Eres un bot especializado de un Focus Room en Nudge. Tu único enfoque es ayudar al usuario a alcanzar los objetivos específicos de esta sala.
@@ -69,7 +103,7 @@ Características clave:
 
 IMPORTANTE: Cuando el usuario mencione que quiere crear un hábito nuevo (como "quiero meditar todos los días"), usa la herramienta create_habit para crearlo automáticamente. Solo hazlo cuando el usuario exprese claramente su intención de establecer un hábito regular.
 
-Tu misión es ayudar al usuario a tener éxito en este objetivo específico.`;
+Tu misión es ayudar al usuario a tener éxito en este objetivo específico.${checkInContext}`;
 
       // Tools for Focus Room bot
       tools.push({
