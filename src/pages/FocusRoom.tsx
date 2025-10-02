@@ -9,7 +9,6 @@ import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon, Share2
 import nudgeIcon from "@/assets/nudge_icon.png";
 import VoiceInterface from "@/components/VoiceInterface";
 import { onGoalCompleted } from "@/utils/gamification";
-import AchievementsModal from "@/components/AchievementsModal";
 import ShareRoomModal from "@/components/ShareRoomModal";
 import ActiveUsersIndicator from "@/components/ActiveUsersIndicator";
 import CelebrationEffect from "@/components/CelebrationEffect";
@@ -71,7 +70,6 @@ const FocusRoom = () => {
   const [showNewGoal, setShowNewGoal] = useState(false);
   const [newGoalTitle, setNewGoalTitle] = useState("");
   const [newGoalIsDaily, setNewGoalIsDaily] = useState(false);
-  const [showAchievements, setShowAchievements] = useState(false);
   const [showShareRoom, setShowShareRoom] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
@@ -370,11 +368,6 @@ const FocusRoom = () => {
       if (achievements.length > 0) {
         setNewAchievements(achievements);
         setShowCelebration(true);
-        
-        // Show achievements modal after celebration
-        setTimeout(() => {
-          setShowAchievements(true);
-        }, 3000);
         
         toast({
           title: "¡Logro desbloqueado!",
@@ -706,13 +699,6 @@ const FocusRoom = () => {
           roomName={room.name}
         />
       )}
-
-      {/* Achievements Modal */}
-      <AchievementsModal
-        open={showAchievements}
-        onOpenChange={setShowAchievements}
-        userAchievements={newAchievements}
-      />
 
       {/* Celebration Effect */}
       <CelebrationEffect

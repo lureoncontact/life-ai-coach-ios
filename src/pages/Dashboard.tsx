@@ -4,12 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Award, Activity, Briefcase, DollarSign, Sprout, Brain } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Share2, Heart, Activity, Briefcase, DollarSign, Sprout, Brain } from "lucide-react";
 import nudgeIcon from "@/assets/nudge_icon.png";
-import { useGamification } from "@/hooks/useGamification";
 import MobileMenu from "@/components/MobileMenu";
-import GamificationBadge from "@/components/GamificationBadge";
-import AchievementsModal from "@/components/AchievementsModal";
 import CreateFocusRoomModal from "@/components/CreateFocusRoomModal";
 import ShareRoomModal from "@/components/ShareRoomModal";
 import AIInsightsModal from "@/components/AIInsightsModal";
@@ -39,14 +36,12 @@ const Dashboard = () => {
   const [focusRooms, setFocusRooms] = useState<FocusRoom[]>([]);
   const [todaysGoals, setTodaysGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showAchievements, setShowAchievements] = useState(false);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [showShareRoom, setShowShareRoom] = useState(false);
   const [showAIInsights, setShowAIInsights] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { stats, achievements, refreshStats } = useGamification();
 
   useEffect(() => {
     loadDashboardData();
@@ -146,9 +141,6 @@ const Dashboard = () => {
           <div className="flex gap-2">
             {/* Desktop icons */}
             <div className="hidden md:flex gap-2">
-              <Button variant="ghost" size="icon" onClick={() => setShowAchievements(true)}>
-                <Trophy className="w-5 h-5" />
-              </Button>
               <Button variant="ghost" size="icon" onClick={() => navigate("/stats")}>
                 <BarChart3 className="w-5 h-5" />
               </Button>
@@ -157,27 +149,12 @@ const Dashboard = () => {
               </Button>
             </div>
             {/* Mobile menu */}
-            <MobileMenu
-              onAchievementsClick={() => setShowAchievements(true)}
-              onCheckInClick={() => {}}
-              showStats={!!stats}
-            />
+            <MobileMenu />
           </div>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8">
-        {/* Gamification Badge */}
-        {stats && (
-          <div className="animate-nudge-slide-up">
-            <GamificationBadge
-              totalPoints={stats.total_points}
-              level={stats.level}
-              currentStreak={stats.current_streak}
-            />
-          </div>
-        )}
-
         {/* Main Chat Button */}
         <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 animate-nudge-slide-up hover-glow">
           <CardContent className="p-6">
@@ -287,22 +264,11 @@ const Dashboard = () => {
         </div>
       </main>
 
-      {/* Achievements Modal */}
-      <AchievementsModal
-        open={showAchievements}
-        onOpenChange={setShowAchievements}
-        userAchievements={achievements}
-        userStats={stats || undefined}
-      />
-
       {/* Create Focus Room Modal */}
       <CreateFocusRoomModal
         open={showCreateRoom}
         onOpenChange={setShowCreateRoom}
-        onRoomCreated={() => {
-          loadDashboardData();
-          refreshStats();
-        }}
+        onRoomCreated={loadDashboardData}
       />
 
       {/* Share Room Modal */}
