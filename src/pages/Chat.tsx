@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Send, Loader2 } from "lucide-react";
-import { Target } from "lucide-react";
+import nudgeIcon from "@/assets/nudge_icon.png";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface Message {
@@ -206,9 +206,7 @@ const Chat = () => {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-primary/10 border border-primary rounded-lg flex items-center justify-center">
-              <Target className="w-5 h-5 text-primary" />
-            </div>
+            <img src={nudgeIcon} alt="Nudge" className="w-9 h-9" />
             <div>
               <h1 className="text-lg font-bold">Chat con Nudge</h1>
               <p className="text-xs text-muted-foreground">Tu coach personal de IA</p>

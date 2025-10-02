@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon, Share2, Activity, Briefcase, Heart, DollarSign, Sprout, Brain, Target } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon, Share2, Activity, Briefcase, Heart, DollarSign, Sprout, Brain } from "lucide-react";
+import nudgeIcon from "@/assets/nudge_icon.png";
 import VoiceInterface from "@/components/VoiceInterface";
 import { onGoalCompleted } from "@/utils/gamification";
 import AchievementsModal from "@/components/AchievementsModal";
@@ -419,7 +420,7 @@ const FocusRoom = () => {
       personal: Sprout,
       mental: Brain,
     };
-    return icons[category] || Target;
+    return icons[category] || Activity;
   };
 
   return (

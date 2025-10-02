@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Trophy, Target, TrendingUp, Calendar, Flame } from "lucide-react";
+import { ArrowLeft, Trophy, TrendingUp, Calendar, Flame } from "lucide-react";
+import nudgeIcon from "@/assets/nudge_icon.png";
 import { Progress } from "@/components/ui/progress";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -195,7 +196,7 @@ const Stats = () => {
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total Metas
                 </CardTitle>
-                <Target className="w-4 h-4 text-primary" />
+                <img src={nudgeIcon} alt="Nudge" className="w-4 h-4" />
               </div>
             </CardHeader>
             <CardContent>

@@ -4,7 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Sparkles, Award, Activity, Briefcase, DollarSign, Sprout, Brain, Target } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart, Sparkles, Award, Activity, Briefcase, DollarSign, Sprout, Brain } from "lucide-react";
+import nudgeIcon from "@/assets/nudge_icon.png";
 import { useGamification } from "@/hooks/useGamification";
 import GamificationBadge from "@/components/GamificationBadge";
 import AchievementsModal from "@/components/AchievementsModal";
@@ -131,7 +132,7 @@ const Dashboard = () => {
       personal: Sprout,
       mental: Brain,
     };
-    return icons[category] || Target;
+    return icons[category] || Activity;
   };
 
   if (loading) {
@@ -148,9 +149,7 @@ const Dashboard = () => {
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-primary/10 border border-primary rounded-lg flex items-center justify-center">
-              <Target className="w-5 h-5 text-primary" />
-            </div>
+            <img src={nudgeIcon} alt="Nudge" className="w-9 h-9" />
             <div>
               <h1 className="text-xl font-bold">Nudge</h1>
               <p className="text-xs text-muted-foreground">

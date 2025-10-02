@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Target } from "lucide-react";
+import nudgeIcon from "@/assets/nudge_icon.png";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -80,9 +80,7 @@ const Auth = () => {
       <Card className="w-full max-w-md animate-scale-in hover-lift">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-14 h-14 bg-primary/10 border-2 border-primary rounded-xl flex items-center justify-center">
-              <Target className="w-7 h-7 text-primary" />
-            </div>
+            <img src={nudgeIcon} alt="Nudge Icon" className="w-14 h-14" />
           </div>
           <CardTitle className="text-3xl font-bold">Nudge</CardTitle>
           <CardDescription>

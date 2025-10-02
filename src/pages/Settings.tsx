@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, LogOut, Bell, Crown, Share2, Download, Palette, Target } from "lucide-react";
+import { ArrowLeft, Save, LogOut, Bell, Crown, Share2, Download, Palette } from "lucide-react";
+import nudgeIcon from "@/assets/nudge_icon.png";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Switch } from "@/components/ui/switch";
 import { requestNotificationPermission, scheduleReminder, sendNotification } from "@/utils/notifications";
@@ -439,9 +440,7 @@ const Settings = () => {
         <Card className="bg-muted/50">
           <CardContent className="p-4 text-center text-sm text-muted-foreground">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-primary/10 border border-primary rounded-lg flex items-center justify-center">
-                <Target className="w-4 h-4 text-primary" />
-              </div>
+              <img src={nudgeIcon} alt="Nudge" className="w-8 h-8" />
               <span className="font-semibold text-foreground text-base">Nudge</span>
             </div>
             <p>Tu coach de vida personal impulsado por IA</p>
