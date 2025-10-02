@@ -124,15 +124,15 @@ const CreateFocusRoomModal = ({ open, onOpenChange, onRoomCreated }: CreateFocus
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in">
         <DialogHeader>
-          <DialogTitle>Crear Focus Room</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="animate-fade-in">Crear Focus Room</DialogTitle>
+          <DialogDescription className="animate-fade-in" style={{ animationDelay: '100ms' }}>
             Configura tu nuevo espacio de enfoque con un bot especializado
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 mt-4">
+        <div className="space-y-4 mt-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
           <div className="space-y-2">
             <Label htmlFor="name">Nombre del Focus Room *</Label>
             <Input
@@ -219,10 +219,10 @@ const CreateFocusRoomModal = ({ open, onOpenChange, onRoomCreated }: CreateFocus
           </div>
 
           <div className="flex gap-3 justify-end pt-4">
-            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isCreating}>
+            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isCreating} className="btn-interactive hover:scale-105">
               Cancelar
             </Button>
-            <Button onClick={handleCreate} disabled={isCreating}>
+            <Button onClick={handleCreate} disabled={isCreating} className="btn-interactive hover:scale-105">
               {isCreating ? "Creando..." : "Crear Focus Room"}
             </Button>
           </div>

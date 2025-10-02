@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, Circle, Flame } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface Habit {
   id: string;
@@ -83,21 +84,12 @@ const HabitsTracker = () => {
   };
 
   if (loading) {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="animate-pulse space-y-3">
-            <div className="h-4 bg-muted rounded w-3/4"></div>
-            <div className="h-4 bg-muted rounded w-1/2"></div>
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return <LoadingSpinner />;
   }
 
   if (habits.length === 0) {
     return (
-      <Card>
+      <Card className="hover-lift animate-fade-in">
         <CardHeader>
           <CardTitle className="text-lg">Hábitos Diarios</CardTitle>
           <CardDescription>
@@ -105,7 +97,7 @@ const HabitsTracker = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button variant="outline" className="w-full" onClick={() => {}}>
+          <Button variant="outline" className="w-full btn-interactive hover:scale-105" onClick={() => {}}>
             Agregar Hábito
           </Button>
         </CardContent>
@@ -117,7 +109,7 @@ const HabitsTracker = () => {
   const progress = (completedToday / habits.length) * 100;
 
   return (
-    <Card>
+    <Card className="hover-lift animate-fade-in">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg flex items-center justify-between">
           Hábitos Diarios
@@ -128,17 +120,18 @@ const HabitsTracker = () => {
         <Progress value={progress} className="h-2 mt-2" />
       </CardHeader>
       <CardContent className="space-y-2">
-        {habits.map((habit) => (
+        {habits.map((habit, index) => (
           <div
             key={habit.id}
-            className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer"
+            className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-all cursor-pointer hover-lift stagger-item btn-interactive"
+            style={{ animationDelay: `${index * 50}ms` }}
             onClick={() => toggleHabit(habit.id)}
           >
             <div className="flex items-center gap-3">
               {habit.completed_today ? (
-                <CheckCircle2 className="w-5 h-5 text-success" />
+                <CheckCircle2 className="w-5 h-5 text-success animate-scale-in" />
               ) : (
-                <Circle className="w-5 h-5 text-muted-foreground" />
+                <Circle className="w-5 h-5 text-muted-foreground transition-transform hover:scale-110" />
               )}
               <span className={habit.completed_today ? "line-through text-muted-foreground" : ""}>
                 {habit.title}
@@ -146,7 +139,7 @@ const HabitsTracker = () => {
             </div>
             {habit.streak > 0 && (
               <div className="flex items-center gap-1 text-sm">
-                <Flame className="w-4 h-4 text-orange-500" />
+                <Flame className="w-4 h-4 text-orange-500 animate-bounce-subtle" />
                 <span className="font-semibold">{habit.streak}</span>
               </div>
             )}

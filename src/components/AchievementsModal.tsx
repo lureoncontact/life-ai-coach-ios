@@ -62,10 +62,10 @@ const AchievementsModal = ({ open, onOpenChange, userAchievements }: Achievement
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto animate-scale-in">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Trophy className="w-5 h-5" />
+            <Trophy className="w-5 h-5 text-primary animate-pulse" />
             Logros
           </DialogTitle>
           <DialogDescription>
@@ -74,19 +74,24 @@ const AchievementsModal = ({ open, onOpenChange, userAchievements }: Achievement
         </DialogHeader>
 
         <div className="grid md:grid-cols-2 gap-4 mt-4">
-          {allAchievements.map((achievement) => {
+          {allAchievements.map((achievement, index) => {
             const unlocked = isUnlocked(achievement.id);
             const unlockDate = getUnlockDate(achievement.id);
 
             return (
               <Card
                 key={achievement.id}
-                className={`p-4 ${unlocked ? "bg-primary/5 border-primary/20" : "opacity-60"}`}
+                className={`p-4 hover-lift stagger-item animate-fade-in ${
+                  unlocked 
+                    ? "bg-primary/5 border-primary/20 hover-glow" 
+                    : "opacity-60"
+                }`}
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 <div className="flex items-start gap-3">
                   <div
-                    className={`text-3xl ${
-                      unlocked ? "grayscale-0" : "grayscale"
+                    className={`text-3xl transition-all ${
+                      unlocked ? "grayscale-0 animate-bounce-subtle" : "grayscale"
                     }`}
                   >
                     {achievement.icon}
