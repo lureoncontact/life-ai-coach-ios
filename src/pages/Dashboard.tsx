@@ -4,12 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2 } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Trophy, Share2, Heart } from "lucide-react";
 import { useGamification } from "@/hooks/useGamification";
 import GamificationBadge from "@/components/GamificationBadge";
 import AchievementsModal from "@/components/AchievementsModal";
 import CreateFocusRoomModal from "@/components/CreateFocusRoomModal";
 import ShareRoomModal from "@/components/ShareRoomModal";
+import DailyCheckInModal from "@/components/DailyCheckInModal";
 
 interface Profile {
   full_name: string;
@@ -37,6 +38,7 @@ const Dashboard = () => {
   const [showAchievements, setShowAchievements] = useState(false);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [showShareRoom, setShowShareRoom] = useState(false);
+  const [showCheckIn, setShowCheckIn] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -44,7 +46,20 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadDashboardData();
+    checkDailyCheckIn();
   }, []);
+
+  const checkDailyCheckIn = () => {
+    const lastCheckIn = localStorage.getItem("last-check-in");
+    const today = new Date().toISOString().split('T')[0];
+    
+    if (lastCheckIn !== today) {
+      // Show check-in modal after 2 seconds
+      setTimeout(() => {
+        setShowCheckIn(true);
+      }, 2000);
+    }
+  };
 
   const loadDashboardData = async () => {
     try {
@@ -140,6 +155,9 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex gap-2">
+            <Button variant="ghost" size="icon" onClick={() => setShowCheckIn(true)}>
+              <Heart className="w-5 h-5" />
+            </Button>
             {stats && (
               <Button variant="ghost" size="icon" onClick={() => setShowAchievements(true)}>
                 <Trophy className="w-5 h-5" />
@@ -291,6 +309,16 @@ const Dashboard = () => {
           roomName={selectedRoom.name}
         />
       )}
+
+      {/* Daily Check-in Modal */}
+      <DailyCheckInModal
+        open={showCheckIn}
+        onOpenChange={setShowCheckIn}
+        onCheckInComplete={() => {
+          refreshStats();
+          loadDashboardData();
+        }}
+      />
     </div>
   );
 };

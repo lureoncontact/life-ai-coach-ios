@@ -82,6 +82,33 @@ export type Database = {
           },
         ]
       }
+      daily_check_ins: {
+        Row: {
+          check_in_date: string
+          created_at: string
+          id: string
+          mood: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          check_in_date: string
+          created_at?: string
+          id?: string
+          mood: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          check_in_date?: string
+          created_at?: string
+          id?: string
+          mood?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       focus_rooms: {
         Row: {
           area_category: string

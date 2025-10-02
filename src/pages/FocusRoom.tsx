@@ -9,6 +9,9 @@ import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon } from 
 import VoiceInterface from "@/components/VoiceInterface";
 import { onGoalCompleted } from "@/utils/gamification";
 import AchievementsModal from "@/components/AchievementsModal";
+import ActiveUsersIndicator from "@/components/ActiveUsersIndicator";
+import { useRealtimePresence } from "@/hooks/useRealtimePresence";
+import { useRealtimeGoals } from "@/hooks/useRealtimeGoals";
 import {
   Dialog,
   DialogContent,
@@ -61,15 +64,42 @@ const FocusRoom = () => {
   const [newGoalIsDaily, setNewGoalIsDaily] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
+  const [profile, setProfile] = useState<{ full_name: string } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Realtime hooks
+  const { activeUsers, activeCount } = useRealtimePresence(
+    roomId || "",
+    profile?.full_name || "Usuario"
+  );
+  
+  useRealtimeGoals(roomId || "", () => {
+    loadGoals();
+  });
+
   useEffect(() => {
+    loadProfile();
     loadRoomData();
     loadGoals();
     loadChatHistory();
   }, [roomId]);
+
+  const loadProfile = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("id", user.id)
+      .single();
+
+    if (data) {
+      setProfile(data);
+    }
+  };
 
   useEffect(() => {
     scrollToBottom();
@@ -391,6 +421,13 @@ const FocusRoom = () => {
             <SettingsIcon className="w-5 h-5" />
           </Button>
         </div>
+        
+        {/* Active Users Indicator */}
+        {activeCount > 0 && (
+          <div className="container mx-auto px-4 pb-3">
+            <ActiveUsersIndicator activeUsers={activeUsers} activeCount={activeCount} />
+          </div>
+        )}
       </header>
 
       <div className="container mx-auto px-4 py-6">
