@@ -276,7 +276,7 @@ const Chat = () => {
       </div>
 
       {/* Input */}
-      <div className="border-t bg-background/80 backdrop-blur-sm">
+      <div className="border-t bg-background/80 backdrop-blur-sm sticky bottom-0">
         <div className="container mx-auto px-4 py-4 max-w-4xl">
           <div className="flex gap-2">
             <Textarea
@@ -301,9 +301,6 @@ const Chat = () => {
               )}
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground mt-2 text-center">
-            Presiona Enter para enviar, Shift+Enter para nueva línea
-          </p>
         </div>
       </div>
     </div>
