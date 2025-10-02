@@ -1,0 +1,60 @@
+{
+  "name": "Nudge - Tu Coach de Vida Personal",
+  "short_name": "Nudge",
+  "description": "Coach de vida personal impulsado por IA para alcanzar tus metas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F7F7",
+  "theme_color": "#48B8A9",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "type": "image/png",
+      "sizes": "540x720",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-desktop.png",
+      "type": "image/png",
+      "sizes": "1280x720",
+      "form_factor": "wide"
+    }
+  ],
+  "categories": ["productivity", "lifestyle", "health"],
+  "shortcuts": [
+    {
+      "name": "Chat con Nudge",
+      "short_name": "Chat",
+      "description": "Habla con tu coach personal",
+      "url": "/chat",
+      "icons": [{ "src": "/favicon.ico", "sizes": "64x64" }]
+    },
+    {
+      "name": "Mis Metas",
+      "short_name": "Metas",
+      "description": "Ver mis metas del día",
+      "url": "/dashboard",
+      "icons": [{ "src": "/favicon.ico", "sizes": "64x64" }]
+    }
+  ]
+}

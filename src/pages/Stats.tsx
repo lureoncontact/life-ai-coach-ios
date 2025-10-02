@@ -4,8 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Trophy, Target, TrendingUp, Calendar } from "lucide-react";
+import { ArrowLeft, Trophy, Target, TrendingUp, Calendar, Flame } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 interface Stats {
   totalGoals: number;
@@ -15,6 +16,20 @@ interface Stats {
   completionRate: number;
   dailyGoals: number;
   completedDailyGoals: number;
+  currentStreak: number;
+  longestStreak: number;
+  totalPoints: number;
+  level: number;
+}
+
+interface GoalsByCategory {
+  category: string;
+  count: number;
+}
+
+interface WeeklyProgress {
+  day: string;
+  completed: number;
 }
 
 const Stats = () => {
@@ -26,7 +41,13 @@ const Stats = () => {
     completionRate: 0,
     dailyGoals: 0,
     completedDailyGoals: 0,
+    currentStreak: 0,
+    longestStreak: 0,
+    totalPoints: 0,
+    level: 1,
   });
+  const [goalsByCategory, setGoalsByCategory] = useState<GoalsByCategory[]>([]);
+  const [weeklyProgress, setWeeklyProgress] = useState<WeeklyProgress[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -43,10 +64,17 @@ const Stats = () => {
         return;
       }
 
-      // Load focus rooms count
+      // Load user stats (gamification)
+      const { data: userStats } = await supabase
+        .from("user_stats")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      // Load focus rooms with categories
       const { data: roomsData, error: roomsError } = await supabase
         .from("focus_rooms")
-        .select("id", { count: "exact" })
+        .select("id, area_category")
         .eq("user_id", user.id);
 
       if (roomsError) throw roomsError;
@@ -54,7 +82,7 @@ const Stats = () => {
       // Load goals stats
       const { data: goalsData, error: goalsError } = await supabase
         .from("goals")
-        .select("is_completed, is_daily")
+        .select("is_completed, is_daily, focus_room_id, completed_at")
         .eq("user_id", user.id);
 
       if (goalsError) throw goalsError;
@@ -66,6 +94,50 @@ const Stats = () => {
       const completedDailyGoals = goalsData?.filter((g) => g.is_daily && g.is_completed).length || 0;
       const completionRate = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
 
+      // Calculate goals by category
+      const categoryCount: Record<string, number> = {};
+      goalsData?.forEach((goal) => {
+        const room = roomsData?.find((r) => r.id === goal.focus_room_id);
+        if (room) {
+          categoryCount[room.area_category] = (categoryCount[room.area_category] || 0) + 1;
+        }
+      });
+
+      const categoryData = Object.entries(categoryCount).map(([category, count]) => ({
+        category: category === "health" ? "Salud" :
+                 category === "career" ? "Carrera" :
+                 category === "relationships" ? "Relaciones" :
+                 category === "finance" ? "Finanzas" :
+                 category === "personal" ? "Personal" :
+                 category === "mental" ? "Mental" : category,
+        count,
+      }));
+
+      setGoalsByCategory(categoryData);
+
+      // Calculate weekly progress (last 7 days)
+      const last7Days = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (6 - i));
+        return date;
+      });
+
+      const weeklyData = last7Days.map((date) => {
+        const dayName = date.toLocaleDateString("es", { weekday: "short" });
+        const completed = goalsData?.filter((goal) => {
+          if (!goal.completed_at) return false;
+          const completedDate = new Date(goal.completed_at);
+          return completedDate.toDateString() === date.toDateString();
+        }).length || 0;
+
+        return {
+          day: dayName.charAt(0).toUpperCase() + dayName.slice(1),
+          completed,
+        };
+      });
+
+      setWeeklyProgress(weeklyData);
+
       setStats({
         totalGoals,
         completedGoals,
@@ -74,6 +146,10 @@ const Stats = () => {
         completionRate,
         dailyGoals,
         completedDailyGoals,
+        currentStreak: userStats?.current_streak || 0,
+        longestStreak: userStats?.longest_streak || 0,
+        totalPoints: userStats?.total_points || 0,
+        level: userStats?.level || 1,
       });
     } catch (error: any) {
       toast({
@@ -111,7 +187,7 @@ const Stats = () => {
 
       <main className="container mx-auto px-4 py-8 space-y-6">
         {/* Summary Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
           <Card className="animate-nudge-slide-up">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -150,15 +226,15 @@ const Stats = () => {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Focus Rooms
+                  Racha Actual
                 </CardTitle>
-                <TrendingUp className="w-4 h-4 text-accent" />
+                <Flame className="w-4 h-4 text-orange-500" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{stats.totalFocusRooms}</div>
+              <div className="text-3xl font-bold text-orange-500">{stats.currentStreak}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                Áreas de enfoque
+                días consecutivos
               </p>
             </CardContent>
           </Card>
@@ -167,18 +243,110 @@ const Stats = () => {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Metas Diarias
+                  Focus Rooms
                 </CardTitle>
-                <Calendar className="w-4 h-4 text-primary" />
+                <TrendingUp className="w-4 h-4 text-accent" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">
-                {stats.completedDailyGoals}/{stats.dailyGoals}
-              </div>
+              <div className="text-3xl font-bold">{stats.totalFocusRooms}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                Hoy completadas
+                áreas de enfoque
               </p>
+            </CardContent>
+          </Card>
+
+          <Card className="animate-nudge-slide-up" style={{ animationDelay: "0.4s" }}>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Nivel
+                </CardTitle>
+                <Trophy className="w-4 h-4 text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-primary">{stats.level}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {stats.totalPoints} pts
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Charts Row */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Weekly Progress Chart */}
+          <Card className="animate-nudge-slide-up">
+            <CardHeader>
+              <CardTitle>Progreso Semanal</CardTitle>
+              <CardDescription>
+                Metas completadas en los últimos 7 días
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={weeklyProgress}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="day" className="text-xs" />
+                  <YAxis className="text-xs" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Bar dataKey="completed" fill="hsl(var(--primary))" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Goals by Category Chart */}
+          <Card className="animate-nudge-slide-up">
+            <CardHeader>
+              <CardTitle>Metas por Categoría</CardTitle>
+              <CardDescription>
+                Distribución de tus metas por área
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <PieChart>
+                  <Pie
+                    data={goalsByCategory}
+                    dataKey="count"
+                    nameKey="category"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    label
+                  >
+                    {goalsByCategory.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={[
+                          'hsl(var(--primary))',
+                          'hsl(var(--success))',
+                          'hsl(var(--accent))',
+                          'hsl(var(--warning))',
+                          'hsl(var(--secondary))',
+                          'hsl(var(--destructive))'
+                        ][index % 6]} 
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--card))',
+                      border: '1px solid hsl(var(--border))',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
             </CardContent>
           </Card>
         </div>
@@ -199,7 +367,7 @@ const Stats = () => {
               </div>
               <Progress value={stats.completionRate} className="h-3" />
             </div>
-            <div className="grid grid-cols-2 gap-4 text-center">
+            <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-success">{stats.completedGoals}</div>
                 <div className="text-xs text-muted-foreground">Completadas</div>
@@ -207,6 +375,10 @@ const Stats = () => {
               <div>
                 <div className="text-2xl font-bold text-primary">{stats.activeGoals}</div>
                 <div className="text-xs text-muted-foreground">En Progreso</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-orange-500">{stats.longestStreak}</div>
+                <div className="text-xs text-muted-foreground">Mejor Racha</div>
               </div>
             </div>
           </CardContent>

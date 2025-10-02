@@ -12,6 +12,7 @@ import FocusRoom from "./pages/FocusRoom";
 import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import InstallPWAPrompt from "./components/InstallPWAPrompt";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <Toaster />
     <Sonner />
+    <InstallPWAPrompt />
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Index />} />
