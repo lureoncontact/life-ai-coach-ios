@@ -12,6 +12,7 @@ import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
 import Progress from "./pages/Progress";
 import Integrations from "./pages/Integrations";
+import SocialMedia from "./pages/SocialMedia";
 import NotFound from "./pages/NotFound";
 
 
@@ -34,6 +35,7 @@ const App = () => (
         <Route path="/settings" element={<Settings />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/integrations" element={<Integrations />} />
+        <Route path="/social-media" element={<SocialMedia />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

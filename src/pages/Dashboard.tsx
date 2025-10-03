@@ -17,7 +17,6 @@ import HabitsTracker from "@/components/HabitsTracker";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import DailyCheckInModal from "@/components/DailyCheckInModal";
 import DailyTipCard from "@/components/DailyTipCard";
-import { SocialMediaAnalysisModal } from "@/components/SocialMediaAnalysisModal";
 
 interface Profile {
   full_name: string;
@@ -49,7 +48,6 @@ const Dashboard = () => {
   const [hasCheckedInToday, setHasCheckedInToday] = useState(true);
   const [isFirstLogin, setIsFirstLogin] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
-  const [showSocialMedia, setShowSocialMedia] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { stats, loading: statsLoading, refreshStats } = useGamification();
@@ -211,7 +209,7 @@ const Dashboard = () => {
               </Button>
             </div>
             {/* Mobile menu */}
-            <MobileMenu onOpenSocialMedia={() => setShowSocialMedia(true)} />
+            <MobileMenu />
           </div>
         </div>
       </header>
@@ -383,7 +381,7 @@ const Dashboard = () => {
           </CardHeader>
           <CardContent>
             <Button 
-              onClick={() => setShowSocialMedia(true)}
+              onClick={() => navigate("/social-media")}
               className="w-full btn-interactive"
               variant="outline"
             >
@@ -422,12 +420,6 @@ const Dashboard = () => {
       <AIInsightsModal
         open={showAIInsights}
         onOpenChange={setShowAIInsights}
-      />
-
-      {/* Social Media Analysis Modal */}
-      <SocialMediaAnalysisModal
-        open={showSocialMedia}
-        onOpenChange={setShowSocialMedia}
       />
     </div>
   );
