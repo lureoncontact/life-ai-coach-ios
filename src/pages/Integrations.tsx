@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, MessageSquare, Activity, Briefcase, Check, ExternalLink } from "lucide-react";
 import MobileMenu from "@/components/MobileMenu";
 import nudgeIcon from "@/assets/nudge_icon.png";
+import whoopLogo from "@/assets/whoop_logo.png";
 import { useToast } from "@/hooks/use-toast";
 
 interface Integration {
@@ -43,7 +44,7 @@ const Integrations = () => {
       id: "whoop",
       name: "Whoop",
       description: "Sincroniza tus métricas de recuperación y sueño",
-      logoUrl: "https://assets-global.website-files.com/5fb4828f3dfac00231fdc59f/5fb4828f3dfac0819ffdc5d5_WHOOP_Logo_Horizontal_Black.svg",
+      logoUrl: whoopLogo,
       category: "health",
       connected: false,
     },
