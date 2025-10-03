@@ -209,11 +209,11 @@ const Integrations = () => {
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-lg bg-background border flex items-center justify-center overflow-hidden">
+                            <div className="w-14 h-14 rounded-xl bg-background border flex items-center justify-center overflow-hidden p-2">
                               <img 
                                 src={integration.logoUrl} 
                                 alt={integration.name}
-                                className="w-8 h-8 object-contain"
+                                className="w-full h-full object-contain"
                                 onError={(e) => {
                                   e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2348B8A9'/%3E%3C/svg%3E";
                                 }}
