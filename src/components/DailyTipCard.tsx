@@ -41,7 +41,11 @@ const DailyTipCard = ({ userName, currentStreak, totalPoints, level }: DailyTipC
   const generateDailyTip = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        // Fallback to generic tip
+        setTip(getGenericTip());
+        return;
+      }
 
       // Get user's habits
       const { data: habits } = await supabase
@@ -77,23 +81,40 @@ const DailyTipCard = ({ userName, currentStreak, totalPoints, level }: DailyTipC
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error from edge function:", error);
+        setTip(getGenericTip());
+        return;
+      }
 
       if (data?.tip) {
         setTip(data.tip);
         const today = new Date().toISOString().split('T')[0];
         localStorage.setItem(`tip-${today}`, data.tip);
+      } else {
+        setTip(getGenericTip());
       }
     } catch (error: any) {
       console.error("Error generating tip:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "No se pudo generar el tip del día"
-      });
+      // Always show a generic tip instead of error toast
+      setTip(getGenericTip());
     } finally {
       setLoading(false);
     }
+  };
+
+  const getGenericTip = () => {
+    const genericTips = [
+      "Empieza el día con una meta pequeña y alcanzable. El momentum es tu mejor aliado.",
+      "La constancia vence al talento. Haz una cosa bien hoy, aunque sea pequeña.",
+      "Tu racha actual es tu compromiso contigo mismo. Protégela.",
+      "Los hábitos se construyen con decisiones diarias. ¿Qué decides hoy?",
+      "El progreso no siempre es visible. Confía en el proceso.",
+      "Cada día es una oportunidad para ser 1% mejor que ayer.",
+      "No rompas la cadena. Tu yo del futuro te lo agradecerá.",
+      "La disciplina es elegir entre lo que quieres ahora y lo que quieres más."
+    ];
+    return genericTips[Math.floor(Math.random() * genericTips.length)];
   };
 
   const handleClose = () => {
