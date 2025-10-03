@@ -211,7 +211,7 @@ const Dashboard = () => {
               </Button>
             </div>
             {/* Mobile menu */}
-            <MobileMenu />
+            <MobileMenu onOpenSocialMedia={() => setShowSocialMedia(true)} />
           </div>
         </div>
       </header>

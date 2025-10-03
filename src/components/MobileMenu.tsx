@@ -2,9 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, BarChart3, Settings, TrendingUp, Plug } from "lucide-react";
+import { Menu, BarChart3, Settings, TrendingUp, Plug, Users } from "lucide-react";
 
-const MobileMenu = () => {
+interface MobileMenuProps {
+  onOpenSocialMedia?: () => void;
+}
+
+const MobileMenu = ({ onOpenSocialMedia }: MobileMenuProps) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -54,6 +58,16 @@ const MobileMenu = () => {
             <Plug className="w-5 h-5 mr-2" />
             Integraciones
           </Button>
+          {onOpenSocialMedia && (
+            <Button
+              variant="ghost"
+              className="w-full justify-start"
+              onClick={() => handleAction(onOpenSocialMedia)}
+            >
+              <Users className="w-5 h-5 mr-2" />
+              Análisis de Redes
+            </Button>
+          )}
           <Button
             variant="ghost"
             className="w-full justify-start"
