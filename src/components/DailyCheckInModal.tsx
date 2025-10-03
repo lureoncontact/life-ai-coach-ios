@@ -34,11 +34,13 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
   const { toast } = useToast();
 
   const deepQuestions = [
-    "¿Cuál es tu mayor miedo en este momento?",
-    "¿Qué te impidió cumplir tus hábitos ayer?",
-    "¿Qué necesitas soltar para avanzar?",
-    "¿Qué historia te cuentas que te limita?",
-    "¿De qué estás huyendo realmente?"
+    "¿Qué te detuvo de hacer ejercicio esta semana?",
+    "¿Cuál fue tu mayor distracción ayer?",
+    "¿Qué excusa te diste para no avanzar hoy?",
+    "¿Qué hábito rompiste y por qué?",
+    "¿Qué decisión evitaste tomar hoy?",
+    "¿En qué momento del día perdiste el enfoque?",
+    "¿Qué compromiso contigo no cumpliste?"
   ];
   
   const todayQuestion = deepQuestions[new Date().getDay() % deepQuestions.length];
@@ -98,32 +100,32 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md animate-scale-in">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto animate-scale-in">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Check-in Diario</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-xl sm:text-2xl">Check-in Diario</DialogTitle>
+          <DialogDescription className="text-sm">
             Comparte cómo te sientes hoy. Esto ayudará a Nudge a darte un mejor soporte.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-4 py-2">
           {/* Mood Selection */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold">¿Cómo te sientes hoy?</Label>
-            <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label className="text-sm sm:text-base font-semibold">¿Cómo te sientes hoy?</Label>
+            <div className="grid grid-cols-2 gap-2">
               {moods.map((mood) => {
                 const Icon = mood.icon;
                 return (
                   <Button
                     key={mood.value}
                     variant={selectedMood === mood.value ? "default" : "outline"}
-                    className={`h-20 flex flex-col gap-2 hover-lift ${
+                    className={`h-16 sm:h-20 flex flex-col gap-1 sm:gap-2 hover-lift ${
                       selectedMood === mood.value ? "ring-2 ring-primary" : ""
                     }`}
                     onClick={() => setSelectedMood(mood.value)}
                   >
-                    <Icon className={`w-8 h-8 ${selectedMood === mood.value ? "" : mood.color}`} />
-                    <span className="text-sm">{mood.label}</span>
+                    <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${selectedMood === mood.value ? "" : mood.color}`} />
+                    <span className="text-xs sm:text-sm">{mood.label}</span>
                   </Button>
                 );
               })}
@@ -132,37 +134,37 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes" className="text-base font-semibold">
+            <Label htmlFor="notes" className="text-sm sm:text-base font-semibold">
               Notas (opcional)
             </Label>
             <Textarea
               id="notes"
-              placeholder="¿Hay algo que quieras compartir sobre cómo te sientes hoy?"
+              placeholder="¿Hay algo que quieras compartir?"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="min-h-[100px] resize-none"
+              className="min-h-[60px] sm:min-h-[80px] resize-none text-sm"
               maxLength={500}
             />
             <p className="text-xs text-muted-foreground text-right">
-              {notes.length}/500 caracteres
+              {notes.length}/500
             </p>
           </div>
 
           {/* Deep Reflection Question */}
           <div className="space-y-2">
-            <Label htmlFor="deepReflection" className="text-base font-semibold">
+            <Label htmlFor="deepReflection" className="text-sm sm:text-base font-semibold">
               {todayQuestion}
             </Label>
             <Textarea
               id="deepReflection"
-              placeholder="Tómate un momento para reflexionar..."
+              placeholder="Sé honesto contigo mismo..."
               value={deepReflection}
               onChange={(e) => setDeepReflection(e.target.value)}
-              className="min-h-[100px] resize-none"
+              className="min-h-[60px] sm:min-h-[80px] resize-none text-sm"
               maxLength={500}
             />
             <p className="text-xs text-muted-foreground text-right">
-              {deepReflection.length}/500 caracteres
+              {deepReflection.length}/500
             </p>
           </div>
 
@@ -170,7 +172,7 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting || !selectedMood}
-            className="w-full h-12 text-base btn-interactive"
+            className="w-full h-10 sm:h-12 text-sm sm:text-base btn-interactive"
           >
             {isSubmitting ? "Guardando..." : "Completar Check-in"}
           </Button>
