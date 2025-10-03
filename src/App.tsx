@@ -10,6 +10,7 @@ import Chat from "./pages/Chat";
 import FocusRoom from "./pages/FocusRoom";
 import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
+import Progress from "./pages/Progress";
 import NotFound from "./pages/NotFound";
 
 
@@ -30,6 +31,7 @@ const App = () => (
         <Route path="/focus-room/:roomId" element={<FocusRoom />} />
         <Route path="/stats" element={<Stats />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/progress" element={<Progress />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

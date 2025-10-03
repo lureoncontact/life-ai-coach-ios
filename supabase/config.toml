@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.daily-tip]
 verify_jwt = false
+
+[functions.level-recommendations]
+verify_jwt = false

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, BarChart3, Settings } from "lucide-react";
+import { Menu, BarChart3, Settings, TrendingUp } from "lucide-react";
 
 const MobileMenu = () => {
   const [open, setOpen] = useState(false);
@@ -30,6 +30,14 @@ const MobileMenu = () => {
           <SheetTitle>Menú</SheetTitle>
         </SheetHeader>
         <div className="flex flex-col gap-2 mt-6">
+          <Button
+            variant="ghost"
+            className="w-full justify-start"
+            onClick={() => handleNavigation("/progress")}
+          >
+            <TrendingUp className="w-5 h-5 mr-2" />
+            Progreso
+          </Button>
           <Button
             variant="ghost"
             className="w-full justify-start"
