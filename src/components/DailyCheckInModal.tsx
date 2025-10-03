@@ -29,8 +29,19 @@ const moods = [
 const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheckInModalProps) => {
   const [selectedMood, setSelectedMood] = useState<string>("");
   const [notes, setNotes] = useState("");
+  const [deepReflection, setDeepReflection] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  const deepQuestions = [
+    "¿Cuál es tu mayor miedo en este momento?",
+    "¿Qué te impidió cumplir tus hábitos ayer?",
+    "¿Qué necesitas soltar para avanzar?",
+    "¿Qué historia te cuentas que te limita?",
+    "¿De qué estás huyendo realmente?"
+  ];
+  
+  const todayQuestion = deepQuestions[new Date().getDay() % deepQuestions.length];
 
   const handleSubmit = async () => {
     if (!selectedMood) {
@@ -69,6 +80,7 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
       // Reset form
       setSelectedMood("");
       setNotes("");
+      setDeepReflection("");
       
       onCheckInComplete?.();
       onOpenChange(false);
@@ -88,7 +100,7 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md animate-scale-in">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Check-in Diario 💚</DialogTitle>
+          <DialogTitle className="text-2xl">Check-in Diario</DialogTitle>
           <DialogDescription>
             Comparte cómo te sientes hoy. Esto ayudará a Nudge a darte un mejor soporte.
           </DialogDescription>
@@ -133,6 +145,24 @@ const DailyCheckInModal = ({ open, onOpenChange, onCheckInComplete }: DailyCheck
             />
             <p className="text-xs text-muted-foreground text-right">
               {notes.length}/500 caracteres
+            </p>
+          </div>
+
+          {/* Deep Reflection Question */}
+          <div className="space-y-2">
+            <Label htmlFor="deepReflection" className="text-base font-semibold">
+              {todayQuestion}
+            </Label>
+            <Textarea
+              id="deepReflection"
+              placeholder="Tómate un momento para reflexionar..."
+              value={deepReflection}
+              onChange={(e) => setDeepReflection(e.target.value)}
+              className="min-h-[100px] resize-none"
+              maxLength={500}
+            />
+            <p className="text-xs text-muted-foreground text-right">
+              {deepReflection.length}/500 caracteres
             </p>
           </div>
 
