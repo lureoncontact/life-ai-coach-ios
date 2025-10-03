@@ -12,10 +12,9 @@ interface Integration {
   id: string;
   name: string;
   description: string;
-  icon: string;
+  logoUrl: string;
   category: "messaging" | "health" | "productivity";
   connected: boolean;
-  comingSoon?: boolean;
 }
 
 const Integrations = () => {
@@ -27,93 +26,83 @@ const Integrations = () => {
       id: "whatsapp",
       name: "WhatsApp",
       description: "Conecta Nudge con WhatsApp para recibir mensajes y recordatorios",
-      icon: "💬",
+      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
       category: "messaging",
       connected: false,
-      comingSoon: true,
     },
     {
       id: "telegram",
       name: "Telegram",
       description: "Chatea con Nudge directamente desde Telegram",
-      icon: "✈️",
+      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
       category: "messaging",
       connected: false,
-      comingSoon: true,
     },
     // Health
     {
       id: "whoop",
       name: "Whoop",
       description: "Sincroniza tus métricas de recuperación y sueño",
-      icon: "⌚",
+      logoUrl: "https://images.ctfassets.net/e23kjtf3f4di/4jEFnXmjJq8s4q4uwQEw66/4e3f1e2d3f1e2d3f1e2d3f1e2d3f1e2d/whoop-logo.png",
       category: "health",
       connected: false,
-      comingSoon: true,
     },
     {
       id: "strava",
       name: "Strava",
       description: "Conecta tus entrenamientos y actividades deportivas",
-      icon: "🏃",
+      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cb/Strava_Logo.svg",
       category: "health",
       connected: false,
-      comingSoon: true,
     },
     {
       id: "apple-health",
       name: "Apple Health",
       description: "Importa datos de salud desde tu iPhone",
-      icon: "🍎",
+      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/2/20/Apple_Health_Icon.png",
       category: "health",
       connected: false,
-      comingSoon: true,
     },
     {
       id: "google-fit",
       name: "Google Fit",
       description: "Sincroniza tu actividad física y datos de salud",
-      icon: "🏋️",
+      logoUrl: "https://www.gstatic.com/images/branding/product/1x/google_fit_2020q4_512dp.png",
       category: "health",
       connected: false,
-      comingSoon: true,
     },
     // Productivity
     {
       id: "notion",
       name: "Notion",
       description: "Sincroniza tus tareas y objetivos con Notion",
-      icon: "📝",
+      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
       category: "productivity",
       connected: false,
-      comingSoon: true,
     },
     {
       id: "todoist",
       name: "Todoist",
       description: "Importa y sincroniza tus tareas diarias",
-      icon: "✅",
+      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Todoist_logo.svg",
       category: "productivity",
       connected: false,
-      comingSoon: true,
     },
     {
       id: "google-calendar",
       name: "Google Calendar",
       description: "Integra tus eventos y recordatorios",
-      icon: "📅",
+      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg",
       category: "productivity",
       connected: false,
-      comingSoon: true,
     },
     {
       id: "trello",
       name: "Trello",
       description: "Conecta tus tableros y tarjetas de Trello",
-      icon: "📊",
+      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Trello-logo-blue.svg",
       category: "productivity",
       connected: false,
-      comingSoon: true,
     },
   ]);
 
@@ -214,17 +203,19 @@ const Integrations = () => {
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-2xl">
-                              {integration.icon}
+                            <div className="w-12 h-12 rounded-lg bg-background border flex items-center justify-center overflow-hidden">
+                              <img 
+                                src={integration.logoUrl} 
+                                alt={integration.name}
+                                className="w-8 h-8 object-contain"
+                                onError={(e) => {
+                                  e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2348B8A9'/%3E%3C/svg%3E";
+                                }}
+                              />
                             </div>
                             <div>
-                              <CardTitle className="text-lg flex items-center gap-2">
+                              <CardTitle className="text-lg">
                                 {integration.name}
-                                {integration.comingSoon && (
-                                  <Badge variant="outline" className="text-xs">
-                                    Próximamente
-                                  </Badge>
-                                )}
                               </CardTitle>
                               <CardDescription className="text-sm mt-1">
                                 {integration.description}
@@ -238,7 +229,6 @@ const Integrations = () => {
                           className="w-full"
                           variant={integration.connected ? "secondary" : "default"}
                           onClick={() => handleConnect(integration.id)}
-                          disabled={integration.comingSoon}
                         >
                           {integration.connected ? (
                             <>
@@ -248,7 +238,7 @@ const Integrations = () => {
                           ) : (
                             <>
                               <ExternalLink className="w-4 h-4 mr-2" />
-                              {integration.comingSoon ? "Próximamente" : "Conectar"}
+                              Conectar
                             </>
                           )}
                         </Button>
