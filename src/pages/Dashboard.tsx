@@ -16,6 +16,7 @@ import AIInsightsModal from "@/components/AIInsightsModal";
 import HabitsTracker from "@/components/HabitsTracker";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import DailyCheckInModal from "@/components/DailyCheckInModal";
+import DailyTipCard from "@/components/DailyTipCard";
 
 interface Profile {
   full_name: string;
@@ -214,6 +215,16 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8">
+        {/* Daily Tip Card */}
+        {stats && profile && (
+          <DailyTipCard
+            userName={profile.full_name}
+            currentStreak={stats.current_streak}
+            totalPoints={stats.total_points}
+            level={stats.level}
+          />
+        )}
+
         {/* User Level & Streak Card */}
         {stats && (
           <div className="animate-nudge-slide-up">
