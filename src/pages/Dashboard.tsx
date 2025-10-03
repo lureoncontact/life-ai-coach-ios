@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageCircle, Plus, Settings, BarChart3, Share2, Heart, Activity, Briefcase, DollarSign, Sprout, Brain } from "lucide-react";
+import { MessageCircle, Plus, Settings, BarChart3, Share2, Heart, Activity, Briefcase, DollarSign, Sprout, Brain, Users } from "lucide-react";
 import nudgeIcon from "@/assets/nudge_icon.png";
 import { useGamification } from "@/hooks/useGamification";
 import MobileMenu from "@/components/MobileMenu";
@@ -17,6 +17,7 @@ import HabitsTracker from "@/components/HabitsTracker";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import DailyCheckInModal from "@/components/DailyCheckInModal";
 import DailyTipCard from "@/components/DailyTipCard";
+import { SocialMediaAnalysisModal } from "@/components/SocialMediaAnalysisModal";
 
 interface Profile {
   full_name: string;
@@ -48,6 +49,7 @@ const Dashboard = () => {
   const [hasCheckedInToday, setHasCheckedInToday] = useState(true);
   const [isFirstLogin, setIsFirstLogin] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<{ id: string; name: string } | null>(null);
+  const [showSocialMedia, setShowSocialMedia] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { stats, loading: statsLoading, refreshStats } = useGamification();
@@ -367,6 +369,29 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* Social Media Analysis Card */}
+        <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5 animate-fade-in hover-lift">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-primary" />
+              Análisis de Redes Sociales
+            </CardTitle>
+            <CardDescription>
+              Conecta tus perfiles de redes sociales para que la IA pueda analizar tu actividad y brindarte mejor contexto
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button 
+              onClick={() => setShowSocialMedia(true)}
+              className="w-full btn-interactive"
+              variant="outline"
+            >
+              <Brain className="w-4 h-4 mr-2" />
+              Configurar Análisis
+            </Button>
+          </CardContent>
+        </Card>
       </main>
 
       {/* Daily Check-in Modal */}
@@ -397,6 +422,12 @@ const Dashboard = () => {
       <AIInsightsModal
         open={showAIInsights}
         onOpenChange={setShowAIInsights}
+      />
+
+      {/* Social Media Analysis Modal */}
+      <SocialMediaAnalysisModal
+        open={showSocialMedia}
+        onOpenChange={setShowSocialMedia}
       />
     </div>
   );
