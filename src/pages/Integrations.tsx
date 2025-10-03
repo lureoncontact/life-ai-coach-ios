@@ -6,7 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, MessageSquare, Activity, Briefcase, Check, ExternalLink } from "lucide-react";
 import MobileMenu from "@/components/MobileMenu";
 import nudgeIcon from "@/assets/nudge_icon.png";
-import whoopLogo from "@/assets/whoop_logo.png";
+import whoopLogo from "@/assets/whoop_logo_new.png";
+import googleFitLogo from "@/assets/googlefit_logo.png";
+import stravaLogo from "@/assets/strava_logo.png";
+import todoistLogo from "@/assets/todoist_logo.png";
+import trelloLogo from "@/assets/trello_logo.png";
+import whatsappLogo from "@/assets/whatsapp_logo.png";
 import { useToast } from "@/hooks/use-toast";
 
 interface Integration {
@@ -27,7 +32,7 @@ const Integrations = () => {
       id: "whatsapp",
       name: "WhatsApp",
       description: "Conecta Nudge con WhatsApp para recibir mensajes y recordatorios",
-      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg",
+      logoUrl: whatsappLogo,
       category: "messaging",
       connected: false,
     },
@@ -52,7 +57,7 @@ const Integrations = () => {
       id: "strava",
       name: "Strava",
       description: "Conecta tus entrenamientos y actividades deportivas",
-      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Strava_Logo.svg/2560px-Strava_Logo.svg.png",
+      logoUrl: stravaLogo,
       category: "health",
       connected: false,
     },
@@ -68,7 +73,7 @@ const Integrations = () => {
       id: "google-fit",
       name: "Google Fit",
       description: "Sincroniza tu actividad física y datos de salud",
-      logoUrl: "https://lh3.googleusercontent.com/YmMGcPa46ylsaD5mTcIFBFXoSzL80R3a6X1bPHWOLkpJSAMgn7lL_a1HLrZ6O9h2Vc8",
+      logoUrl: googleFitLogo,
       category: "health",
       connected: false,
     },
@@ -85,7 +90,7 @@ const Integrations = () => {
       id: "todoist",
       name: "Todoist",
       description: "Importa y sincroniza tus tareas diarias",
-      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Todoist_logo.svg",
+      logoUrl: todoistLogo,
       category: "productivity",
       connected: false,
     },
@@ -101,7 +106,7 @@ const Integrations = () => {
       id: "trello",
       name: "Trello",
       description: "Conecta tus tableros y tarjetas de Trello",
-      logoUrl: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Trello-logo-blue.svg",
+      logoUrl: trelloLogo,
       category: "productivity",
       connected: false,
     },
