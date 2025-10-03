@@ -248,7 +248,7 @@ html, body {
   box-shadow:
     0 4px 16px -4px rgba(0, 0, 0, 0.12),
     0 20px 40px -8px rgba(0, 0, 0, 0.12),
-    0 12px 24px -8px hsl(var(--primary) / 0.15);
+    0 12px 24px -8px hsl(var(--primary) / 0.08);
 }
 
 .hover-glow {
@@ -258,10 +258,10 @@ html, body {
 
 .hover-glow:hover {
   box-shadow: 
-    0 0 0 1px hsl(var(--primary) / 0.1),
-    0 0 30px -5px hsl(var(--primary) / 0.4),
-    0 10px 40px -10px hsl(var(--primary) / 0.3);
-  transform: scale(1.02);
+    0 0 0 1px hsl(var(--primary) / 0.08),
+    0 0 30px -5px hsl(var(--primary) / 0.15),
+    0 10px 40px -10px hsl(var(--primary) / 0.12);
+  transform: scale(1.015);
 }
 
 /* Glass morphism effect */
