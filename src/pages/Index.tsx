@@ -1,13 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { LaunchReservationModal } from "@/components/LaunchReservationModal";
 
 import nudgeIcon from "@/assets/nudge_icon.png";
 import nudgeLogo from "@/assets/nudge_logo.png";
 
 const Index = () => {
   const navigate = useNavigate();
+  const [showReservationModal, setShowReservationModal] = useState(false);
 
   useEffect(() => {
     checkUser();
@@ -51,7 +53,23 @@ const Index = () => {
             Iniciar sesión
           </Button>
         </div>
+        
+        <div className="mt-8 animate-fade-in" style={{ animationDelay: '800ms' }}>
+          <Button 
+            size="lg" 
+            variant="default"
+            onClick={() => setShowReservationModal(true)} 
+            className="min-w-[250px] btn-interactive hover:scale-110 bg-gradient-to-r from-primary to-primary/80"
+          >
+            🚀 Reservar oferta de lanzamiento
+          </Button>
+        </div>
       </div>
+      
+      <LaunchReservationModal 
+        open={showReservationModal} 
+        onOpenChange={setShowReservationModal}
+      />
     </div>
   );
 };

@@ -302,6 +302,30 @@ export type Database = {
         }
         Relationships: []
       }
+      launch_reservations: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
       meditation_sessions: {
         Row: {
           created_at: string
