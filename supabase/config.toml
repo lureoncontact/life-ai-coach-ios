@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.level-recommendations]
 verify_jwt = false
+
+[functions.room-daily-tip]
+verify_jwt = false

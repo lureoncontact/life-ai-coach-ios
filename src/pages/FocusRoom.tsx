@@ -20,6 +20,7 @@ import WorkoutLogger from "@/components/focus-room-features/WorkoutLogger";
 import SkillTracker from "@/components/focus-room-features/SkillTracker";
 import RelationshipLogger from "@/components/focus-room-features/RelationshipLogger";
 import BookTracker from "@/components/focus-room-features/BookTracker";
+import FocusRoomDailyTip from "@/components/FocusRoomDailyTip";
 import {
   Dialog,
   DialogContent,
@@ -587,6 +588,14 @@ const FocusRoom = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Daily Tip for this Focus Room */}
+            <FocusRoomDailyTip 
+              roomId={roomId || ""}
+              roomName={room.name}
+              roomCategory={room.area_category}
+              goals={goals}
+            />
           </div>
 
           {/* Category-specific features */}
