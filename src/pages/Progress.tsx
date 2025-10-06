@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, TrendingUp } from "lucide-react";
 import MobileMenu from "@/components/MobileMenu";
-import ProgressMap from "@/components/ProgressMap";
+import ProgressMapInteractive from "@/components/progress-map/ProgressMapInteractive";
 import { useGamification } from "@/hooks/useGamification";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import nudgeIcon from "@/assets/nudge_icon.png";
@@ -58,7 +58,7 @@ const Progress = () => {
             </p>
           </div>
 
-          <ProgressMap
+          <ProgressMapInteractive
             currentLevel={stats.level}
             totalPoints={stats.total_points}
             currentStreak={stats.current_streak}

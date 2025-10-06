@@ -128,6 +128,10 @@ export default {
           "0%, 100%": { boxShadow: "0 0 20px -5px hsl(var(--primary) / 0.5)" },
           "50%": { boxShadow: "0 0 30px 0px hsl(var(--primary) / 0.8)" },
         },
+        "gentle-pulse": {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.05)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -143,6 +147,7 @@ export default {
         "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
         "shimmer": "shimmer 2s linear infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "gentle-pulse": "gentle-pulse 2s ease-in-out infinite",
       },
     },
   },
