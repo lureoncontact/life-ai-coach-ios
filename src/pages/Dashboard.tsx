@@ -17,6 +17,7 @@ import HabitsTracker from "@/components/HabitsTracker";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import DailyCheckInModal from "@/components/DailyCheckInModal";
 import DailyTipCard from "@/components/DailyTipCard";
+import { useTranslation } from "react-i18next";
 
 interface Profile {
   full_name: string;
@@ -37,6 +38,7 @@ interface Goal {
 }
 
 const Dashboard = () => {
+  const { t } = useTranslation();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [focusRooms, setFocusRooms] = useState<FocusRoom[]>([]);
   const [todaysGoals, setTodaysGoals] = useState<Goal[]>([]);
@@ -179,7 +181,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5">
-        <LoadingSpinner size="lg" text="Cargando tu dashboard..." />
+        <LoadingSpinner size="lg" text={t('dashboard.loadingDashboard')} />
       </div>
     );
   }
@@ -192,9 +194,9 @@ const Dashboard = () => {
           <div className="flex items-center gap-3">
             <img src={nudgeIcon} alt="Nudge" className="w-9 h-9" />
             <div>
-              <h1 className="text-xl font-bold">Nudge</h1>
+              <h1 className="text-xl font-bold">{t('dashboard.title')}</h1>
               <p className="text-xs text-muted-foreground">
-                Hola, {profile?.full_name || "Usuario"}
+                {t('dashboard.greeting')}, {profile?.full_name || "Usuario"}
               </p>
             </div>
           </div>
@@ -246,10 +248,10 @@ const Dashboard = () => {
               onClick={() => navigate("/chat")}
             >
               <MessageCircle className="w-6 h-6 mr-2" />
-              Hablar con Nudge
+              {t('dashboard.chatButton')}
             </Button>
             <p className="text-center text-sm text-muted-foreground mt-3">
-              Tu coach personal está listo para ayudarte
+              {t('dashboard.chatDescription')}
             </p>
           </CardContent>
         </Card>
@@ -262,7 +264,7 @@ const Dashboard = () => {
         {/* Today's Goals */}
         {todaysGoals.length > 0 && (
           <div className="space-y-4 animate-fade-in">
-            <h2 className="text-2xl font-bold">Metas de Hoy</h2>
+            <h2 className="text-2xl font-bold">{t('dashboard.todaysGoals')}</h2>
             <div className="grid gap-3">
               {todaysGoals.map((goal, index) => (
                 <Card 
@@ -279,7 +281,7 @@ const Dashboard = () => {
                       variant={goal.is_completed ? "secondary" : "default"}
                       className="btn-interactive"
                     >
-                      {goal.is_completed ? "✓" : "Marcar"}
+                      {goal.is_completed ? "✓" : t('focusRoom.mark')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -291,10 +293,10 @@ const Dashboard = () => {
         {/* Focus Rooms */}
         <div className="space-y-4 animate-nudge-slide-up">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Focus Rooms</h2>
+            <h2 className="text-2xl font-bold">{t('dashboard.focusRooms')}</h2>
             <Button size="sm" variant="outline" onClick={() => setShowCreateRoom(true)}>
               <Plus className="w-4 h-4 mr-2" />
-              Nueva Sala
+              {t('dashboard.newRoom')}
             </Button>
           </div>
           
@@ -302,10 +304,10 @@ const Dashboard = () => {
             <Card className="border-dashed">
               <CardContent className="p-8 text-center">
                 <p className="text-muted-foreground mb-4">
-                  No tienes Focus Rooms aún
+                  {t('dashboard.noRooms')}
                 </p>
                 <Button onClick={() => navigate("/onboarding")}>
-                  Crear tu primera sala
+                  {t('dashboard.createFirstRoom')}
                 </Button>
               </CardContent>
             </Card>
@@ -351,10 +353,10 @@ const Dashboard = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Heart className="w-5 h-5 text-primary" />
-                Check-in Diario
+                {t('dashboard.dailyCheckIn')}
               </CardTitle>
               <CardDescription>
-                Comparte cómo te sientes hoy para que Nudge pueda apoyarte mejor
+                {t('dashboard.dailyCheckInDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -362,7 +364,7 @@ const Dashboard = () => {
                 onClick={() => setShowCheckIn(true)}
                 className="w-full btn-interactive"
               >
-                Hacer Check-in
+                {t('dashboard.doCheckIn')}
               </Button>
             </CardContent>
           </Card>
@@ -373,10 +375,10 @@ const Dashboard = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="w-5 h-5 text-primary" />
-              Análisis de Redes Sociales
+              {t('dashboard.socialMediaAnalysis')}
             </CardTitle>
             <CardDescription>
-              Conecta tus perfiles de redes sociales para que la IA pueda analizar tu actividad y brindarte mejor contexto
+              {t('dashboard.socialMediaDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -386,7 +388,7 @@ const Dashboard = () => {
               variant="outline"
             >
               <Brain className="w-4 h-4 mr-2" />
-              Configurar Análisis
+              {t('dashboard.setupAnalysis')}
             </Button>
           </CardContent>
         </Card>

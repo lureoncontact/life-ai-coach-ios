@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, LogOut, Bell, Crown, Share2, Download, Palette } from "lucide-react";
+import { ArrowLeft, Save, LogOut, Bell, Crown, Share2, Download, Palette, Languages } from "lucide-react";
 import nudgeIcon from "@/assets/nudge_icon.png";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Switch } from "@/components/ui/switch";
@@ -17,6 +17,8 @@ import PremiumPlansModal from "@/components/PremiumPlansModal";
 import IntegrationsModal from "@/components/IntegrationsModal";
 import ExportDataModal from "@/components/ExportDataModal";
 import ThemeSelector from "@/components/ThemeSelector";
+import { useTranslation } from "react-i18next";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Profile {
   full_name: string;
@@ -28,6 +30,7 @@ interface Profile {
 }
 
 const Settings = () => {
+  const { t, i18n } = useTranslation();
   const [profile, setProfile] = useState<Profile>({
     full_name: "",
     age: null,
@@ -45,6 +48,15 @@ const Settings = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('language', lng);
+    toast({
+      title: lng === 'es' ? 'Idioma actualizado' : 'Language updated',
+      description: lng === 'es' ? 'La aplicación ahora está en español' : 'The app is now in English',
+    });
+  };
 
   useEffect(() => {
     loadProfile();
@@ -105,8 +117,8 @@ const Settings = () => {
     if (!hasPermission) {
       toast({
         variant: "destructive",
-        title: "Permisos denegados",
-        description: "No se pueden mostrar notificaciones. Habilita los permisos en tu navegador.",
+        title: t('notifications.permissionsDenied'),
+        description: t('notifications.permissionsDeniedDescription'),
       });
       setNotificationsEnabled(false);
       localStorage.setItem("notificationsEnabled", "false");
@@ -151,8 +163,8 @@ const Settings = () => {
     
     if (enabled) {
       toast({
-        title: "Recordatorios activados",
-        description: `Recibirás un recordatorio diario a las ${reminderTime}`,
+        title: t('notifications.remindersActivated'),
+        description: `${t('notifications.remindersActivatedDescription')} ${reminderTime}`,
       });
     }
   };
@@ -190,8 +202,8 @@ const Settings = () => {
       if (error) throw error;
 
       toast({
-        title: "Perfil actualizado",
-        description: "Tus cambios se han guardado correctamente",
+        title: t('settings.profileUpdated'),
+        description: t('settings.profileUpdatedDescription'),
       });
     } catch (error: any) {
       toast({
@@ -222,8 +234,8 @@ const Settings = () => {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-lg font-bold">Configuración</h1>
-            <p className="text-xs text-muted-foreground">Gestiona tu cuenta y preferencias</p>
+            <h1 className="text-lg font-bold">{t('settings.title')}</h1>
+            <p className="text-xs text-muted-foreground">{t('settings.subtitle')}</p>
           </div>
         </div>
       </header>
@@ -232,27 +244,27 @@ const Settings = () => {
         {/* Profile Section */}
         <Card className="hover-lift stagger-item animate-fade-in" style={{ animationDelay: '0ms' }}>
           <CardHeader>
-            <CardTitle>Información Personal</CardTitle>
+            <CardTitle>{t('settings.personalInfo')}</CardTitle>
             <CardDescription>
-              Actualiza tu información básica
+              {t('settings.personalInfoDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Nombre completo *</Label>
+              <Label htmlFor="fullName">{t('settings.fullName')} *</Label>
               <Input
                 id="fullName"
                 value={profile.full_name}
                 onChange={(e) =>
                   setProfile({ ...profile, full_name: e.target.value })
                 }
-                placeholder="Tu nombre"
+                placeholder={t('settings.fullName')}
               />
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="age">Edad</Label>
+                <Label htmlFor="age">{t('settings.age')}</Label>
                 <Input
                   id="age"
                   type="number"
@@ -268,14 +280,14 @@ const Settings = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="gender">Género</Label>
+                <Label htmlFor="gender">{t('settings.gender')}</Label>
                 <Input
                   id="gender"
                   value={profile.gender || ""}
                   onChange={(e) =>
                     setProfile({ ...profile, gender: e.target.value })
                   }
-                  placeholder="Hombre / Mujer / Otro"
+                  placeholder={t('settings.genderPlaceholder')}
                 />
               </div>
             </div>
@@ -285,50 +297,74 @@ const Settings = () => {
         {/* Context Section */}
         <Card className="hover-lift stagger-item animate-fade-in" style={{ animationDelay: '100ms' }}>
           <CardHeader>
-            <CardTitle>Contexto Personal</CardTitle>
+            <CardTitle>{t('settings.personalContext')}</CardTitle>
             <CardDescription>
-              Esta información ayuda a personalizar tu experiencia con la IA
+              {t('settings.personalContextDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="interests">Intereses</Label>
+              <Label htmlFor="interests">{t('settings.interests')}</Label>
               <Textarea
                 id="interests"
                 value={profile.interests || ""}
                 onChange={(e) =>
                   setProfile({ ...profile, interests: e.target.value })
                 }
-                placeholder="Deportes, lectura, música, viajes..."
+                placeholder={t('settings.interestsPlaceholder')}
                 rows={3}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="habits">Hábitos Actuales</Label>
+              <Label htmlFor="habits">{t('settings.currentHabits')}</Label>
               <Textarea
                 id="habits"
                 value={profile.habits || ""}
                 onChange={(e) =>
                   setProfile({ ...profile, habits: e.target.value })
                 }
-                placeholder="Rutina matutina, ejercicio, meditación..."
+                placeholder={t('settings.habitsPlaceholder')}
                 rows={3}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="userStory">Tu Historia</Label>
+              <Label htmlFor="userStory">{t('settings.yourStory')}</Label>
               <Textarea
                 id="userStory"
                 value={profile.user_story || ""}
                 onChange={(e) =>
                   setProfile({ ...profile, user_story: e.target.value })
                 }
-                placeholder="Cuéntanos sobre ti, tus miedos, logros, aspiraciones..."
+                placeholder={t('settings.storyPlaceholder')}
                 rows={4}
               />
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Language Section */}
+        <Card className="hover-lift stagger-item animate-fade-in" style={{ animationDelay: '150ms' }}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Languages className="w-5 h-5" />
+              {t('settings.language')}
+            </CardTitle>
+            <CardDescription>
+              {t('settings.languageDescription')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Select value={i18n.language} onValueChange={changeLanguage}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="es">{t('settings.spanish')}</SelectItem>
+                <SelectItem value="en">{t('settings.english')}</SelectItem>
+              </SelectContent>
+            </Select>
           </CardContent>
         </Card>
 
@@ -340,18 +376,18 @@ const Settings = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="w-5 h-5" />
-              Recordatorios
+              {t('settings.reminders')}
             </CardTitle>
             <CardDescription>
-              Configura recordatorios diarios para tus metas
+              {t('settings.remindersDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label>Activar recordatorios diarios</Label>
+                <Label>{t('settings.enableReminders')}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Recibe notificaciones para completar tus metas diarias
+                  {t('settings.enableRemindersDescription')}
                 </p>
               </div>
               <Switch
@@ -362,7 +398,7 @@ const Settings = () => {
 
             {notificationsEnabled && (
               <div className="space-y-2">
-                <Label htmlFor="reminderTime">Hora del recordatorio</Label>
+                <Label htmlFor="reminderTime">{t('settings.reminderTime')}</Label>
                 <Input
                   id="reminderTime"
                   type="time"
@@ -370,7 +406,7 @@ const Settings = () => {
                   onChange={(e) => updateReminderTime(e.target.value)}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Recibirás una notificación todos los días a esta hora
+                  {t('settings.reminderTimeDescription')}
                 </p>
               </div>
             )}
@@ -380,9 +416,9 @@ const Settings = () => {
         {/* Premium & Features Section */}
         <Card className="hover-lift stagger-item animate-fade-in" style={{ animationDelay: '300ms' }}>
           <CardHeader>
-            <CardTitle>Funciones Avanzadas</CardTitle>
+            <CardTitle>{t('settings.advancedFeatures')}</CardTitle>
             <CardDescription>
-              Desbloquea todo el potencial de Nudge
+              {t('settings.advancedFeaturesDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -392,7 +428,7 @@ const Settings = () => {
               onClick={() => setShowPremiumModal(true)}
             >
               <Crown className="w-4 h-4 mr-2 text-primary animate-pulse" />
-              Ver Planes Premium
+              {t('settings.premiumPlans')}
             </Button>
             <Button
               variant="outline"
@@ -400,7 +436,7 @@ const Settings = () => {
               onClick={() => setShowIntegrationsModal(true)}
             >
               <Share2 className="w-4 h-4 mr-2" />
-              Integraciones
+              {t('settings.integrations')}
             </Button>
             <Button
               variant="outline"
@@ -408,7 +444,7 @@ const Settings = () => {
               onClick={() => setShowExportModal(true)}
             >
               <Download className="w-4 h-4 mr-2" />
-              Exportar Datos
+              {t('settings.exportData')}
             </Button>
           </CardContent>
         </Card>
@@ -421,7 +457,7 @@ const Settings = () => {
             className="w-full btn-interactive hover:scale-105"
           >
             <Save className="w-4 h-4 mr-2" />
-            {saving ? "Guardando..." : "Guardar Cambios"}
+            {saving ? t('settings.saving') : t('settings.saveChanges')}
           </Button>
 
           <Separator />
@@ -432,7 +468,7 @@ const Settings = () => {
             className="w-full btn-interactive hover:scale-105"
           >
             <LogOut className="w-4 h-4 mr-2" />
-            Cerrar Sesión
+            {t('common.signOut')}
           </Button>
         </div>
 
@@ -443,8 +479,8 @@ const Settings = () => {
               <img src={nudgeIcon} alt="Nudge" className="w-8 h-8" />
               <span className="font-semibold text-foreground text-base">Nudge</span>
             </div>
-            <p>Tu coach de vida personal impulsado por IA</p>
-            <p className="mt-2 text-xs">Versión 1.0.0</p>
+            <p>{t('landing.title')}</p>
+            <p className="mt-2 text-xs">{t('settings.appVersion')}</p>
           </CardContent>
         </Card>
       </main>

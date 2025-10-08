@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { LaunchReservationModal } from "@/components/LaunchReservationModal";
+import { useTranslation } from "react-i18next";
 
 import nudgeIcon from "@/assets/nudge_icon.png";
 import nudgeLogo from "@/assets/nudge_logo.png";
 
 const Index = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [showReservationModal, setShowReservationModal] = useState(false);
 
@@ -42,15 +44,15 @@ const Index = () => {
         <div className="animate-fade-in" style={{ animationDelay: '200ms' }}>
           <img src={nudgeLogo} alt="Nudge" className="h-16 mx-auto mb-6" />
           <p className="text-xl text-muted-foreground mb-8 animate-fade-in" style={{ animationDelay: '400ms' }}>
-            Tu coach de vida personal impulsado por IA
+            {t('landing.title')}
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: '600ms' }}>
           <Button size="lg" onClick={() => navigate("/auth")} className="min-w-[200px] btn-interactive hover:scale-110">
-            Comenzar
+            {t('landing.getStarted')}
           </Button>
           <Button size="lg" variant="outline" onClick={() => navigate("/auth")} className="min-w-[200px] btn-interactive hover:scale-110">
-            Iniciar sesión
+            {t('landing.signIn')}
           </Button>
         </div>
         
@@ -61,7 +63,7 @@ const Index = () => {
             onClick={() => setShowReservationModal(true)} 
             className="min-w-[250px] btn-interactive hover:scale-110 bg-gradient-to-r from-primary to-primary/80"
           >
-            🚀 Reservar oferta de lanzamiento
+            {t('landing.reserveOffer')}
           </Button>
         </div>
       </div>

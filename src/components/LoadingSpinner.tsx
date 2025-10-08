@@ -1,11 +1,14 @@
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface LoadingSpinnerProps {
   size?: "sm" | "md" | "lg";
   text?: string;
 }
 
-const LoadingSpinner = ({ size = "md", text = "Cargando..." }: LoadingSpinnerProps) => {
+const LoadingSpinner = ({ size = "md", text }: LoadingSpinnerProps) => {
+  const { t } = useTranslation();
+  const defaultText = text || t('common.loading');
   const sizeClasses = {
     sm: "w-6 h-6",
     md: "w-12 h-12",
@@ -18,8 +21,8 @@ const LoadingSpinner = ({ size = "md", text = "Cargando..." }: LoadingSpinnerPro
         <Loader2 className={`${sizeClasses[size]} text-primary animate-spin`} />
         <div className="absolute inset-0 animate-pulse-glow rounded-full" />
       </div>
-      {text && (
-        <p className="text-muted-foreground animate-nudge-pulse">{text}</p>
+      {defaultText && (
+        <p className="text-muted-foreground animate-nudge-pulse">{defaultText}</p>
       )}
     </div>
   );
