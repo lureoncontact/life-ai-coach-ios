@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Lightbulb, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 
 interface FocusRoomDailyTipProps {
   roomId: string;
@@ -11,6 +12,7 @@ interface FocusRoomDailyTipProps {
 }
 
 const FocusRoomDailyTip = ({ roomId, roomName, roomCategory, goals }: FocusRoomDailyTipProps) => {
+  const { t } = useTranslation();
   const [tip, setTip] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
@@ -89,41 +91,14 @@ const FocusRoomDailyTip = ({ roomId, roomName, roomCategory, goals }: FocusRoomD
   };
 
   const getFallbackTip = (category: string, goals: any[]) => {
-    const categoryTips: Record<string, string[]> = {
-      health: [
-        "La constancia en el ejercicio es más importante que la intensidad. Muévete hoy, aunque sea poco.",
-        "Tu cuerpo es tu hogar permanente. Cuídalo con pequeñas decisiones diarias."
-      ],
-      mental: [
-        "Unos minutos de meditación pueden transformar tu día. ¿Por qué no empezar ahora?",
-        "La paz mental no es la ausencia de problemas, sino la capacidad de lidiar con ellos."
-      ],
-      career: [
-        "Cada pequeño logro te acerca a tu meta profesional. ¿Qué harás hoy para avanzar?",
-        "El éxito profesional es la suma de pequeños esfuerzos repetidos día tras día."
-      ],
-      finance: [
-        "Ahorrar no es privarse, es priorizar tu futuro sobre impulsos momentáneos.",
-        "Cada peso ahorrado es un voto de confianza en tu futuro."
-      ],
-      relationships: [
-        "Las relaciones se nutren de pequeños gestos consistentes, no de grandes eventos esporádicos.",
-        "Escuchar activamente es el regalo más valioso que puedes dar a alguien."
-      ],
-      personal: [
-        "El crecimiento personal no es un destino, es un viaje diario de pequeñas mejoras.",
-        "Dedica tiempo a lo que amas. Es una inversión en tu felicidad."
-      ]
-    };
-
-    const tips = categoryTips[category] || [
-      "Cada día es una oportunidad para ser 1% mejor.",
-      "El progreso no siempre es visible. Confía en el proceso."
-    ];
+    const categoryTips = t('focusRoomDailyTip.categoryTips', { returnObjects: true }) as Record<string, string[]>;
+    const defaultTips = t('focusRoomDailyTip.defaultTips', { returnObjects: true }) as string[];
+    
+    const tips = categoryTips[category] || defaultTips;
 
     // If there are incomplete goals, give a targeted tip
     if (goals.length > 0 && goals.some(g => !g.is_completed)) {
-      return `Enfócate en completar tus metas pendientes hoy. ${tips[0]}`;
+      return `${t('focusRoomDailyTip.focusOnGoals')} ${tips[0]}`;
     }
 
     return tips[Math.floor(Math.random() * tips.length)];
@@ -134,14 +109,14 @@ const FocusRoomDailyTip = ({ roomId, roomName, roomCategory, goals }: FocusRoomD
       <CardHeader className="p-4 pb-2">
         <CardTitle className="text-base flex items-center gap-2">
           <Lightbulb className="w-5 h-5 text-accent" />
-          Consejo del Día
+          {t('focusRoomDailyTip.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 pt-2">
         {loading ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Generando consejo...</span>
+            <span>{t('focusRoomDailyTip.generating')}</span>
           </div>
         ) : (
           <p className="text-sm leading-relaxed text-foreground/90">

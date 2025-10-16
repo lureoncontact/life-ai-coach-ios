@@ -191,5 +191,84 @@
   "socialMedia": {
     "title": "Análisis de Redes Sociales",
     "description": "Conecta tus perfiles de redes sociales para que la IA pueda analizar tu actividad y proporcionar mejor contexto"
+  },
+  "dailyTipCard": {
+    "title": "Tip del Día",
+    "generating": "Generando tu tip personalizado...",
+    "genericTips": [
+      "Empieza el día con una meta pequeña y alcanzable. El momentum es tu mejor aliado.",
+      "La constancia vence al talento. Haz una cosa bien hoy, aunque sea pequeña.",
+      "Tu racha actual es tu compromiso contigo mismo. Protégela.",
+      "Los hábitos se construyen con decisiones diarias. ¿Qué decides hoy?",
+      "El progreso no siempre es visible. Confía en el proceso.",
+      "Cada día es una oportunidad para ser 1% mejor que ayer.",
+      "No rompas la cadena. Tu yo del futuro te lo agradecerá.",
+      "La disciplina es elegir entre lo que quieres ahora y lo que quieres más."
+    ]
+  },
+  "focusRoomDailyTip": {
+    "title": "Consejo del Día",
+    "generating": "Generando consejo...",
+    "focusOnGoals": "Enfócate en completar tus metas pendientes hoy.",
+    "categoryTips": {
+      "health": [
+        "La constancia en el ejercicio es más importante que la intensidad. Muévete hoy, aunque sea poco.",
+        "Tu cuerpo es tu hogar permanente. Cuídalo con pequeñas decisiones diarias."
+      ],
+      "mental": [
+        "Unos minutos de meditación pueden transformar tu día. ¿Por qué no empezar ahora?",
+        "La paz mental no es la ausencia de problemas, sino la capacidad de lidiar con ellos."
+      ],
+      "career": [
+        "Cada pequeño logro te acerca a tu meta profesional. ¿Qué harás hoy para avanzar?",
+        "El éxito profesional es la suma de pequeños esfuerzos repetidos día tras día."
+      ],
+      "finance": [
+        "Ahorrar no es privarse, es priorizar tu futuro sobre impulsos momentáneos.",
+        "Cada peso ahorrado es un voto de confianza en tu futuro."
+      ],
+      "relationships": [
+        "Las relaciones se nutren de pequeños gestos consistentes, no de grandes eventos esporádicos.",
+        "Escuchar activamente es el regalo más valioso que puedes dar a alguien."
+      ],
+      "personal": [
+        "El crecimiento personal no es un destino, es un viaje diario de pequeñas mejoras.",
+        "Dedica tiempo a lo que amas. Es una inversión en tu felicidad."
+      ]
+    },
+    "defaultTips": [
+      "Cada día es una oportunidad para ser 1% mejor.",
+      "El progreso no siempre es visible. Confía en el proceso."
+    ]
+  },
+  "focusRoom": {
+    "loading": "Cargando...",
+    "errorLoading": "No se pudo cargar el Focus Room",
+    "chat": "Chat",
+    "chatDescription": "Tu coach especializado está aquí para ayudarte",
+    "botGreeting": "Soy tu coach especializado en {roomName}. ¿Cómo puedo ayudarte hoy?",
+    "goals": "Metas",
+    "newGoal": "Nueva Meta",
+    "newGoalDescription": "Crea una nueva meta para este Focus Room",
+    "goalTitle": "Título de la meta",
+    "goalPlaceholder": "Ej: Leer 10 páginas al día",
+    "dailyGoal": "Meta diaria",
+    "createGoal": "Crear Meta",
+    "noGoals": "No hay metas aún",
+    "dailyLabel": "📅 Diaria",
+    "writeMessage": "Escribe tu mensaje...",
+    "goalCreated": "Meta creada",
+    "goalCreatedDescription": "Tu nueva meta ha sido agregada",
+    "errorCreatingGoal": "No se pudo crear la meta",
+    "errorUpdatingGoal": "No se pudo actualizar la meta",
+    "achievementUnlocked": "¡Logro desbloqueado!",
+    "achievementUnlockedDescription": "Has desbloqueado {count} nuevo{plural} logro{plural}",
+    "goalCompleted": "¡Meta completada! 🎉",
+    "pointsAwarded": "+{points} puntos",
+    "creditsExhausted": "Se han agotado los créditos de Lovable AI. Ve a Settings → Workspace → Usage para agregar más créditos.",
+    "tooManyRequests": "Demasiadas solicitudes. Por favor espera un momento antes de intentar de nuevo.",
+    "errorConnecting": "Error al conectar con el asistente",
+    "noResponse": "No se recibió respuesta del servidor",
+    "errorSending": "No se pudo enviar el mensaje"
   }
 }

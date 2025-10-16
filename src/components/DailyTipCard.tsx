@@ -4,6 +4,7 @@ import { X, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 interface DailyTipCardProps {
   userName: string;
@@ -13,6 +14,7 @@ interface DailyTipCardProps {
 }
 
 const DailyTipCard = ({ userName, currentStreak, totalPoints, level }: DailyTipCardProps) => {
+  const { t } = useTranslation();
   const [tip, setTip] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [isClosed, setIsClosed] = useState(false);
@@ -104,16 +106,7 @@ const DailyTipCard = ({ userName, currentStreak, totalPoints, level }: DailyTipC
   };
 
   const getGenericTip = () => {
-    const genericTips = [
-      "Empieza el día con una meta pequeña y alcanzable. El momentum es tu mejor aliado.",
-      "La constancia vence al talento. Haz una cosa bien hoy, aunque sea pequeña.",
-      "Tu racha actual es tu compromiso contigo mismo. Protégela.",
-      "Los hábitos se construyen con decisiones diarias. ¿Qué decides hoy?",
-      "El progreso no siempre es visible. Confía en el proceso.",
-      "Cada día es una oportunidad para ser 1% mejor que ayer.",
-      "No rompas la cadena. Tu yo del futuro te lo agradecerá.",
-      "La disciplina es elegir entre lo que quieres ahora y lo que quieres más."
-    ];
+    const genericTips = t('dailyTipCard.genericTips', { returnObjects: true }) as string[];
     return genericTips[Math.floor(Math.random() * genericTips.length)];
   };
 
@@ -141,9 +134,9 @@ const DailyTipCard = ({ userName, currentStreak, totalPoints, level }: DailyTipC
             <Lightbulb className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h3 className="font-semibold text-sm mb-1">Tip del Día</h3>
+            <h3 className="font-semibold text-sm mb-1">{t('dailyTipCard.title')}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {tip || "Generando tu tip personalizado..."}
+              {tip || t('dailyTipCard.generating')}
             </p>
           </div>
         </div>

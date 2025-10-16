@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Send, Loader2, Plus, Check, Settings as SettingsIcon, Share2, Activity, Briefcase, Heart, DollarSign, Sprout, Brain, MessageCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import nudgeIcon from "@/assets/nudge_icon.png";
 import VoiceInterface from "@/components/VoiceInterface";
 import { onGoalCompleted } from "@/utils/gamification";
@@ -62,6 +63,7 @@ interface Goal {
 }
 
 const FocusRoom = () => {
+  const { t } = useTranslation();
   const { roomId } = useParams();
   const [room, setRoom] = useState<FocusRoom | null>(null);
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -140,7 +142,7 @@ const FocusRoom = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "No se pudo cargar el Focus Room",
+        description: t('focusRoom.errorLoading'),
       });
       navigate("/dashboard");
       return;
@@ -233,16 +235,16 @@ const FocusRoom = () => {
         const errorData = await response.json().catch(() => ({ error: "Error desconocido" }));
         
         if (response.status === 402) {
-          throw new Error("Se han agotado los créditos de Lovable AI. Ve a Settings → Workspace → Usage para agregar más créditos.");
+          throw new Error(t('focusRoom.creditsExhausted'));
         } else if (response.status === 429) {
-          throw new Error("Demasiadas solicitudes. Por favor espera un momento antes de intentar de nuevo.");
+          throw new Error(t('focusRoom.tooManyRequests'));
         }
         
-        throw new Error(errorData.error || "Error al conectar con el asistente");
+        throw new Error(errorData.error || t('focusRoom.errorConnecting'));
       }
 
       if (!response.body) {
-        throw new Error("No se recibió respuesta del servidor");
+        throw new Error(t('focusRoom.noResponse'));
       }
 
       const reader = response.body.getReader();
@@ -302,7 +304,7 @@ const FocusRoom = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message || "No se pudo enviar el mensaje",
+        description: error.message || t('focusRoom.errorSending'),
       });
       setMessages((prev) => prev.slice(0, -1));
     } finally {
@@ -327,14 +329,14 @@ const FocusRoom = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "No se pudo crear la meta",
+        description: t('focusRoom.errorCreatingGoal'),
       });
       return;
     }
 
     toast({
-      title: "Meta creada",
-      description: "Tu nueva meta ha sido agregada",
+      title: t('focusRoom.goalCreated'),
+      description: t('focusRoom.goalCreatedDescription'),
     });
 
     setNewGoalTitle("");
@@ -363,7 +365,7 @@ const FocusRoom = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "No se pudo actualizar la meta",
+        description: t('focusRoom.errorUpdatingGoal'),
       });
       return;
     }
@@ -376,14 +378,18 @@ const FocusRoom = () => {
         setNewAchievements(achievements);
         setShowCelebration(true);
         
+        const plural = achievements.length > 1 ? 's' : '';
         toast({
-          title: "¡Logro desbloqueado!",
-          description: `Has desbloqueado ${achievements.length} nuevo${achievements.length > 1 ? 's' : ''} logro${achievements.length > 1 ? 's' : ''}`,
+          title: t('focusRoom.achievementUnlocked'),
+          description: t('focusRoom.achievementUnlockedDescription', { 
+            count: achievements.length, 
+            plural 
+          }),
         });
       } else {
         toast({
-          title: "¡Meta completada! 🎉",
-          description: `+${goal.is_daily ? 15 : 10} puntos`,
+          title: t('focusRoom.goalCompleted'),
+          description: t('focusRoom.pointsAwarded', { points: goal.is_daily ? 15 : 10 }),
         });
       }
     }
@@ -413,7 +419,7 @@ const FocusRoom = () => {
   if (!room) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-primary text-xl">Cargando...</div>
+        <div className="animate-pulse text-primary text-xl">{t('focusRoom.loading')}</div>
       </div>
     );
   }
@@ -494,7 +500,7 @@ const FocusRoom = () => {
                   className="w-full h-14 text-base btn-interactive hover:scale-105 transition-transform"
                 >
                   <MessageCircle className="w-5 h-5 mr-2" />
-                  Chat
+                  {t('focusRoom.chat')}
                 </Button>
               </CardContent>
             </Card>
@@ -503,7 +509,7 @@ const FocusRoom = () => {
             <Card className="w-full max-w-full">
               <CardHeader className="p-4">
                 <div className="flex items-center justify-between gap-2">
-                  <CardTitle className="text-lg">Metas</CardTitle>
+                  <CardTitle className="text-lg">{t('focusRoom.goals')}</CardTitle>
                   <Dialog open={showNewGoal} onOpenChange={setShowNewGoal}>
                     <DialogTrigger asChild>
                       <Button size="sm" variant="ghost">
@@ -512,17 +518,17 @@ const FocusRoom = () => {
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Nueva Meta</DialogTitle>
+                        <DialogTitle>{t('focusRoom.newGoal')}</DialogTitle>
                         <DialogDescription>
-                          Crea una nueva meta para este Focus Room
+                          {t('focusRoom.newGoalDescription')}
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="goalTitle">Título de la meta</Label>
+                          <Label htmlFor="goalTitle">{t('focusRoom.goalTitle')}</Label>
                           <Input
                             id="goalTitle"
-                            placeholder="Ej: Leer 10 páginas al día"
+                            placeholder={t('focusRoom.goalPlaceholder')}
                             value={newGoalTitle}
                             onChange={(e) => setNewGoalTitle(e.target.value)}
                           />
@@ -534,11 +540,11 @@ const FocusRoom = () => {
                             onCheckedChange={(checked) => setNewGoalIsDaily(checked as boolean)}
                           />
                           <Label htmlFor="isDaily" className="text-sm">
-                            Meta diaria
+                            {t('focusRoom.dailyGoal')}
                           </Label>
                         </div>
                         <Button onClick={createGoal} className="w-full">
-                          Crear Meta
+                          {t('focusRoom.createGoal')}
                         </Button>
                       </div>
                     </DialogContent>
@@ -548,7 +554,7 @@ const FocusRoom = () => {
               <CardContent className="space-y-2 p-4">
                 {goals.length === 0 ? (
                   <p className="text-sm text-muted-foreground text-center py-4">
-                    No hay metas aún
+                    {t('focusRoom.noGoals')}
                   </p>
                 ) : (
                   goals.map((goal, index) => (
@@ -576,10 +582,10 @@ const FocusRoom = () => {
                               goal.is_completed ? "line-through text-muted-foreground" : ""
                             }`}
                           >
-                            {goal.title}
+                          {goal.title}
                           </p>
                           {goal.is_daily && (
-                            <span className="text-xs text-muted-foreground">📅 Diaria</span>
+                            <span className="text-xs text-muted-foreground">{t('focusRoom.dailyLabel')}</span>
                           )}
                         </div>
                       </div>
@@ -618,10 +624,10 @@ const FocusRoom = () => {
                   </div>
                 );
               })()}
-              <span>Chat</span>
+              <span>{t('focusRoom.chat')}</span>
             </DialogTitle>
             <DialogDescription>
-              Tu coach especializado está aquí para ayudarte
+              {t('focusRoom.chatDescription')}
             </DialogDescription>
           </DialogHeader>
 
@@ -639,9 +645,9 @@ const FocusRoom = () => {
                     </div>
                   );
                 })()}
-                <h2 className="text-xl font-bold mb-2">Bot de {room.name}</h2>
+                <h2 className="text-xl font-bold mb-2">{room.name} Bot</h2>
                 <p className="text-muted-foreground">
-                  Soy tu coach especializado en {room.name}. ¿Cómo puedo ayudarte hoy?
+                  {t('focusRoom.botGreeting', { roomName: room.name })}
                 </p>
               </div>
             )}
@@ -677,7 +683,7 @@ const FocusRoom = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Escribe tu mensaje..."
+                placeholder={t('focusRoom.writeMessage')}
                 className="resize-none text-sm"
                 rows={2}
                 disabled={isLoading}

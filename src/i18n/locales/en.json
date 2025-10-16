@@ -191,5 +191,84 @@
   "socialMedia": {
     "title": "Social Media Analysis",
     "description": "Connect your social media profiles so the AI can analyze your activity and provide better context"
+  },
+  "dailyTipCard": {
+    "title": "Tip of the Day",
+    "generating": "Generating your personalized tip...",
+    "genericTips": [
+      "Start the day with a small, achievable goal. Momentum is your best ally.",
+      "Consistency beats talent. Do one thing well today, even if it's small.",
+      "Your current streak is your commitment to yourself. Protect it.",
+      "Habits are built with daily decisions. What do you choose today?",
+      "Progress isn't always visible. Trust the process.",
+      "Every day is an opportunity to be 1% better than yesterday.",
+      "Don't break the chain. Your future self will thank you.",
+      "Discipline is choosing between what you want now and what you want most."
+    ]
+  },
+  "focusRoomDailyTip": {
+    "title": "Daily Tip",
+    "generating": "Generating tip...",
+    "focusOnGoals": "Focus on completing your pending goals today.",
+    "categoryTips": {
+      "health": [
+        "Consistency in exercise is more important than intensity. Move today, even if just a little.",
+        "Your body is your permanent home. Take care of it with small daily decisions."
+      ],
+      "mental": [
+        "A few minutes of meditation can transform your day. Why not start now?",
+        "Mental peace is not the absence of problems, but the ability to deal with them."
+      ],
+      "career": [
+        "Every small achievement brings you closer to your professional goal. What will you do today to advance?",
+        "Professional success is the sum of small efforts repeated day after day."
+      ],
+      "finance": [
+        "Saving isn't about depriving yourself, it's about prioritizing your future over momentary impulses.",
+        "Every dollar saved is a vote of confidence in your future."
+      ],
+      "relationships": [
+        "Relationships are nurtured by small consistent gestures, not by sporadic big events.",
+        "Active listening is the most valuable gift you can give someone."
+      ],
+      "personal": [
+        "Personal growth is not a destination, it's a daily journey of small improvements.",
+        "Dedicate time to what you love. It's an investment in your happiness."
+      ]
+    },
+    "defaultTips": [
+      "Every day is an opportunity to be 1% better.",
+      "Progress isn't always visible. Trust the process."
+    ]
+  },
+  "focusRoom": {
+    "loading": "Loading...",
+    "errorLoading": "Could not load the Focus Room",
+    "chat": "Chat",
+    "chatDescription": "Your specialized coach is here to help you",
+    "botGreeting": "I'm your coach specialized in {roomName}. How can I help you today?",
+    "goals": "Goals",
+    "newGoal": "New Goal",
+    "newGoalDescription": "Create a new goal for this Focus Room",
+    "goalTitle": "Goal title",
+    "goalPlaceholder": "E.g.: Read 10 pages a day",
+    "dailyGoal": "Daily goal",
+    "createGoal": "Create Goal",
+    "noGoals": "No goals yet",
+    "dailyLabel": "📅 Daily",
+    "writeMessage": "Write your message...",
+    "goalCreated": "Goal created",
+    "goalCreatedDescription": "Your new goal has been added",
+    "errorCreatingGoal": "Could not create the goal",
+    "errorUpdatingGoal": "Could not update the goal",
+    "achievementUnlocked": "Achievement unlocked!",
+    "achievementUnlockedDescription": "You've unlocked {count} new achievement{plural}",
+    "goalCompleted": "Goal completed! 🎉",
+    "pointsAwarded": "+{points} points",
+    "creditsExhausted": "Lovable AI credits have been exhausted. Go to Settings → Workspace → Usage to add more credits.",
+    "tooManyRequests": "Too many requests. Please wait a moment before trying again.",
+    "errorConnecting": "Error connecting with the assistant",
+    "noResponse": "No response received from the server",
+    "errorSending": "Could not send the message"
   }
 }
