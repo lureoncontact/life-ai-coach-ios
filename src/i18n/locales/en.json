@@ -106,5 +106,90 @@
     "timeUpdatedDescription": "New reminder at",
     "workOnGoals": "Time to work on your goals!",
     "pendingGoals": "You have {count} pending daily goal{plural}."
+  },
+  "menu": {
+    "title": "Menu",
+    "progress": "Progress",
+    "statistics": "Statistics",
+    "integrations": "Integrations",
+    "socialAnalysis": "Social Analysis",
+    "settings": "Settings"
+  },
+  "progress": {
+    "title": "Your Progress",
+    "loading": "Loading your progress...",
+    "levelMap": "Level Map",
+    "levelMapDescription": "Visualize your path to mastery. Each level represents your commitment to change.",
+    "level": "Level",
+    "points": "points",
+    "streak": "Streak",
+    "currentLevel": "Current Level",
+    "nextLevel": "Next Level",
+    "pointsRequired": "points required",
+    "recommendation": "Recommendation for Level {level}",
+    "keepGoing": "Keep it up! You only need {points} more points to reach level {level}."
+  },
+  "celebration": {
+    "levelup": "Level Reached!",
+    "streak": "Epic Streak!"
+  },
+  "integrations": {
+    "title": "Integrations",
+    "description": "Connect your favorite apps",
+    "comingSoon": "🚀 <strong>Coming soon:</strong> All these integrations will be available in the final version",
+    "strava": "Strava",
+    "stravaDesc": "Sync your workouts and activities",
+    "googleFit": "Google Fit",
+    "googleFitDesc": "Track your health and fitness data",
+    "whoop": "Whoop",
+    "whoopDesc": "Analyze your recovery and strain",
+    "todoist": "Todoist",
+    "todoistDesc": "Sync your goals and reminders",
+    "trello": "Trello",
+    "trelloDesc": "Export your goals and progress automatically",
+    "whatsapp": "WhatsApp",
+    "whatsappDesc": "Sync daily tasks and goals"
+  },
+  "export": {
+    "title": "Export Data",
+    "description": "Download your data in different formats",
+    "jsonTitle": "Export in JSON",
+    "jsonDesc": "Complete data in JSON format",
+    "csvTitle": "Export Goals (CSV)",
+    "csvDesc": "Goals in spreadsheet format",
+    "exportButton": "Export",
+    "dataIncluded": "The exported data includes your profile, Focus Rooms, goals, statistics and achievements"
+  },
+  "premium": {
+    "title": "Choose the perfect plan to reach your goals",
+    "free": "Free",
+    "pro": "Pro",
+    "goalsPerRoom": "goals per room",
+    "unlimitedGoals": "Unlimited goals",
+    "basicStats": "Basic statistics",
+    "advancedStats": "Advanced statistics",
+    "premiumIntegrations": "Premium integrations",
+    "prioritySupport": "Priority support",
+    "aiInsights": "AI insights",
+    "selectPlan": "Select Plan",
+    "currentPlan": "Current Plan"
+  },
+  "aiInsights": {
+    "title": "Progress Analysis with AI",
+    "description": "Personalized insights based on your goals and progress",
+    "analyzing": "Analyzing your progress...",
+    "generate": "Generate a personalized analysis of your progress"
+  },
+  "dailyTip": {
+    "title": "Daily Tip",
+    "tips": [
+      "Your current streak is your commitment to yourself. Protect it.",
+      "Small daily actions create big long-term changes.",
+      "Progress isn't always visible. Trust the process."
+    ]
+  },
+  "socialMedia": {
+    "title": "Social Media Analysis",
+    "description": "Connect your social media profiles so the AI can analyze your activity and provide better context"
   }
 }

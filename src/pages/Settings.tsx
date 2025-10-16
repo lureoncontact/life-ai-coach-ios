@@ -137,8 +137,11 @@ const Settings = () => {
         .eq("is_completed", false);
 
       if (goals && goals.length > 0) {
-        sendNotification("¡Hora de trabajar en tus metas!", {
-          body: `Tienes ${goals.length} meta${goals.length > 1 ? 's' : ''} diaria${goals.length > 1 ? 's' : ''} pendiente${goals.length > 1 ? 's' : ''}.`,
+        sendNotification(t('notifications.workOnGoals'), {
+          body: t('notifications.pendingGoals', { 
+            count: goals.length, 
+            plural: goals.length > 1 ? 's' : '' 
+          }),
           tag: "daily-reminder",
         });
       }
@@ -151,8 +154,8 @@ const Settings = () => {
       if (!hasPermission) {
         toast({
           variant: "destructive",
-          title: "Permisos denegados",
-          description: "Por favor habilita las notificaciones en la configuración de tu navegador.",
+          title: t('notifications.permissionsDenied'),
+          description: t('notifications.permissionsDeniedDescription'),
         });
         return;
       }
@@ -175,8 +178,8 @@ const Settings = () => {
     
     if (notificationsEnabled) {
       toast({
-        title: "Hora actualizada",
-        description: `Nuevo recordatorio a las ${time}`,
+        title: t('notifications.timeUpdated'),
+        description: `${t('notifications.timeUpdatedDescription')} ${time}`,
       });
     }
   };

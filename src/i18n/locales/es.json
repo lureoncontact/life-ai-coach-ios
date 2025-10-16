@@ -106,5 +106,90 @@
     "timeUpdatedDescription": "Nuevo recordatorio a las",
     "workOnGoals": "¡Hora de trabajar en tus metas!",
     "pendingGoals": "Tienes {count} meta{plural} diaria{plural} pendiente{plural}."
+  },
+  "menu": {
+    "title": "Menú",
+    "progress": "Progreso",
+    "statistics": "Estadísticas",
+    "integrations": "Integraciones",
+    "socialAnalysis": "Análisis de Redes",
+    "settings": "Configuración"
+  },
+  "progress": {
+    "title": "Tu Progreso",
+    "loading": "Cargando tu progreso...",
+    "levelMap": "Mapa de Niveles",
+    "levelMapDescription": "Visualiza tu camino hacia la maestría. Cada nivel representa tu compromiso con el cambio.",
+    "level": "Nivel",
+    "points": "puntos",
+    "streak": "Racha",
+    "currentLevel": "Nivel Actual",
+    "nextLevel": "Siguiente Nivel",
+    "pointsRequired": "puntos requeridos",
+    "recommendation": "Recomendación para Nivel {level}",
+    "keepGoing": "¡Sigue así! Solo necesitas {points} puntos más para alcanzar el nivel {level}."
+  },
+  "celebration": {
+    "levelup": "¡Nivel Alcanzado!",
+    "streak": "¡Racha Épica!"
+  },
+  "integrations": {
+    "title": "Integraciones",
+    "description": "Conecta tus aplicaciones favoritas",
+    "comingSoon": "🚀 <strong>Próximamente:</strong> Todas estas integraciones estarán disponibles en la versión final",
+    "strava": "Strava",
+    "stravaDesc": "Sincroniza tus entrenamientos y actividades",
+    "googleFit": "Google Fit",
+    "googleFitDesc": "Rastrea tus datos de salud y fitness",
+    "whoop": "Whoop",
+    "whoopDesc": "Analiza tu recuperación y esfuerzo",
+    "todoist": "Todoist",
+    "todoistDesc": "Sincroniza tus metas y recordatorios",
+    "trello": "Trello",
+    "trelloDesc": "Exporta tus metas y progreso automáticamente",
+    "whatsapp": "WhatsApp",
+    "whatsappDesc": "Sincroniza tareas y metas diarias"
+  },
+  "export": {
+    "title": "Exportar Datos",
+    "description": "Descarga tus datos en diferentes formatos",
+    "jsonTitle": "Exportar en JSON",
+    "jsonDesc": "Datos completos en formato JSON",
+    "csvTitle": "Exportar Metas (CSV)",
+    "csvDesc": "Metas en formato de hoja de cálculo",
+    "exportButton": "Exportar",
+    "dataIncluded": "Los datos exportados incluyen tu perfil, Focus Rooms, metas, estadísticas y logros"
+  },
+  "premium": {
+    "title": "Elige el plan perfecto para alcanzar tus metas",
+    "free": "Gratis",
+    "pro": "Pro",
+    "goalsPerRoom": "metas por sala",
+    "unlimitedGoals": "Metas ilimitadas",
+    "basicStats": "Estadísticas básicas",
+    "advancedStats": "Estadísticas avanzadas",
+    "premiumIntegrations": "Integraciones premium",
+    "prioritySupport": "Soporte prioritario",
+    "aiInsights": "Insights de IA",
+    "selectPlan": "Seleccionar Plan",
+    "currentPlan": "Plan Actual"
+  },
+  "aiInsights": {
+    "title": "Análisis de Progreso con IA",
+    "description": "Insights personalizados basados en tus metas y progreso",
+    "analyzing": "Analizando tu progreso...",
+    "generate": "Genera un análisis personalizado de tu progreso"
+  },
+  "dailyTip": {
+    "title": "Consejo del Día",
+    "tips": [
+      "Tu racha actual es tu compromiso contigo mismo. Protégela.",
+      "Pequeñas acciones diarias crean grandes cambios a largo plazo.",
+      "El progreso no siempre es visible. Confía en el proceso."
+    ]
+  },
+  "socialMedia": {
+    "title": "Análisis de Redes Sociales",
+    "description": "Conecta tus perfiles de redes sociales para que la IA pueda analizar tu actividad y proporcionar mejor contexto"
   }
 }

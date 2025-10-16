@@ -6,15 +6,17 @@ import ProgressMapInteractive from "@/components/progress-map/ProgressMapInterac
 import { useGamification } from "@/hooks/useGamification";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import nudgeIcon from "@/assets/nudge_icon.png";
+import { useTranslation } from "react-i18next";
 
 const Progress = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { stats, loading } = useGamification();
 
   if (loading || !stats) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5">
-        <LoadingSpinner size="lg" text="Cargando tu progreso..." />
+        <LoadingSpinner size="lg" text={t('progress.loading')} />
       </div>
     );
   }
@@ -37,10 +39,10 @@ const Progress = () => {
             <div>
               <h1 className="text-xl font-bold flex items-center gap-2">
                 <TrendingUp className="w-5 h-5" />
-                Tu Progreso
+                {t('progress.title')}
               </h1>
               <p className="text-xs text-muted-foreground">
-                Nivel {stats.level} • {stats.total_points} puntos
+                {t('progress.level')} {stats.level} • {stats.total_points} {t('progress.points')}
               </p>
             </div>
           </div>
@@ -52,9 +54,9 @@ const Progress = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
           <div className="mb-6 space-y-2">
-            <h2 className="text-2xl font-bold">Mapa de Niveles</h2>
+            <h2 className="text-2xl font-bold">{t('progress.levelMap')}</h2>
             <p className="text-muted-foreground">
-              Visualiza tu camino hacia la maestría. Cada nivel representa tu compromiso con el cambio.
+              {t('progress.levelMapDescription')}
             </p>
           </div>
 
