@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +14,7 @@ interface AIInsightsModalProps {
 }
 
 const AIInsightsModal = ({ open, onOpenChange }: AIInsightsModalProps) => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [insights, setInsights] = useState<string>("");
@@ -52,7 +54,7 @@ const AIInsightsModal = ({ open, onOpenChange }: AIInsightsModalProps) => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "No se pudo generar el análisis. Intenta de nuevo.",
+        description: t('aiInsights.generate'),
       });
     } finally {
       setLoading(false);

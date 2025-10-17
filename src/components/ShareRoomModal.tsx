@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ interface ShareRoomModalProps {
 }
 
 const ShareRoomModal = ({ open, onOpenChange, roomId, roomName }: ShareRoomModalProps) => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   
@@ -23,8 +25,8 @@ const ShareRoomModal = ({ open, onOpenChange, roomId, roomName }: ShareRoomModal
     navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     toast({
-      title: "Enlace copiado",
-      description: "El enlace ha sido copiado al portapapeles",
+      title: t('shareRoom.linkCopied'),
+      description: t('shareRoom.linkCopiedDescription'),
     });
     setTimeout(() => setCopied(false), 2000);
   };

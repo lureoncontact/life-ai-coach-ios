@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +23,7 @@ interface SocialPlatform {
 
 const SocialMedia = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [platforms, setPlatforms] = useState<SocialPlatform[]>([
     {
       id: "instagram",
@@ -58,7 +60,7 @@ const SocialMedia = () => {
   const handleConnect = (platformId: string) => {
     const username = inputValues[platformId];
     if (!username || username.trim() === "") {
-      toast.error("Por favor ingresa un nombre de usuario");
+      toast.error(t('socialMedia.enterUsername'));
       return;
     }
 
@@ -68,13 +70,13 @@ const SocialMedia = () => {
             ...p, 
             connected: true, 
             username,
-            lastAnalysis: "Hace 2 min",
+            lastAnalysis: t('socialMedia.lastAnalysisDate'),
             insights: Math.floor(Math.random() * 50) + 10
           }
         : p
     ));
     
-    toast.success(`${platforms.find(p => p.id === platformId)?.name} conectado exitosamente`);
+    toast.success(t('socialMedia.connectedSuccess', { platform: platforms.find(p => p.id === platformId)?.name }));
   };
 
   const handleDisconnect = (platformId: string) => {
@@ -84,7 +86,7 @@ const SocialMedia = () => {
         : p
     ));
     setInputValues(prev => ({ ...prev, [platformId]: "" }));
-    toast.info(`${platforms.find(p => p.id === platformId)?.name} desconectado`);
+    toast.info(t('socialMedia.disconnected', { platform: platforms.find(p => p.id === platformId)?.name }));
   };
 
   const connectedCount = platforms.filter(p => p.connected).length;
@@ -101,9 +103,9 @@ const SocialMedia = () => {
             </Button>
             <img src={nudgeIcon} alt="Nudge" className="w-9 h-9" />
             <div>
-              <h1 className="text-xl font-bold">Análisis de Redes Sociales</h1>
+              <h1 className="text-xl font-bold">{t('socialMedia.title')}</h1>
               <p className="text-xs text-muted-foreground">
-                Conecta tus perfiles para análisis personalizado
+                {t('socialMedia.description')}
               </p>
             </div>
           </div>
@@ -128,11 +130,9 @@ const SocialMedia = () => {
               <div className="flex gap-3">
                 <Brain className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <p className="font-semibold text-sm">¿Cómo funciona el análisis?</p>
+                  <p className="font-semibold text-sm">{t('socialMedia.howItWorks')}</p>
                   <p className="text-sm text-muted-foreground">
-                    La IA analizará tus publicaciones, interacciones y patrones de uso para comprender mejor tus intereses, 
-                    hábitos y contexto social. Esto permite recomendaciones más personalizadas y un seguimiento más completo 
-                    de tus objetivos. Tus datos están protegidos y solo se usan para mejorar tu experiencia.
+                    {t('socialMedia.howItWorksDescription')}
                   </p>
                 </div>
               </div>
@@ -145,7 +145,7 @@ const SocialMedia = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Redes Conectadas</p>
+                    <p className="text-sm text-muted-foreground">{t('socialMedia.connectedNetworks')}</p>
                     <p className="text-2xl font-bold">{connectedCount}/4</p>
                   </div>
                   <CheckCircle2 className="w-8 h-8 text-primary" />
@@ -157,7 +157,7 @@ const SocialMedia = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Insights Totales</p>
+                    <p className="text-sm text-muted-foreground">{t('socialMedia.totalInsights')}</p>
                     <p className="text-2xl font-bold">{totalInsights}</p>
                   </div>
                   <TrendingUp className="w-8 h-8 text-primary" />
@@ -169,9 +169,9 @@ const SocialMedia = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Último Análisis</p>
+                    <p className="text-sm text-muted-foreground">{t('socialMedia.lastAnalysis')}</p>
                     <p className="text-2xl font-bold">
-                      {connectedCount > 0 ? "Activo" : "—"}
+                      {connectedCount > 0 ? t('socialMedia.active') : "—"}
                     </p>
                   </div>
                   <Clock className="w-8 h-8 text-primary" />
@@ -209,10 +209,10 @@ const SocialMedia = () => {
                     {platform.connected ? (
                       <Badge variant="default" className="gap-1">
                         <CheckCircle2 className="w-3 h-3" />
-                        Conectado
+                        {t('socialMedia.connect')}ado
                       </Badge>
                     ) : (
-                      <Badge variant="outline">No conectado</Badge>
+                      <Badge variant="outline">No {t('socialMedia.connect').toLowerCase()}ado</Badge>
                     )}
                   </div>
                 </CardHeader>
@@ -222,11 +222,11 @@ const SocialMedia = () => {
                     <div className="space-y-3">
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
-                          <p className="text-muted-foreground text-xs">Insights generados</p>
+                          <p className="text-muted-foreground text-xs">{t('socialMedia.insightsGenerated')}</p>
                           <p className="font-semibold">{platform.insights}</p>
                         </div>
                         <div>
-                          <p className="text-muted-foreground text-xs">Último análisis</p>
+                          <p className="text-muted-foreground text-xs">{t('socialMedia.lastAnalysisDate')}</p>
                           <p className="font-semibold">{platform.lastAnalysis}</p>
                         </div>
                       </div>
@@ -236,7 +236,7 @@ const SocialMedia = () => {
                         className="w-full"
                         onClick={() => handleDisconnect(platform.id)}
                       >
-                        Desconectar
+                        {t('socialMedia.disconnect')}
                       </Button>
                     </div>
                   ) : (
@@ -250,7 +250,7 @@ const SocialMedia = () => {
                         className="w-full"
                         onClick={() => handleConnect(platform.id)}
                       >
-                        Conectar
+                        {t('socialMedia.connect')}
                       </Button>
                     </div>
                   )}

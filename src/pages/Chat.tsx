@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
@@ -16,6 +17,7 @@ interface Message {
 }
 
 const Chat = () => {
+  const { t } = useTranslation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -118,16 +120,16 @@ const Chat = () => {
         const errorData = await response.json().catch(() => ({ error: "Error desconocido" }));
         
         if (response.status === 402) {
-          throw new Error("Se han agotado los créditos de Lovable AI. Ve a Settings → Workspace → Usage para agregar más créditos.");
+          throw new Error(t('chat.creditsExhausted'));
         } else if (response.status === 429) {
-          throw new Error("Demasiadas solicitudes. Por favor espera un momento antes de intentar de nuevo.");
+          throw new Error(t('chat.tooManyRequests'));
         }
         
-        throw new Error(errorData.error || "Error al conectar con el asistente");
+        throw new Error(errorData.error || t('chat.errorConnecting'));
       }
 
       if (!response.body) {
-        throw new Error("No se recibió respuesta del servidor");
+        throw new Error(t('chat.noResponse'));
       }
 
       const reader = response.body.getReader();
@@ -189,7 +191,7 @@ const Chat = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message || "No se pudo enviar el mensaje",
+        description: error.message || t('chat.errorSending'),
       });
       // Remove the empty assistant message
       setMessages((prev) => prev.slice(0, -1));
@@ -220,8 +222,8 @@ const Chat = () => {
           <div className="flex items-center gap-3">
             <img src={nudgeIcon} alt="Nudge" className="w-9 h-9" />
             <div>
-              <h1 className="text-lg font-bold">Chat con Nudge</h1>
-              <p className="text-xs text-muted-foreground">Tu coach personal de IA</p>
+              <h1 className="text-lg font-bold">{t('chat.title')}</h1>
+              <p className="text-xs text-muted-foreground">{t('chat.subtitle')}</p>
             </div>
           </div>
           <Button
@@ -242,10 +244,10 @@ const Chat = () => {
             <Card className="p-8 text-center border-dashed animate-scale-in">
               <div className="text-5xl mb-4 animate-bounce-subtle">👋</div>
               <h2 className="text-xl font-bold mb-2">
-                ¡Hola {profile?.full_name || ""}!
+                {t('chat.greeting', { name: profile?.full_name || "" })}
               </h2>
               <p className="text-muted-foreground">
-                Soy Nudge, tu coach personal de IA. Cuéntame, ¿en qué puedo ayudarte hoy?
+                {t('chat.greetingMessage')}
               </p>
             </Card>
           )}
@@ -283,7 +285,7 @@ const Chat = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Escribe tu mensaje..."
+              placeholder={t('chat.messagePlaceholder')}
               className="resize-none"
               rows={3}
               disabled={isLoading}

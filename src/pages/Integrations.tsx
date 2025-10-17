@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,20 +27,22 @@ interface Integration {
 const Integrations = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
+  
   const [integrations, setIntegrations] = useState<Integration[]>([
     // Messaging
     {
       id: "whatsapp",
-      name: "WhatsApp",
-      description: "Conecta Nudge con WhatsApp para recibir mensajes y recordatorios",
+      name: t('integrations.whatsapp'),
+      description: t('integrations.whatsappDescription'),
       logoUrl: whatsappLogo,
       category: "messaging",
       connected: false,
     },
     {
       id: "telegram",
-      name: "Telegram",
-      description: "Chatea con Nudge directamente desde Telegram",
+      name: t('integrations.telegram'),
+      description: t('integrations.telegramDescription'),
       logoUrl: "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
       category: "messaging",
       connected: false,
@@ -47,32 +50,32 @@ const Integrations = () => {
     // Health
     {
       id: "whoop",
-      name: "Whoop",
-      description: "Sincroniza tus métricas de recuperación y sueño",
+      name: t('integrations.whoop'),
+      description: t('integrations.whoopDescription'),
       logoUrl: whoopLogo,
       category: "health",
       connected: false,
     },
     {
       id: "strava",
-      name: "Strava",
-      description: "Conecta tus entrenamientos y actividades deportivas",
+      name: t('integrations.strava'),
+      description: t('integrations.stravaDescription'),
       logoUrl: stravaLogo,
       category: "health",
       connected: false,
     },
     {
       id: "apple-health",
-      name: "Apple Health",
-      description: "Importa datos de salud desde tu iPhone",
+      name: t('integrations.appleHealth'),
+      description: t('integrations.appleHealthDescription'),
       logoUrl: "https://developer.apple.com/assets/elements/icons/healthkit/healthkit-96x96_2x.png",
       category: "health",
       connected: false,
     },
     {
       id: "google-fit",
-      name: "Google Fit",
-      description: "Sincroniza tu actividad física y datos de salud",
+      name: t('integrations.googleFit'),
+      description: t('integrations.googleFitDescription'),
       logoUrl: googleFitLogo,
       category: "health",
       connected: false,
@@ -80,32 +83,32 @@ const Integrations = () => {
     // Productivity
     {
       id: "notion",
-      name: "Notion",
-      description: "Sincroniza tus tareas y objetivos con Notion",
+      name: t('integrations.notion'),
+      description: t('integrations.notionDescription'),
       logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
       category: "productivity",
       connected: false,
     },
     {
       id: "todoist",
-      name: "Todoist",
-      description: "Importa y sincroniza tus tareas diarias",
+      name: t('integrations.todoist'),
+      description: t('integrations.todoistDescription'),
       logoUrl: todoistLogo,
       category: "productivity",
       connected: false,
     },
     {
       id: "google-calendar",
-      name: "Google Calendar",
-      description: "Integra tus eventos y recordatorios",
+      name: t('integrations.googleCalendar'),
+      description: t('integrations.googleCalendarDescription'),
       logoUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg",
       category: "productivity",
       connected: false,
     },
     {
       id: "trello",
-      name: "Trello",
-      description: "Conecta tus tableros y tarjetas de Trello",
+      name: t('integrations.trello'),
+      description: t('integrations.trelloDescription'),
       logoUrl: trelloLogo,
       category: "productivity",
       connected: false,
@@ -126,22 +129,13 @@ const Integrations = () => {
   };
 
   const getCategoryTitle = (category: string) => {
-    switch (category) {
-      case "messaging":
-        return "Mensajería";
-      case "health":
-        return "Salud y Fitness";
-      case "productivity":
-        return "Productividad";
-      default:
-        return category;
-    }
+    return t(`integrations.category${category.charAt(0).toUpperCase()}${category.slice(1)}`);
   };
 
   const handleConnect = (id: string) => {
     toast({
-      title: "Próximamente",
-      description: "Esta integración estará disponible pronto. ¡Estamos trabajando en ella!",
+      title: t('integrations.comingSoon'),
+      description: t('integrations.comingSoonDescription'),
     });
   };
 
@@ -163,9 +157,9 @@ const Integrations = () => {
             </Button>
             <img src={nudgeIcon} alt="Nudge" className="w-9 h-9" />
             <div>
-              <h1 className="text-xl font-bold">Integraciones</h1>
+              <h1 className="text-xl font-bold">{t('integrations.title')}</h1>
               <p className="text-xs text-muted-foreground">
-                Conecta Nudge con tus apps favoritas
+                {t('integrations.description')}
               </p>
             </div>
           </div>
@@ -178,9 +172,9 @@ const Integrations = () => {
         <div className="max-w-5xl mx-auto space-y-8">
           {/* Intro */}
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold">Expande las capacidades de Nudge</h2>
+            <h2 className="text-2xl font-bold">{t('integrations.expandCapabilities')}</h2>
             <p className="text-muted-foreground">
-              Conecta tus herramientas favoritas para llevar tu progreso al siguiente nivel
+              {t('integrations.expandDescription')}
             </p>
           </div>
 
@@ -239,12 +233,12 @@ const Integrations = () => {
                           {integration.connected ? (
                             <>
                               <Check className="w-4 h-4 mr-2" />
-                              Conectado
+                              {t('integrations.connected')}
                             </>
                           ) : (
                             <>
                               <ExternalLink className="w-4 h-4 mr-2" />
-                              Conectar
+                              {t('integrations.connect')}
                             </>
                           )}
                         </Button>
@@ -259,14 +253,14 @@ const Integrations = () => {
           {/* Request Integration */}
           <Card className="bg-gradient-to-r from-primary/5 to-accent/5 border-primary/20">
             <CardHeader>
-              <CardTitle>¿Falta alguna integración?</CardTitle>
+              <CardTitle>{t('integrations.missingIntegration')}</CardTitle>
               <CardDescription>
-                Estamos constantemente agregando nuevas integraciones. Si hay una app que te gustaría conectar con Nudge, háznoslo saber.
+                {t('integrations.missingIntegrationDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Button variant="outline" onClick={() => navigate("/settings")}>
-                Sugerir Integración
+                {t('integrations.suggestIntegration')}
               </Button>
             </CardContent>
           </Card>

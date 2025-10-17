@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ interface PremiumPlansModalProps {
 }
 
 const PremiumPlansModal = ({ open, onOpenChange }: PremiumPlansModalProps) => {
+  const { t } = useTranslation();
   const { toast } = useToast();
 
   const handleSubscribe = (plan: string) => {

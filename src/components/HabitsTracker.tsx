@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -20,6 +21,7 @@ interface HabitsTrackerProps {
 }
 
 const HabitsTracker = ({ onStatsUpdate }: HabitsTrackerProps) => {
+  const { t } = useTranslation();
   const [habits, setHabits] = useState<Habit[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -89,16 +91,15 @@ const HabitsTracker = ({ onStatsUpdate }: HabitsTrackerProps) => {
           // Only show success message if points were actually awarded
           if (achievements !== null) {
             toast({
-              title: "¡Todos los hábitos completados! 🎉",
-              description: "Has ganado puntos extra y tu racha continúa",
+              title: t('habits.allCompleted'),
+              description: t('habits.allCompletedDescription'),
             });
-            // Notify parent to update stats
             onStatsUpdate?.();
           }
         } else {
           toast({
-            title: "¡Hábito completado!",
-            description: `Racha de ${newStreak} día${newStreak !== 1 ? 's' : ''}`,
+            title: t('habits.habitCompleted'),
+            description: t('habits.streakDays', { count: newStreak, plural: newStreak !== 1 ? 's' : '' }),
           });
         }
       }
@@ -119,14 +120,14 @@ const HabitsTracker = ({ onStatsUpdate }: HabitsTrackerProps) => {
     return (
       <Card className="hover-lift animate-fade-in">
         <CardHeader>
-          <CardTitle className="text-lg">Hábitos Diarios</CardTitle>
+          <CardTitle className="text-lg">{t('habits.title')}</CardTitle>
           <CardDescription>
-            No tienes hábitos configurados aún
+            {t('habits.noHabits')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button variant="outline" className="w-full btn-interactive hover:scale-105" onClick={() => {}}>
-            Agregar Hábito
+            {t('habits.addHabit')}
           </Button>
         </CardContent>
       </Card>
@@ -140,7 +141,7 @@ const HabitsTracker = ({ onStatsUpdate }: HabitsTrackerProps) => {
     <Card className="hover-lift animate-fade-in">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg flex items-center justify-between">
-          Hábitos Diarios
+          {t('habits.title')}
           <span className="text-sm font-normal text-muted-foreground">
             {completedToday}/{habits.length}
           </span>

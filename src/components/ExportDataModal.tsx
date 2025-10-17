@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -12,6 +13,7 @@ interface ExportDataModalProps {
 }
 
 const ExportDataModal = ({ open, onOpenChange }: ExportDataModalProps) => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [exporting, setExporting] = useState(false);
 

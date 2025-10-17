@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -36,6 +37,7 @@ interface WeeklyProgress {
 }
 
 const Stats = () => {
+  const { t } = useTranslation();
   const [stats, setStats] = useState<Stats>({
     totalGoals: 0,
     completedGoals: 0,
@@ -109,12 +111,7 @@ const Stats = () => {
       });
 
       const categoryData = Object.entries(categoryCount).map(([category, count]) => ({
-        category: category === "health" ? "Salud" :
-                 category === "career" ? "Carrera" :
-                 category === "relationships" ? "Relaciones" :
-                 category === "finance" ? "Finanzas" :
-                 category === "personal" ? "Personal" :
-                 category === "mental" ? "Mental" : category,
+        category: t(`stats.category${category.charAt(0).toUpperCase()}${category.slice(1)}`),
         count,
       }));
 
@@ -207,7 +204,7 @@ const Stats = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5">
-        <LoadingSpinner size="lg" text="Cargando estadísticas..." />
+        <LoadingSpinner size="lg" text={t('stats.loading')} />
       </div>
     );
   }
@@ -221,8 +218,8 @@ const Stats = () => {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-lg font-bold">Estadísticas</h1>
-            <p className="text-xs text-muted-foreground">Tu progreso en Nudge</p>
+            <h1 className="text-lg font-bold">{t('stats.title')}</h1>
+            <p className="text-xs text-muted-foreground">{t('stats.subtitle')}</p>
           </div>
         </div>
       </header>
@@ -234,7 +231,7 @@ const Stats = () => {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Total Metas
+                  {t('stats.totalGoals')}
                 </CardTitle>
                 <img src={nudgeIcon} alt="Nudge" className="w-4 h-4" />
               </div>
@@ -242,7 +239,7 @@ const Stats = () => {
             <CardContent>
               <div className="text-2xl md:text-3xl font-bold">{stats.totalGoals}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                {stats.activeGoals} activas
+                {stats.activeGoals} {t('stats.active')}
               </p>
             </CardContent>
           </Card>
@@ -251,7 +248,7 @@ const Stats = () => {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Completadas
+                  {t('stats.completed')}
                 </CardTitle>
                 <Trophy className="w-4 h-4 text-success" />
               </div>
@@ -259,7 +256,7 @@ const Stats = () => {
             <CardContent>
               <div className="text-2xl md:text-3xl font-bold text-success">{stats.completedGoals}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                {stats.completionRate}% de tasa
+                {stats.completionRate}% {t('stats.completionRate')}
               </p>
             </CardContent>
           </Card>
@@ -268,7 +265,7 @@ const Stats = () => {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Racha Actual
+                  {t('stats.currentStreak')}
                 </CardTitle>
                 <Flame className="w-4 h-4 text-orange-500 animate-bounce-subtle" />
               </div>
@@ -276,7 +273,7 @@ const Stats = () => {
             <CardContent>
               <div className="text-2xl md:text-3xl font-bold text-orange-500">{stats.currentStreak}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                días consecutivos
+                {t('stats.consecutiveDays')}
               </p>
             </CardContent>
           </Card>
@@ -285,7 +282,7 @@ const Stats = () => {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Focus Rooms
+                  {t('stats.focusRooms')}
                 </CardTitle>
                 <TrendingUp className="w-4 h-4 text-accent" />
               </div>
@@ -293,7 +290,7 @@ const Stats = () => {
             <CardContent>
               <div className="text-2xl md:text-3xl font-bold">{stats.totalFocusRooms}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                áreas de enfoque
+                {t('stats.focusAreas')}
               </p>
             </CardContent>
           </Card>
@@ -302,7 +299,7 @@ const Stats = () => {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Nivel
+                  {t('stats.level')}
                 </CardTitle>
                 <Trophy className="w-4 h-4 text-primary animate-pulse" />
               </div>
@@ -310,7 +307,7 @@ const Stats = () => {
             <CardContent>
               <div className="text-2xl md:text-3xl font-bold text-primary">{stats.level}</div>
               <p className="text-xs text-muted-foreground mt-1">
-                {stats.totalPoints} pts
+                {stats.totalPoints} {t('stats.points')}
               </p>
             </CardContent>
           </Card>
@@ -321,9 +318,9 @@ const Stats = () => {
           {/* Weekly Progress Chart */}
           <Card className="hover-glow stagger-item" style={{ animationDelay: "0.25s" }}>
             <CardHeader>
-              <CardTitle className="text-base md:text-lg">Progreso Semanal</CardTitle>
+              <CardTitle className="text-base md:text-lg">{t('stats.weeklyProgress')}</CardTitle>
               <CardDescription>
-                Metas completadas en los últimos 7 días
+                {t('stats.weeklyProgressDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -348,9 +345,9 @@ const Stats = () => {
           {/* Goals by Category Chart */}
           <Card className="hover-glow stagger-item" style={{ animationDelay: "0.3s" }}>
             <CardHeader>
-              <CardTitle className="text-base md:text-lg">Metas por Categoría</CardTitle>
+              <CardTitle className="text-base md:text-lg">{t('stats.goalsByCategory')}</CardTitle>
               <CardDescription>
-                Distribución de tus metas por área
+                {t('stats.goalsByCategoryDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -395,15 +392,15 @@ const Stats = () => {
         {/* Completion Rate Card */}
         <Card className="hover-lift stagger-item" style={{ animationDelay: "0.35s" }}>
           <CardHeader>
-            <CardTitle className="text-base md:text-lg">Tasa de Completado General</CardTitle>
+            <CardTitle className="text-base md:text-lg">{t('stats.overallCompletionRate')}</CardTitle>
             <CardDescription>
-              Porcentaje de metas completadas del total
+              {t('stats.overallCompletionRateDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">Progreso</span>
+                <span className="text-sm font-medium">{t('stats.progress')}</span>
                 <span className="text-sm font-bold text-primary">{stats.completionRate}%</span>
               </div>
               <Progress value={stats.completionRate} className="h-3 transition-all duration-500" />
@@ -411,15 +408,15 @@ const Stats = () => {
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="hover-lift">
                 <div className="text-xl md:text-2xl font-bold text-success">{stats.completedGoals}</div>
-                <div className="text-xs text-muted-foreground">Completadas</div>
+                <div className="text-xs text-muted-foreground">{t('stats.completedGoals')}</div>
               </div>
               <div className="hover-lift">
                 <div className="text-xl md:text-2xl font-bold text-primary">{stats.activeGoals}</div>
-                <div className="text-xs text-muted-foreground">En Progreso</div>
+                <div className="text-xs text-muted-foreground">{t('stats.inProgress')}</div>
               </div>
               <div className="hover-lift">
                 <div className="text-xl md:text-2xl font-bold text-orange-500">{stats.longestStreak}</div>
-                <div className="text-xs text-muted-foreground">Mejor Racha</div>
+                <div className="text-xs text-muted-foreground">{t('stats.bestStreak')}</div>
               </div>
             </div>
           </CardContent>
@@ -431,7 +428,7 @@ const Stats = () => {
             <div className="flex items-center justify-between">
               <CardTitle className="text-base md:text-lg flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-primary" />
-                Análisis de Hábitos con IA
+                {t('stats.habitsAnalysisAI')}
               </CardTitle>
               <Button
                 size="sm"
@@ -439,11 +436,11 @@ const Stats = () => {
                 disabled={analyzingHabits}
                 className="btn-interactive"
               >
-                {analyzingHabits ? "Analizando..." : "Analizar"}
+                {analyzingHabits ? t('stats.analyzing') : t('stats.analyze')}
               </Button>
             </div>
             <CardDescription>
-              Obtén insights sobre tus áreas de oportunidad
+              {t('stats.habitsAnalysisDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -456,7 +453,7 @@ const Stats = () => {
             ) : (
               <div className="text-center p-8 text-muted-foreground">
                 <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Haz clic en "Analizar" para obtener un análisis personalizado de tus hábitos</p>
+                <p>{t('stats.analyzePrompt')}</p>
               </div>
             )}
           </CardContent>
